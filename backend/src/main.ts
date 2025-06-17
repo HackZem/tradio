@@ -5,11 +5,15 @@ import { NestExpressApplication } from "@nestjs/platform-express"
 import { RedisStore } from "connect-redis"
 import * as cookieParser from "cookie-parser"
 import * as session from "express-session"
+import { graphqlUploadExpress } from "graphql-upload-ts"
+import * as countries from "i18n-iso-countries"
 
 import { CoreModule } from "./core/core.module"
 import { RedisService } from "./core/redis/redis.service"
 import ms, { type StringValue } from "./shared/utils/ms.util"
 import parseBoolean from "./shared/utils/parse-boolean.util"
+
+countries.registerLocale(require("i18n-iso-countries/langs/en.json"))
 
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(CoreModule)
@@ -18,6 +22,7 @@ async function bootstrap() {
 	const redis = app.get(RedisService)
 
 	app.use(cookieParser(config.getOrThrow<string>("COOKIES_SECRET")))
+	app.use(config.getOrThrow<string>("GRAPHQL_PREFIX"), graphqlUploadExpress())
 
 	app.useGlobalPipes(new ValidationPipe({ transform: true }))
 

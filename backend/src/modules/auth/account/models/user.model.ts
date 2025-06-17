@@ -27,6 +27,15 @@ export class UserModel implements User {
 	@Field(() => String, { nullable: true })
 	public description: string
 
+	@Field(() => String, { nullable: true })
+	phone: string
+
+	@Field(() => String, { nullable: true })
+	country: string
+
+	@Field(() => String, { nullable: true })
+	city: string
+
 	@Field(() => Boolean, { defaultValue: false })
 	isVerified: boolean
 

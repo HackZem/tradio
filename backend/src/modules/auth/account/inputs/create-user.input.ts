@@ -1,6 +1,8 @@
 import { Field, InputType } from "@nestjs/graphql"
 import { IsEmail, IsNotEmpty, IsString, Length, Matches } from "class-validator"
 
+import { Match } from "@/src/shared/decorators/match.decorator"
+
 @InputType()
 export class CreateUserInput {
 	@Field()
@@ -22,4 +24,10 @@ export class CreateUserInput {
 	//@Matches(/^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$/)
 	@Length(8, 100)
 	public password: string
+
+	@Field()
+	@IsString()
+	@IsNotEmpty()
+	@Match("password", { message: "Passwords must match" })
+	public confirmPassword: string
 }

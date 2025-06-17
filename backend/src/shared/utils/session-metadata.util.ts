@@ -9,8 +9,6 @@ import { IS_DEV_ENV } from "./is-dev.util"
 
 import DeviceDetector = require("device-detector-js")
 
-countries.registerLocale(require("i18n-iso-countries/langs/en.json"))
-
 export const getSessionMetadata = (
 	req: Request,
 	userAgent: string,

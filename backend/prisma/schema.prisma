@@ -17,6 +17,10 @@ model User {
 
   description String?
   avatar      String?
+  phone       String?
+
+  country String?
+  city    String?
 
   isVerified Boolean @default(false) @map("is_verified")
 

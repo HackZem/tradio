@@ -24,10 +24,27 @@ services:
       - redis_data:/data
     networks:
       - tradio-backend
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    environment:
+      - SERVICES=s3
+      - DEBUG=1
+      - DEFAULT_REGION=eu-central-1
+      - DATA_DIR=/data
+    volumes:
+      - ./localstack_data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - tradio-backend
 
 volumes:
   postgres_data:
   redis_data:
+  localstack:
 
 networks:
   tradio-backend:
