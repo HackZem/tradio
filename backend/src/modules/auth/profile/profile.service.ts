@@ -31,21 +31,12 @@ export class ProfileService {
 
 		const fileName = `/channels/${user.username}.webp`
 
-		if (file.filename && file.filename.endsWith(".gif")) {
-			const processedBuffer = await sharp(buffer, { animated: true })
-				.resize(512, 512)
-				.webp()
-				.toBuffer()
+		const processedBuffer = await sharp(buffer)
+			.resize(512, 512)
+			.webp()
+			.toBuffer()
 
-			await this.s3Service.upload(processedBuffer, fileName, "image/webp")
-		} else {
-			const processedBuffer = await sharp(buffer, { animated: true })
-				.resize(512, 512)
-				.webp()
-				.toBuffer()
-
-			await this.s3Service.upload(processedBuffer, fileName, "image/webp")
-		}
+		await this.s3Service.upload(processedBuffer, fileName, "image/webp")
 
 		await this.prismaService.user.update({
 			where: { id: user.id },
@@ -55,7 +46,7 @@ export class ProfileService {
 		})
 	}
 
-	public async removeAvater(user: User) {
+	public async removeAvatar(user: User) {
 		if (!user.avatar) return
 
 		await this.s3Service.remove(user.avatar)

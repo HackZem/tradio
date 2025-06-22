@@ -19,7 +19,7 @@ export class FileValidationPipe implements PipeTransform {
 
 		const fileStream = createReadStream() as ReadStream
 
-		const allowedFormats = ["jpg", "jpeg", "png", "webp", "gif"]
+		const allowedFormats = ["jpg", "jpeg", "png", "webp"]
 		const isFileFormatValid = validateFileFormat(filename, allowedFormats)
 
 		if (!isFileFormatValid) {

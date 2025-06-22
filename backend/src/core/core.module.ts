@@ -9,6 +9,7 @@ import { SessionModule } from "../modules/auth/session/session.module"
 import { VerificationModule } from "../modules/auth/verification/verification.module"
 import { MailModule } from "../modules/libs/mail/mail.module"
 import { S3Module } from "../modules/libs/s3/s3.module"
+import { LotModule } from "../modules/lot/lot.module"
 import { IS_DEV_ENV } from "../shared/utils/is-dev.util"
 
 import { getGraphQLConfig } from "./config/graphql.config"
@@ -33,6 +34,7 @@ import { RedisModule } from "./redis/redis.module"
 		MailModule,
 		AccountModule,
 		ProfileModule,
+		LotModule,
 		SessionModule,
 		VerificationModule,
 	],

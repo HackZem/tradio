@@ -1,6 +1,8 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql"
 import type { User } from "@prisma/client"
 
+import { LotModel } from "@/src/modules/lot/models/lot.model"
+
 @ObjectType()
 export class UserModel implements User {
 	@Field(() => ID)
@@ -28,17 +30,20 @@ export class UserModel implements User {
 	public description: string
 
 	@Field(() => String, { nullable: true })
-	phone: string
+	public phone: string
 
 	@Field(() => String, { nullable: true })
-	country: string
+	public country: string
 
 	@Field(() => String, { nullable: true })
-	city: string
+	public city: string
 
 	@Field(() => Boolean, { defaultValue: false })
-	isVerified: boolean
+	public isVerified: boolean
 
 	@Field(() => Boolean, { defaultValue: false })
-	isEmailVerified: boolean
+	public isEmailVerified: boolean
+
+	@Field(() => [LotModel])
+	public lots: boolean[]
 }

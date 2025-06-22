@@ -26,7 +26,7 @@ export class ProfileResolver {
 	@Authorization()
 	@Mutation(() => Boolean, { name: "removeProfileAvatar" })
 	public async removeAvatar(@Authorized() user: User) {
-		return this.profileService.removeAvater(user)
+		return this.profileService.removeAvatar(user)
 	}
 
 	@Authorization()

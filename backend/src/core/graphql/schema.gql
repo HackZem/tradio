@@ -10,6 +10,12 @@ input ChangeProfileInfoInput {
   username: String!
 }
 
+enum ConditionType {
+  DEFECTIVE
+  NEW
+  USED
+}
+
 input CreateUserInput {
   confirmPassword: String!
   email: String!
@@ -28,6 +34,17 @@ type DeviceModel {
   type: String!
 }
 
+input FiltersInput {
+  query: String
+  skip: Float
+  take: Float
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
 type LocationModel {
   city: String!
   country: String!
@@ -38,6 +55,33 @@ type LocationModel {
 input LoginInput {
   login: String!
   password: String!
+}
+
+type LotModel {
+  buyNowPrice: Float
+  city: String!
+  condition: ConditionType!
+  country: String!
+  createdAt: DateTime!
+  currentPrice: Float
+  description: JSON
+  expiresIn: DateTime
+  firstPrice: Float
+  id: ID!
+  photos: [String!]!
+  returnPeriod: ReturnType!
+  title: String!
+  type: LotType!
+  updatedAt: DateTime!
+  user: UserModel!
+  userId: String!
+  viewsCount: Float!
+}
+
+enum LotType {
+  AUCTION
+  BUYNOW
+  MIXED
 }
 
 type Mutation {
@@ -53,9 +97,18 @@ type Mutation {
 }
 
 type Query {
+  findAllLots(filters: FiltersInput!): [LotModel!]!
   findCurrentSession: SessionModel!
+  findLotById(id: String!): LotModel!
   findOtherSessionsByUser: [SessionModel!]!
   findProfile: UserModel!
+}
+
+enum ReturnType {
+  NON_RETURNABLE
+  PERIOD_7D
+  PERIOD_14D
+  PERIOD_30D
 }
 
 type SessionMetadataModel {
@@ -84,6 +137,7 @@ type UserModel {
   id: ID!
   isEmailVerified: Boolean!
   isVerified: Boolean!
+  lots: [LotModel!]!
   password: String!
   phone: String
   updatedAt: DateTime!
