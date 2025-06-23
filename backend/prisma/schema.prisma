@@ -75,11 +75,28 @@ model Lot {
   returnPeriod ReturnType    @map("return_period")
   condition    ConditionType
 
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?   @map("category_id")
+
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String? @map("user_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Category {
+  id String @id @default(cuid(2))
+
+  title String
+  slug  String @unique
+
+  lots Lot[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("categories")
 }
 
 model Token {

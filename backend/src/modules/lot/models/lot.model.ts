@@ -1,9 +1,10 @@
 import { Field, Float, ID, ObjectType, registerEnumType } from "@nestjs/graphql"
-import { ConditionType, Lot, LotType, ReturnType } from "@prisma/client"
+import { Bid, ConditionType, Lot, LotType, ReturnType } from "@prisma/client"
 import { Decimal, JsonValue } from "@prisma/client/runtime/library"
 import GraphQLJSON from "graphql-type-json"
 
 import { UserModel } from "../../auth/account/models/user.model"
+import { CategoryModel } from "../../category/models/category.model"
 
 @ObjectType()
 export class LotModel implements Lot {
@@ -54,6 +55,12 @@ export class LotModel implements Lot {
 
 	@Field(() => ConditionType)
 	public condition: ConditionType
+
+	@Field(() => CategoryModel)
+	category: CategoryModel
+
+	@Field(() => String)
+	categoryId: string
 
 	@Field(() => UserModel)
 	public user: UserModel

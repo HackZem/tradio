@@ -14,6 +14,7 @@ export class IsCityExistsConstraint implements ValidatorConstraintInterface {
 		const object = args.object as ChangeProfileInfoInput
 
 		if (!object.country) return false
+		if (!city) return false
 
 		const cities = City.getCitiesOfCountry(object.country)
 
@@ -23,6 +24,6 @@ export class IsCityExistsConstraint implements ValidatorConstraintInterface {
 	}
 	defaultMessage(args: ValidationArguments) {
 		const object = args.object as ChangeProfileInfoInput
-		return `City "${args.value}" not exists in country "${countries.getName(object.country, "en")}"`
+		return `City "${args.value}" not exists in country "${countries.getName(object.country ?? "", "en")}"`
 	}
 }

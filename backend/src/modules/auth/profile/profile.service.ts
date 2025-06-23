@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from "@nestjs/common"
+import {
+	BadRequestException,
+	ConflictException,
+	Injectable,
+} from "@nestjs/common"
 import { User } from "@prisma/client"
 import { FileUpload } from "graphql-upload-ts"
 import * as sharp from "sharp"
@@ -62,14 +66,18 @@ export class ProfileService {
 	}
 
 	public async changeInfo(user: User, input: ChangeProfileInfoInput) {
-		const { username, ...data } = input
+		const { username, city, country, ...data } = input
 
 		const isUsernameExists = await this.prismaService.user.findUnique({
-			where: { username },
+			where: { username: username ?? "" },
 		})
 
 		if (isUsernameExists && username !== user.username) {
 			throw new ConflictException("This username is already taken")
+		}
+
+		if (country && !city) {
+			throw new BadRequestException("You can't change a country without a city")
 		}
 
 		await this.prismaService.user.update({

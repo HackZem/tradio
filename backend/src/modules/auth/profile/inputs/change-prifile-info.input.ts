@@ -14,39 +14,39 @@ import { IsCityExistsConstraint } from "@/src/shared/decorators/is-city-constrai
 
 @InputType()
 export class ChangeProfileInfoInput {
-	@Field()
+	@Field(() => String, { nullable: true })
 	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
 	@Matches(/^[A-Za-z][A-Za-z0-9]*$/)
 	@Length(3, 32)
-	public username: string
+	public username?: string
 
-	@Field()
+	@Field(() => String, { nullable: true })
 	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
 	@IsPhoneNumber()
-	public phone: string
+	public phone?: string
 
-	@Field()
+	@Field(() => String, { nullable: true })
 	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
 	@Length(2, 500)
-	public description: string
+	public description?: string
 
-	@Field()
+	@Field(() => String, { nullable: true })
 	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
 	@IsISO31661Alpha2()
-	public country: string
+	public country?: string
 
-	@Field()
+	@Field(() => String, { nullable: true })
 	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
 	@Validate(IsCityExistsConstraint)
-	public city: string
+	public city?: string
 }

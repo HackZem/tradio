@@ -7,7 +7,6 @@ import {
 	IsISO31661Alpha2,
 	IsNotEmpty,
 	IsNumber,
-	IsObject,
 	IsOptional,
 	IsString,
 	Length,
@@ -20,75 +19,61 @@ import { IsCityExistsConstraint } from "@/src/shared/decorators/is-city-constrai
 import { IsCUID } from "@/src/shared/decorators/is-cuid.decorator"
 
 @InputType()
-export class ChangeLotInfoInput {
+export class CreateLotInput {
 	@Field(() => String)
 	@IsString()
 	@IsNotEmpty()
-	public lotId: string
-
-	@Field(() => String, { nullable: true })
-	@IsOptional()
-	@IsString()
-	@IsNotEmpty()
 	@Length(10, 32)
-	public title?: string
+	public title: string
 
 	@Field(() => GraphQLJSON, { nullable: true })
 	@IsOptional()
-	@IsObject()
+	@IsString()
 	@IsNotEmpty()
 	@Max(1000)
 	public description?: JsonObject
 
-	@Field(() => LotType, { nullable: true })
-	@IsOptional()
+	@Field(() => LotType)
 	@IsEnum(LotType)
 	@IsNotEmpty()
-	public type?: LotType
+	public type: LotType
 
-	@Field(() => String, { nullable: true })
-	@IsOptional()
+	@Field(() => String)
 	@IsString()
 	@IsNotEmpty()
 	@IsISO31661Alpha2()
-	public country?: string
+	public country: string
 
-	@Field(() => String, { nullable: true })
-	@IsOptional()
+	@Field(() => String)
 	@IsString()
 	@IsNotEmpty()
 	@Validate(IsCityExistsConstraint)
-	public city?: string
+	public city: string
 
-	@Field(() => ReturnType, { nullable: true })
-	@IsOptional()
+	@Field(() => ReturnType)
 	@IsEnum(ReturnType)
 	@IsNotEmpty()
-	public returnPeriod?: ReturnType
+	public returnPeriod: ReturnType
 
-	@Field(() => ConditionType, { nullable: true })
-	@IsOptional()
+	@Field(() => ConditionType)
 	@IsEnum(ConditionType)
 	@IsNotEmpty()
-	public condition?: ConditionType
+	public condition: ConditionType
 
-	@Field(() => Float, { nullable: true })
-	@IsOptional()
+	@Field(() => Float)
 	@IsNumber()
 	@IsNotEmpty()
 	public firstPrice: number
 
-	@Field(() => Date, { nullable: true })
-	@IsOptional()
+	@Field(() => Date)
 	@IsDate()
 	@IsNotEmpty()
 	public expiresIn: Date
 
-	@Field(() => String, { nullable: true })
-	@IsOptional()
+	@Field(() => String)
 	@IsCUID()
 	@IsNotEmpty()
-	public categoryId?: string
+	public categoryId: string
 }
 
 registerEnumType(ReturnType, { name: "ReturnType" })

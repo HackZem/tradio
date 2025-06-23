@@ -14,6 +14,7 @@ import { PrismaService } from "@/src/core/prisma/prisma.service"
 import { S3Service } from "../libs/s3/s3.service"
 
 import { ChangeLotInfoInput } from "./inputs/change-lot-info.input"
+import { CreateLotInput } from "./inputs/create-lot.input"
 import { FiltersInput } from "./inputs/filters.input"
 import { RemovePhotoInput } from "./inputs/remove-photo.input"
 import { ReorderPhotosInput } from "./inputs/reorder-photos.input"
@@ -54,7 +55,7 @@ export class LotService {
 
 		const lots = this.prismaService.lot.findMany({
 			where: whereClause,
-			include: { user: {} },
+			include: { user: true, category: true },
 			skip: skip ?? 0,
 			take: take ?? 16,
 		})
@@ -63,13 +64,34 @@ export class LotService {
 	}
 
 	public async findById(id: string) {
-		const lot = await this.prismaService.lot.findUnique({ where: { id } })
+		const lot = await this.prismaService.lot.findUnique({
+			where: { id },
+			include: { user: true, category: true },
+		})
 
 		if (!lot) {
 			throw new NotFoundException("Lot not found")
 		}
 
 		return lot
+	}
+
+	public async create(user: User, input: CreateLotInput) {
+		const { categoryId, ...data } = input
+
+		await this.prismaService.lot.create({
+			data: {
+				...data,
+				category: { connect: { id: categoryId } },
+				user: {
+					connect: {
+						id: user.id,
+					},
+				},
+			},
+		})
+
+		return true
 	}
 
 	public async changeInfo(user: User, input: ChangeLotInfoInput) {
@@ -81,10 +103,14 @@ export class LotService {
 			returnPeriod,
 			title,
 			lotId,
+			categoryId,
+			expiresIn,
+			firstPrice,
 		} = input
 
 		const lot = await this.prismaService.lot.findUnique({
 			where: { id: lotId },
+			include: { bids: true },
 		})
 
 		if (!lot) {
@@ -96,23 +122,40 @@ export class LotService {
 				"You do not have permission to edit this lot",
 			)
 		}
-		//TODO: продовжую роботу тут, треба добавити обмеження коли будуть ставки
+
+		const isBidPlaced = lot.bids.length > 0
+
+		const data: Prisma.LotUpdateInput = isBidPlaced
+			? {
+					title: lot.title.startsWith(title ?? "") ? title : lot.title,
+				}
+			: {
+					city,
+					condition,
+					country,
+					description,
+					returnPeriod,
+					title,
+					expiresIn,
+					firstPrice,
+					category: {
+						connect: {
+							id: categoryId ?? lot.categoryId!,
+						},
+					},
+				}
+
 		await this.prismaService.lot.update({
 			where: { id: lotId },
-			data: {
-				city,
-				condition,
-				country,
-				description: description ?? undefined,
-				returnPeriod,
-				title,
-			},
+			data,
 		})
+
+		return true
 	}
 
 	public async uploadPhoto(
-		input: UploadPhotoInput,
 		user: User,
+		input: UploadPhotoInput,
 		file: FileUpload,
 	) {
 		const { lotId } = input
@@ -156,6 +199,8 @@ export class LotService {
 				},
 			},
 		})
+
+		return true
 	}
 
 	public async removePhoto(user: User, input: RemovePhotoInput) {
