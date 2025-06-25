@@ -42,7 +42,7 @@ export class LotModel implements Lot {
 	public expiresIn: Date
 
 	@Field(() => Number, { defaultValue: 0 })
-	public viewsCount: number
+	public views: number
 
 	@Field(() => String)
 	public country: string

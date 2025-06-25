@@ -7,6 +7,7 @@ import { AccountModule } from "../modules/auth/account/account.module"
 import { ProfileModule } from "../modules/auth/profile/profile.module"
 import { SessionModule } from "../modules/auth/session/session.module"
 import { VerificationModule } from "../modules/auth/verification/verification.module"
+import { BidModule } from "../modules/bid/bid.module"
 import { CategoryModule } from "../modules/category/category.module"
 import { MailModule } from "../modules/libs/mail/mail.module"
 import { S3Module } from "../modules/libs/s3/s3.module"
@@ -36,6 +37,7 @@ import { RedisModule } from "./redis/redis.module"
 		AccountModule,
 		ProfileModule,
 		LotModule,
+		BidModule,
 		SessionModule,
 		VerificationModule,
 		CategoryModule,

@@ -5,7 +5,7 @@ import {
 	NotFoundException,
 } from "@nestjs/common"
 import { createId } from "@paralleldrive/cuid2"
-import type { Prisma, User } from "@prisma/client"
+import { Prisma, User } from "@prisma/client"
 import { FileUpload } from "graphql-upload-ts"
 import * as sharp from "sharp"
 
@@ -15,7 +15,12 @@ import { S3Service } from "../libs/s3/s3.service"
 
 import { ChangeLotInfoInput } from "./inputs/change-lot-info.input"
 import { CreateLotInput } from "./inputs/create-lot.input"
-import { FiltersInput } from "./inputs/filters.input"
+import {
+	FiltersInput,
+	PriceRangeInput,
+	SortBy,
+	SortOrder,
+} from "./inputs/filters.input"
 import { RemovePhotoInput } from "./inputs/remove-photo.input"
 import { ReorderPhotosInput } from "./inputs/reorder-photos.input"
 import { UploadPhotoInput } from "./inputs/upload-photo.input"
@@ -27,7 +32,7 @@ export class LotService {
 		private readonly s3Service: S3Service,
 	) {}
 
-	private findByQuery(query: string): Prisma.LotWhereInput {
+	private buildQueryCondition(query: string): Prisma.LotWhereInput {
 		return {
 			OR: [
 				{
@@ -48,16 +53,77 @@ export class LotService {
 		}
 	}
 
-	public async findAll(input: FiltersInput) {
-		const { query, skip, take } = input
+	private buildPriceRangeCondition({
+		min,
+		max,
+	}: PriceRangeInput): Prisma.LotWhereInput {
+		return {
+			currentPrice: {
+				gte: min,
+				lte: max,
+			},
+		}
+	}
 
-		const whereClause = query ? this.findByQuery(query) : undefined
+	private buildOrderBy(
+		sortBy?: SortBy,
+		sortOrder?: SortOrder,
+	): Prisma.LotOrderByWithRelationInput {
+		const order = sortOrder || SortOrder.DESC
+
+		return sortBy ? { [sortBy]: order } : {}
+	}
+
+	private buildWhereClause({
+		query,
+		priceRange,
+		country,
+		city,
+		lotTypes,
+		condition,
+		categoryIds,
+	}: FiltersInput): Prisma.LotWhereInput {
+		const conditions: Prisma.LotWhereInput[] = []
+
+		const queryTrim = query?.trim()
+		if (queryTrim) {
+			conditions.push(this.buildQueryCondition(queryTrim))
+		}
+		if (priceRange?.min || priceRange?.max) {
+			conditions.push(this.buildPriceRangeCondition(priceRange))
+		}
+		if (country || city) {
+			conditions.push({
+				country,
+				city,
+			})
+		}
+		if ((lotTypes ?? []).length > 0) {
+			conditions.push({ type: { in: lotTypes } })
+		}
+		if ((condition ?? []).length > 0) {
+			conditions.push({ condition: { in: condition } })
+		}
+		if ((categoryIds ?? []).length > 0) {
+			conditions.push({ categoryId: { in: categoryIds } })
+		}
+
+		return { AND: conditions }
+	}
+
+	public async findAll(input: FiltersInput) {
+		const { skip, take, sortBy, sortOrder } = input
+
+		const whereClause = this.buildWhereClause(input)
+
+		const orderBy = this.buildOrderBy(sortBy, sortOrder)
 
 		const lots = this.prismaService.lot.findMany({
 			where: whereClause,
 			include: { user: true, category: true },
 			skip: skip ?? 0,
 			take: take ?? 16,
+			orderBy,
 		})
 
 		return lots

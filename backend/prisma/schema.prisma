@@ -41,13 +41,16 @@ model Bid {
 
   amount Decimal @db.Decimal(12, 2)
 
-  lot   Lot?    @relation(fields: [lotId], references: [id], onDelete: Cascade)
-  lotId String? @map("lot_id")
+  lot   Lot    @relation(fields: [lotId], references: [id], onDelete: Cascade)
+  lotId String @map("lot_id")
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
 
   createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([amount])
+  @@map("bids")
 }
 
 model Lot {
@@ -66,8 +69,8 @@ model Lot {
 
   expiresIn DateTime? @map("expires-in")
 
-  viewsCount Int   @default(0) @map("views_count")
-  bids       Bid[]
+  views Int   @default(0)
+  bids  Bid[]
 
   country String
   city    String
@@ -83,6 +86,8 @@ model Lot {
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("lots")
 }
 
 model Category {

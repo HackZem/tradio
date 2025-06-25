@@ -71,8 +71,16 @@ type DeviceModel {
 }
 
 input FiltersInput {
+  categoryIds: [String!]
+  city: String
+  condition: [ConditionType!]
+  country: String
+  lotTypes: [LotType!]
+  priceRange: PriceRangeInput
   query: String
   skip: Float
+  sortBy: SortBy
+  sortOrder: SortOrder
   take: Float
 }
 
@@ -139,6 +147,11 @@ type Mutation {
   verifyAccount(data: VerificationInput!): UserModel!
 }
 
+input PriceRangeInput {
+  max: Float
+  min: Float
+}
+
 type Query {
   findAllCategories: [CategoryModel!]!
   findAllLots(filters: FiltersInput!): [LotModel!]!
@@ -176,6 +189,18 @@ type SessionModel {
   id: ID!
   metadata: SessionMetadataModel!
   userId: String!
+}
+
+enum SortBy {
+  BIDS
+  CREATED_AT
+  EXPIRES_IN
+  PRICE
+}
+
+enum SortOrder {
+  ASC
+  DESC
 }
 
 """The `Upload` scalar type represents a file upload."""

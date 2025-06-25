@@ -10,13 +10,20 @@ import { ChangeProfileInfoInput } from "@/src/modules/auth/profile/inputs/change
 
 @ValidatorConstraint({ name: "isCityExists", async: false })
 export class IsCityExistsConstraint implements ValidatorConstraintInterface {
-	validate(city: string, args: ValidationArguments) {
+	validate(
+		city: string,
+		args: ValidationArguments & {
+			constraints: [{ isCountryOptional: boolean }]
+		},
+	) {
 		const object = args.object as ChangeProfileInfoInput
 
-		if (!object.country) return false
+		const isCountryOptional = args.constraints[0].isCountryOptional
+
+		if (!object.country && !isCountryOptional) return false
 		if (!city) return false
 
-		const cities = City.getCitiesOfCountry(object.country)
+		const cities = City.getCitiesOfCountry(object.country ?? "")
 
 		if (!cities || cities.length === 0) return false
 
