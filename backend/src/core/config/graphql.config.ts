@@ -15,5 +15,8 @@ export const getGraphQLConfig = (
 		sortSchema: true,
 		context: ({ req, res }) => ({ req, res }),
 		resolvers: { JSON: GraphQLJSON },
+		subscriptions: {
+			"graphql-ws": true,
+		},
 	}
 }

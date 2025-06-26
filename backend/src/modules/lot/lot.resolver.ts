@@ -48,6 +48,24 @@ export class LotResolver {
 	}
 
 	@Authorization()
+	@Mutation(() => Boolean, { name: "subscribeToLot" })
+	public async subscribe(
+		@Authorized() user: User,
+		@Args("lotId") lotId: string,
+	) {
+		return this.lotService.subscribe(user, lotId)
+	}
+
+	@Authorization()
+	@Mutation(() => Boolean, { name: "unsubscribeFromLot" })
+	public async unsubscribe(
+		@Authorized() user: User,
+		@Args("lotId") lotId: string,
+	) {
+		return this.lotService.unsubscribe(user, lotId)
+	}
+
+	@Authorization()
 	@Mutation(() => Boolean, { name: "uploadPhotoToLot" })
 	public async uploadPhoto(
 		@Authorized() user: User,

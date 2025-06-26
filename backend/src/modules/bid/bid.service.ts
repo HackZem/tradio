@@ -62,6 +62,7 @@ export class BidService {
 			orderBy: {
 				amount: "desc",
 			},
+			take: 1,
 		})
 
 		if (!bid) {

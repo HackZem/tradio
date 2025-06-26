@@ -1,9 +1,6 @@
 import { Field, Float, ID, InputType } from "@nestjs/graphql"
 import { Bid } from "@prisma/client"
 import { Decimal } from "@prisma/client/runtime/library"
-import { IsNotEmpty, IsNumber } from "class-validator"
-
-import { IsCUID } from "@/src/shared/decorators/is-cuid.decorator"
 
 import { UserModel } from "../../auth/account/models/user.model"
 import { LotModel } from "../../lot/models/lot.model"

@@ -136,7 +136,7 @@ export class LotService {
 		})
 
 		if (!lot) {
-			throw new NotFoundException("Lot not found")
+			throw new NotFoundException("Lot is not found")
 		}
 
 		return lot
@@ -180,7 +180,7 @@ export class LotService {
 		})
 
 		if (!lot) {
-			throw new NotFoundException("Lot not found")
+			throw new NotFoundException("Lot is not found")
 		}
 
 		if (lot.userId !== user.id) {
@@ -219,6 +219,77 @@ export class LotService {
 		return true
 	}
 
+	public async subscribe(user: User, lotId: string) {
+		const result = await this.prismaService.$transaction(async tx => {
+			const lot = await tx.lot.findUnique({
+				where: {
+					id: lotId,
+				},
+				include: { subscriptions: { where: { userId: user.id } } },
+			})
+
+			if (!lot) {
+				throw new NotFoundException("Lot is not found")
+			}
+
+			if (lot.subscriptions.length > 0) {
+				throw new BadRequestException("User already has a subscription")
+			}
+
+			await tx.lot.update({
+				where: { id: lotId },
+				data: {
+					subscriptions: {
+						create: {
+							user: { connect: { id: user.id } },
+						},
+					},
+				},
+			})
+
+			return true
+		})
+
+		return result
+	}
+
+	public async unsubscribe(user: User, lotId: string) {
+		const result = await this.prismaService.$transaction(async tx => {
+			const lot = await tx.lot.findUnique({
+				where: {
+					id: lotId,
+				},
+				include: { subscriptions: { where: { userId: user.id } } },
+			})
+
+			if (!lot) {
+				throw new NotFoundException("Lot is not found")
+			}
+
+			if (!lot.subscriptions.length) {
+				throw new BadRequestException("User is not subscribed")
+			}
+
+			await tx.lot.update({
+				where: { id: lotId },
+				data: {
+					subscriptions: {
+						delete: {
+							lotId_userId: {
+								userId: user.id,
+								lotId,
+							},
+						},
+					},
+				},
+			})
+
+			return true
+		})
+
+		return result
+	}
+
 	public async uploadPhoto(
 		user: User,
 		input: UploadPhotoInput,
@@ -231,7 +302,7 @@ export class LotService {
 		})
 
 		if (!lot) {
-			throw new NotFoundException("Lot not found")
+			throw new NotFoundException("Lot is not found")
 		}
 
 		if (lot.userId !== user.id) {
@@ -277,7 +348,7 @@ export class LotService {
 		})
 
 		if (!lot) {
-			throw new NotFoundException("Lot not found")
+			throw new NotFoundException("Lot is not found")
 		}
 
 		if (lot.userId !== user.id) {
@@ -308,7 +379,7 @@ export class LotService {
 		})
 
 		if (!lot) {
-			throw new NotFoundException("Lot not found")
+			throw new NotFoundException("Lot is not found")
 		}
 
 		if (lot.userId !== user.id) {

@@ -13,12 +13,12 @@ export class IsCityExistsConstraint implements ValidatorConstraintInterface {
 	validate(
 		city: string,
 		args: ValidationArguments & {
-			constraints: [{ isCountryOptional: boolean }]
+			constraints?: [{ isCountryOptional: boolean }]
 		},
 	) {
 		const object = args.object as ChangeProfileInfoInput
 
-		const isCountryOptional = args.constraints[0].isCountryOptional
+		const isCountryOptional = args.constraints?.[0]?.isCountryOptional
 
 		if (!object.country && !isCountryOptional) return false
 		if (!city) return false

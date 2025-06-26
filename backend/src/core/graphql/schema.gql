@@ -116,12 +116,22 @@ type LotModel {
   id: ID!
   photos: [String!]!
   returnPeriod: ReturnType!
+  subscriptions: [LotSubscriptionModel!]!
   title: String!
   type: LotType!
   updatedAt: DateTime!
   user: UserModel!
   userId: String!
-  viewsCount: Float!
+  views: Float!
+}
+
+type LotSubscriptionModel {
+  createdAt: DateTime!
+  id: ID!
+  lot: LotModel!
+  lotId: String!
+  user: UserModel!
+  userId: String!
 }
 
 enum LotType {
@@ -139,12 +149,37 @@ type Mutation {
   createUser(data: CreateUserInput!): Boolean!
   login(data: LoginInput!): UserModel!
   logout: Boolean!
+  placeBid(data: PlaceBidInput!): Boolean!
   removePhotoFromLot(data: RemovePhotoInput!): Boolean!
   removeProfileAvatar: Boolean!
   removeSession(id: String!): Boolean!
   reorderPhotosInLot(data: ReorderPhotosInput!): Boolean!
+  subscribeToLot(lotId: String!): Boolean!
+  unsubscribeFromLot(lotId: String!): Boolean!
   uploadPhotoToLot(data: UploadPhotoInput!, file: Upload!): Boolean!
   verifyAccount(data: VerificationInput!): UserModel!
+}
+
+type NotificationModel {
+  createdAt: DateTime!
+  description: String!
+  id: ID!
+  isRead: Boolean!
+  title: String!
+  type: NotificationType!
+  user: UserModel!
+  userId: String!
+}
+
+enum NotificationType {
+  NEW_BID
+  OUTBID
+  TIME_WARNING
+}
+
+input PlaceBidInput {
+  amount: Float!
+  lotId: String!
 }
 
 input PriceRangeInput {
@@ -156,6 +191,7 @@ type Query {
   findAllCategories: [CategoryModel!]!
   findAllLots(filters: FiltersInput!): [LotModel!]!
   findCurrentSession: SessionModel!
+  findLastBid(lotId: String!): Boolean!
   findLotById(id: String!): LotModel!
   findOtherSessionsByUser: [SessionModel!]!
   findProfile: UserModel!
@@ -221,8 +257,10 @@ type UserModel {
   isEmailVerified: Boolean!
   isVerified: Boolean!
   lots: [LotModel!]!
+  notifications: [NotificationModel!]!
   password: String!
   phone: String
+  subscriptions: [LotSubscriptionModel!]!
   updatedAt: DateTime!
   username: String!
 }

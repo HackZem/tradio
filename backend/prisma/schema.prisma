@@ -26,9 +26,11 @@ model User {
 
   isEmailVerified Boolean @default(false) @map("is_email_verified")
 
-  tokens Token[]
-  bids   Bid[]
-  lots   Lot[]
+  tokens        Token[]
+  bids          Bid[]
+  lots          Lot[]
+  notifications Notification[]
+  subscriptions LotSubscription[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -53,6 +55,21 @@ model Bid {
   @@map("bids")
 }
 
+model LotSubscription {
+  id String @id @default(cuid(2))
+
+  lot   Lot    @relation(fields: [lotId], references: [id], onDelete: Cascade)
+  lotId String @map("lot_id")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([lotId, userId])
+  @@map("lot_subscriptions")
+}
+
 model Lot {
   id String @id @default(cuid(2))
 
@@ -69,8 +86,9 @@ model Lot {
 
   expiresIn DateTime? @map("expires-in")
 
-  views Int   @default(0)
-  bids  Bid[]
+  views         Int               @default(0)
+  bids          Bid[]
+  subscriptions LotSubscription[]
 
   country String
   city    String
@@ -102,6 +120,23 @@ model Category {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("categories")
+}
+
+model Notification {
+  id String @id @default(cuid(2))
+
+  title       String
+  description String
+
+  isRead Boolean          @default(false) @map("is_read")
+  type   NotificationType
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("notifications")
 }
 
 model Token {
@@ -149,4 +184,12 @@ enum ConditionType {
   DEFECTIVE
 
   @@map("condition_type")
+}
+
+enum NotificationType {
+  NEW_BID
+  OUTBID
+  TIME_WARNING
+
+  @@map("notification_type")
 }

@@ -1,7 +1,9 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql"
 import type { User } from "@prisma/client"
 
+import { LotSubscriptionModel } from "@/src/modules/lot/models/lot-subscription.model"
 import { LotModel } from "@/src/modules/lot/models/lot.model"
+import { NotificationModel } from "@/src/modules/notification/models/notification.model"
 
 @ObjectType()
 export class UserModel implements User {
@@ -45,5 +47,11 @@ export class UserModel implements User {
 	public isEmailVerified: boolean
 
 	@Field(() => [LotModel])
-	public lots: boolean[]
+	public lots: LotModel[]
+
+	@Field(() => [NotificationModel])
+	public notifications: NotificationModel[]
+
+	@Field(() => [LotSubscriptionModel])
+	public subscriptions: LotSubscriptionModel[]
 }

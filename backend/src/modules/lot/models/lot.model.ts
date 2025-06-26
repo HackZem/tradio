@@ -6,6 +6,8 @@ import GraphQLJSON from "graphql-type-json"
 import { UserModel } from "../../auth/account/models/user.model"
 import { CategoryModel } from "../../category/models/category.model"
 
+import { LotSubscriptionModel } from "./lot-subscription.model"
+
 @ObjectType()
 export class LotModel implements Lot {
 	@Field(() => ID)
@@ -55,6 +57,9 @@ export class LotModel implements Lot {
 
 	@Field(() => ConditionType)
 	public condition: ConditionType
+
+	@Field(() => [LotSubscriptionModel])
+	public subscriptions: LotSubscriptionModel[]
 
 	@Field(() => CategoryModel)
 	category: CategoryModel

@@ -12,6 +12,7 @@ import { CategoryModule } from "../modules/category/category.module"
 import { MailModule } from "../modules/libs/mail/mail.module"
 import { S3Module } from "../modules/libs/s3/s3.module"
 import { LotModule } from "../modules/lot/lot.module"
+import { NotificationModule } from "../modules/notification/notification.module"
 import { IS_DEV_ENV } from "../shared/utils/is-dev.util"
 
 import { getGraphQLConfig } from "./config/graphql.config"
@@ -41,6 +42,7 @@ import { RedisModule } from "./redis/redis.module"
 		SessionModule,
 		VerificationModule,
 		CategoryModule,
+		NotificationModule,
 	],
 	controllers: [],
 	providers: [],
