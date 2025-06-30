@@ -173,6 +173,7 @@ type NotificationModel {
 
 enum NotificationType {
   NEW_BID
+  OTHER
   OUTBID
   TIME_WARNING
 }

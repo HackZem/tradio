@@ -10,6 +10,7 @@ import * as countries from "i18n-iso-countries"
 
 import { CoreModule } from "./core/core.module"
 import { RedisService } from "./core/redis/redis.service"
+import { RedisIoAdapter } from "./shared/adapters/redis-io.adapter"
 import ms, { type StringValue } from "./shared/utils/ms.util"
 import parseBoolean from "./shared/utils/parse-boolean.util"
 
@@ -26,25 +27,29 @@ async function bootstrap() {
 
 	app.useGlobalPipes(new ValidationPipe({ transform: true }))
 
-	app.use(
-		session({
-			secret: config.getOrThrow<string>("SESSION_SECRET"),
-			name: config.getOrThrow<string>("SESSION_NAME"),
-			resave: false,
-			saveUninitialized: false,
-			cookie: {
-				domain: config.getOrThrow<string>("SESSION_DOMAIN"),
-				maxAge: ms(config.getOrThrow<StringValue>("SESSION_MAX_AGE")),
-				httpOnly: parseBoolean(config.getOrThrow<string>("SESSION_HTTP_ONLY")),
-				secure: parseBoolean(config.getOrThrow<string>("SESSION_SECURE")),
-				sameSite: "lax",
-			},
-			store: new RedisStore({
-				client: redis,
-				prefix: config.getOrThrow<string>("SESSION_FOLDER"),
-			}),
+	const sessionMiddleware = session({
+		secret: config.getOrThrow<string>("SESSION_SECRET"),
+		name: config.getOrThrow<string>("SESSION_NAME"),
+		resave: false,
+		saveUninitialized: false,
+		cookie: {
+			domain: config.getOrThrow<string>("SESSION_DOMAIN"),
+			maxAge: ms(config.getOrThrow<StringValue>("SESSION_MAX_AGE")),
+			httpOnly: parseBoolean(config.getOrThrow<string>("SESSION_HTTP_ONLY")),
+			secure: parseBoolean(config.getOrThrow<string>("SESSION_SECURE")),
+			sameSite: "lax",
+		},
+		store: new RedisStore({
+			client: redis,
+			prefix: config.getOrThrow<string>("SESSION_FOLDER"),
 		}),
-	)
+	})
+
+	app.use(sessionMiddleware)
+
+	const redisIoAdapter = new RedisIoAdapter(app, sessionMiddleware, config)
+	await redisIoAdapter.connectToRedis()
+	app.useWebSocketAdapter(redisIoAdapter)
 
 	app.enableCors({
 		origin: config.getOrThrow<string>("ALLOWED_ORIGIN"),

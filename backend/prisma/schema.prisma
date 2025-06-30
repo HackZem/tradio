@@ -191,5 +191,7 @@ enum NotificationType {
   OUTBID
   TIME_WARNING
 
+  OTHER
+
   @@map("notification_type")
 }

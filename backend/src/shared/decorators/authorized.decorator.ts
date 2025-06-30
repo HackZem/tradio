@@ -8,6 +8,9 @@ export const Authorized = createParamDecorator(
 
 		if (ctx.getType() === "http") {
 			user = ctx.switchToHttp().getRequest().user
+		} else if (ctx.getType() === "ws") {
+			const client = ctx.switchToWs().getClient()
+			user = client.data.user
 		} else {
 			const context = GqlExecutionContext.create(ctx)
 			user = context.getContext().req.user

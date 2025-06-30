@@ -17,6 +17,7 @@ export const getGraphQLConfig = (
 		resolvers: { JSON: GraphQLJSON },
 		subscriptions: {
 			"graphql-ws": true,
+			"subscriptions-transport-ws": true,
 		},
 	}
 }

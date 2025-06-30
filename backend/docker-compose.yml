@@ -26,6 +26,7 @@ services:
       - tradio-backend
   localstack:
     container_name: localstack
+    restart: always
     image: localstack/localstack:latest
     ports:
       - "4566:4566"
