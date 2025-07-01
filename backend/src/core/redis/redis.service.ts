@@ -3,8 +3,6 @@ import { ConfigService } from "@nestjs/config"
 import { Notification } from "@prisma/client"
 import Redis, { type RedisOptions } from "ioredis"
 
-import { NotificationModel } from "@/src/modules/notification/models/notification.model"
-
 @Injectable()
 export class RedisService extends Redis implements OnModuleInit {
 	public publisher: Redis

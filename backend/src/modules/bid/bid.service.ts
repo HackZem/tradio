@@ -7,11 +7,16 @@ import { User } from "@prisma/client"
 
 import { PrismaService } from "@/src/core/prisma/prisma.service"
 
+import { NotificationService } from "../notification/notification.service"
+
 import { PlaceBidInput } from "./inputs/place-bid.input"
 
 @Injectable()
 export class BidService {
-	public constructor(private readonly prismaService: PrismaService) {}
+	public constructor(
+		private readonly prismaService: PrismaService,
+		private readonly notificationService: NotificationService,
+	) {}
 
 	public async place(user: User, input: PlaceBidInput) {
 		const { amount, lotId } = input
@@ -52,6 +57,25 @@ export class BidService {
 				},
 			},
 		})
+
+		await this.prismaService.lot.update({
+			where: {
+				id: lotId,
+			},
+			data: {
+				subscriptions: {
+					create: {
+						user: {
+							connect: {
+								id: user.id,
+							},
+						},
+					},
+				},
+			},
+		})
+
+		await this.notificationService.notifyNewBid(lotId, user.id, amount)
 
 		return true
 	}

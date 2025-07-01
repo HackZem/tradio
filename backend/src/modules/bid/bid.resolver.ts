@@ -13,7 +13,7 @@ export class BidResolver {
 
 	@Authorization()
 	@Mutation(() => Boolean, { name: "placeBid" })
-	public async placeBid(
+	public async place(
 		@Authorized() user: User,
 		@Args("data") input: PlaceBidInput,
 	) {
