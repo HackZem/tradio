@@ -172,10 +172,13 @@ type NotificationModel {
 }
 
 enum NotificationType {
+  LOT_ENDED
+  LOT_ENDING
+  LOT_LOST
+  LOT_WON
   NEW_BID
   OTHER
   OUTBID
-  TIME_WARNING
 }
 
 input PlaceBidInput {

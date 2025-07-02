@@ -232,6 +232,10 @@ export class LotService {
 				throw new NotFoundException("Lot is not found")
 			}
 
+			if (lot.userId === user.id) {
+				throw new BadRequestException("User cant subscribe to his lot")
+			}
+
 			if (lot.subscriptions.length > 0) {
 				throw new BadRequestException("User already has a subscription")
 			}

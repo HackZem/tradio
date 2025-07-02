@@ -189,8 +189,10 @@ enum ConditionType {
 enum NotificationType {
   NEW_BID
   OUTBID
-  TIME_WARNING
-
+  LOT_ENDING
+  LOT_WON
+  LOT_LOST
+  LOT_ENDED
   OTHER
 
   @@map("notification_type")
