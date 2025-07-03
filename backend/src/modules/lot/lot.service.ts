@@ -5,7 +5,7 @@ import {
 	NotFoundException,
 } from "@nestjs/common"
 import { createId } from "@paralleldrive/cuid2"
-import { Prisma, User } from "@prisma/client"
+import { LotType, Prisma, User } from "@prisma/client"
 import { FileUpload } from "graphql-upload-ts"
 import * as sharp from "sharp"
 
@@ -24,12 +24,14 @@ import {
 import { RemovePhotoInput } from "./inputs/remove-photo.input"
 import { ReorderPhotosInput } from "./inputs/reorder-photos.input"
 import { UploadPhotoInput } from "./inputs/upload-photo.input"
+import { LotQueueService } from "./queues/lot-queue.service"
 
 @Injectable()
 export class LotService {
 	public constructor(
 		private readonly prismaService: PrismaService,
 		private readonly s3Service: S3Service,
+		private readonly lotQueueService: LotQueueService,
 	) {}
 
 	private buildQueryCondition(query: string): Prisma.LotWhereInput {
@@ -143,11 +145,13 @@ export class LotService {
 	}
 
 	public async create(user: User, input: CreateLotInput) {
-		const { categoryId, ...data } = input
+		const { categoryId, firstPrice, ...data } = input
 
-		await this.prismaService.lot.create({
+		const newLot = await this.prismaService.lot.create({
 			data: {
 				...data,
+				firstPrice,
+				currentPrice: firstPrice,
 				category: { connect: { id: categoryId } },
 				user: {
 					connect: {
@@ -156,6 +160,9 @@ export class LotService {
 				},
 			},
 		})
+
+		if (newLot.type === LotType.AUCTION || newLot.type === LotType.MIXED)
+			await this.lotQueueService.sheduleLotEvents(newLot)
 
 		return true
 	}

@@ -45,6 +45,10 @@ export class RedisService extends Redis implements OnModuleInit {
 		await this.publisher.hdel("user:socket", userId)
 	}
 
+	public async deleteAllUserSockets() {
+		await this.publisher.del("user:socket")
+	}
+
 	public async getUserSocket(userId: string) {
 		return await this.publisher.hget("user:socket", userId)
 	}

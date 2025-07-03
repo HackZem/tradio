@@ -31,6 +31,9 @@ export class LotModel implements Lot {
 	@Field(() => LotType)
 	public type: LotType
 
+	@Field(() => Boolean)
+	public isActive: boolean
+
 	@Field(() => Float, { nullable: true })
 	public currentPrice: Decimal
 

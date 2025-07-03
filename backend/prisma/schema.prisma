@@ -78,7 +78,8 @@ model Lot {
 
   photos String[]
 
-  type LotType
+  type     LotType
+  isActive Boolean @default(true) @map("is-active")
 
   currentPrice Decimal? @map("current_price") @db.Decimal(12, 2)
   firstPrice   Decimal? @map("first_price") @db.Decimal(12, 2)

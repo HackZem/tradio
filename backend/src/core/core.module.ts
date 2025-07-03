@@ -1,4 +1,5 @@
 import { ApolloDriver } from "@nestjs/apollo"
+import { BullModule } from "@nestjs/bull"
 import { Module } from "@nestjs/common"
 import { ConfigModule, ConfigService } from "@nestjs/config"
 import { GraphQLModule } from "@nestjs/graphql"
@@ -15,6 +16,7 @@ import { LotModule } from "../modules/lot/lot.module"
 import { NotificationModule } from "../modules/notification/notification.module"
 import { IS_DEV_ENV } from "../shared/utils/is-dev.util"
 
+import { getBullConfig } from "./config/bull.config"
 import { getGraphQLConfig } from "./config/graphql.config"
 import { PrismaModule } from "./prisma/prisma.module"
 import { RedisModule } from "./redis/redis.module"
@@ -33,6 +35,11 @@ import { RedisModule } from "./redis/redis.module"
 		}),
 		PrismaModule,
 		RedisModule,
+		BullModule.forRootAsync({
+			imports: [ConfigModule],
+			useFactory: getBullConfig,
+			inject: [ConfigService],
+		}),
 		S3Module,
 		MailModule,
 		AccountModule,

@@ -114,6 +114,7 @@ type LotModel {
   expiresIn: DateTime
   firstPrice: Float
   id: ID!
+  isActive: Boolean!
   photos: [String!]!
   returnPeriod: ReturnType!
   subscriptions: [LotSubscriptionModel!]!

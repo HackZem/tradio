@@ -36,10 +36,20 @@ export class BidService {
 			throw new NotFoundException("Lot not found")
 		}
 
-		const maxAmount = lot.bids[0]?.amount
+		if (!lot.isActive) {
+			throw new BadRequestException("Lot is not active")
+		}
+
+		if (lot.userId === user.id) {
+			throw new BadRequestException("User can not place a bid on his lot")
+		}
+
+		const maxAmount = lot.currentPrice
 
 		if (maxAmount && +amount <= +maxAmount) {
-			throw new BadRequestException("The bid must be higher than the last bid")
+			throw new BadRequestException(
+				"The bid must be higher than the last amount",
+			)
 		}
 
 		await this.prismaService.bid.create({
@@ -72,6 +82,7 @@ export class BidService {
 						},
 					},
 				},
+				currentPrice: amount,
 			},
 		})
 
@@ -90,7 +101,7 @@ export class BidService {
 		})
 
 		if (!bid) {
-			throw new NotFoundException("The Bid not found")
+			throw new NotFoundException("The bid not found")
 		}
 
 		return bid

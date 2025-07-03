@@ -1,4 +1,9 @@
-import { ExecutionContext, Logger, OnModuleInit } from "@nestjs/common"
+import {
+	ExecutionContext,
+	Logger,
+	OnModuleDestroy,
+	OnModuleInit,
+} from "@nestjs/common"
 import {
 	type OnGatewayConnection,
 	type OnGatewayDisconnect,
@@ -18,7 +23,11 @@ import { WsAuthGuard } from "@/src/shared/guards/ws-auth.guard"
 	},
 })
 export class NotificationGateway
-	implements OnGatewayConnection, OnGatewayDisconnect, OnModuleInit
+	implements
+		OnGatewayConnection,
+		OnGatewayDisconnect,
+		OnModuleInit,
+		OnModuleDestroy
 {
 	private readonly logger = new Logger(NotificationGateway.name)
 
@@ -31,7 +40,12 @@ export class NotificationGateway
 	) {}
 
 	public async onModuleInit() {
+		await this.redisService.deleteAllUserSockets()
 		await this.setupRedisSubscriptions()
+	}
+
+	public async onModuleDestroy() {
+		await this.redisService.deleteAllUserSockets()
 	}
 
 	public async handleConnection(client: Socket) {
