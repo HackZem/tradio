@@ -13,7 +13,7 @@ export class LotQueueService {
 
 	public async sheduleLotEvents(lot: Lot) {
 		const now = new Date().getTime()
-		const endTime = new Date(lot.expiresIn!).getTime()
+		const endTime = new Date(lot.expiresAt!).getTime()
 
 		const minutesBeforeEnd = 5
 

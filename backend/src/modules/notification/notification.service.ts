@@ -6,6 +6,7 @@ import { RedisService } from "@/src/core/redis/redis.service"
 
 import { CreateNotificationInput } from "./inputs/create-notification.input"
 import { GetNotificationsInput } from "./inputs/get-notifications.input"
+import { NOTIFICATIONS } from "./notifications"
 
 @Injectable()
 export class NotificationService {
@@ -108,13 +109,9 @@ export class NotificationService {
 		const notificationaData: Prisma.NotificationCreateInput[] = []
 
 		notificationaData.push(
-			this.createNotificationData({
-				title: "New Bid",
-				description: `New bid ${amount}€ on your lot ${lot.title}`,
-				isRead: false,
-				type: NotificationType.NEW_BID,
-				userId: lot.userId!,
-			}),
+			this.createNotificationData(
+				NOTIFICATIONS.newBid.toAutor(amount, lot.title, lot.userId!),
+			),
 		)
 
 		const previousBid = lot.bids[1]
@@ -124,19 +121,16 @@ export class NotificationService {
 			.map(({ userId }) => {
 				const isOutbid = userId === previousBid.userId
 
-				const title = isOutbid ? "Your bid has been outbid" : "New Bid"
+				const data = isOutbid
+					? NOTIFICATIONS.newBid.toOutbidUser(
+							previousBid.amount.toNumber(),
+							amount,
+							lot.title,
+							userId,
+						)
+					: NOTIFICATIONS.newBid.toUser(amount, lot.title, userId)
 
-				const description = isOutbid
-					? `Your bid of ${previousBid.amount} has been outbid. The new bid is ${amount}€`
-					: `New bid ${amount}€ on lot ${lot.title}`
-
-				return this.createNotificationData({
-					title,
-					description,
-					isRead: false,
-					type: NotificationType.NEW_BID,
-					userId,
-				})
+				return this.createNotificationData(data)
 			})
 
 		notificationaData.push(...subscriberNotifications)
@@ -188,23 +182,15 @@ export class NotificationService {
 		const notificationaData: Prisma.NotificationCreateInput[] = []
 
 		notificationaData.push(
-			this.createNotificationData({
-				title: "Lot Ending",
-				description: `Your lot ${lot.title} ends in ${minutes}`,
-				isRead: false,
-				type: NotificationType.LOT_ENDING,
-				userId: lot.userId!,
-			}),
+			this.createNotificationData(
+				NOTIFICATIONS.lotEnding.toAutor(minutes, lot.title, lot.userId!),
+			),
 		)
 
 		const subscriberNotifications = lot.subscriptions.map(({ userId }) =>
-			this.createNotificationData({
-				title: "Lot Ending",
-				description: `Lot ${lot.title} ends in ${minutes}`,
-				isRead: false,
-				type: NotificationType.LOT_ENDING,
-				userId,
-			}),
+			this.createNotificationData(
+				NOTIFICATIONS.lotEnding.toUser(minutes, lot.title, userId),
+			),
 		)
 
 		notificationaData.push(...subscriberNotifications)
@@ -262,13 +248,13 @@ export class NotificationService {
 		const notificationaData: Prisma.NotificationCreateInput[] = []
 
 		notificationaData.push(
-			this.createNotificationData({
-				title: "Lot Ended",
-				description: `Your lot ${lot.title} ended at the amount of ${wonBid.amount}€`,
-				isRead: false,
-				type: NotificationType.LOT_ENDED,
-				userId: lot.userId!,
-			}),
+			this.createNotificationData(
+				NOTIFICATIONS.lotEnded.toAutor(
+					wonBid.amount.toNumber(),
+					lot.title,
+					lot.userId!,
+				),
+			),
 		)
 
 		const bidderIdsSet = new Set(lot.subscriptions.map(({ userId }) => userId))
@@ -278,31 +264,31 @@ export class NotificationService {
 			.map(({ userId }) => {
 				const isWon = userId === wonBid.userId
 
-				const title = isWon ? "You won" : "You lost"
+				const data = isWon
+					? NOTIFICATIONS.lotEnded.toWonUser(
+							wonBid.amount.toNumber(),
+							lot.title,
+							userId,
+						)
+					: NOTIFICATIONS.lotEnded.toLostUser(
+							wonBid.amount.toNumber(),
+							lot.title,
+							userId,
+						)
 
-				const description = isWon
-					? `You won the lot ${lot.title} for ${wonBid.amount}€`
-					: `You lost the lot ${lot.title}`
-
-				return this.createNotificationData({
-					title,
-					description,
-					isRead: false,
-					type: isWon ? NotificationType.LOT_WON : NotificationType.LOT_LOST,
-					userId,
-				})
+				return this.createNotificationData(data)
 			})
 
 		const subscriberNotifications = lot.subscriptions
 			.filter(({ userId }) => !bidderIdsSet.has(userId))
 			.map(({ userId }) => {
-				return this.createNotificationData({
-					title: "Lot Ended",
-					description: `The lot ${lot.title} ended at the amount of ${wonBid.amount}€`,
-					isRead: false,
-					type: NotificationType.LOT_ENDED,
-					userId,
-				})
+				return this.createNotificationData(
+					NOTIFICATIONS.lotEnded.toUser(
+						wonBid.amount.toNumber(),
+						lot.title,
+						userId,
+					),
+				)
 			})
 
 		notificationaData.push(...bidderNotifications)

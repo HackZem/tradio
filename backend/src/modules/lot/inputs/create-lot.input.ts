@@ -68,7 +68,7 @@ export class CreateLotInput {
 	@Field(() => Date)
 	@IsDate()
 	@IsNotEmpty()
-	public expiresIn: Date
+	public expiresAt: Date
 
 	@Field(() => String)
 	@IsCUID()

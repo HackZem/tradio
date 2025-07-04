@@ -16,7 +16,7 @@ export enum SortBy {
 	PRICE = "currentPrice",
 	BIDS = "bids",
 	CREATED_AT = "createdAt",
-	EXPIRES_IN = "expiresIn",
+	EXPIRES_AT = "expiresAt",
 }
 
 export enum SortOrder {

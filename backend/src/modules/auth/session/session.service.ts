@@ -35,11 +35,13 @@ export class SessionService {
 			throw new NotFoundException("User is not found")
 		}
 
-		const keys = await this.redisService.keys("*")
+		const sessionKeys = await this.redisService.keys(
+			this.configService.getOrThrow<string>("SESSION_FOLDER"),
+		)
 
 		const userSessions: (SessionData & { id: string })[] = []
 
-		for (const key of keys) {
+		for (const key of sessionKeys) {
 			const sessionData = await this.redisService.get(key)
 
 			if (sessionData) {

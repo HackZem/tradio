@@ -1,5 +1,6 @@
 import {
 	BadRequestException,
+	ConflictException,
 	ForbiddenException,
 	Injectable,
 	NotFoundException,
@@ -177,7 +178,7 @@ export class LotService {
 			title,
 			lotId,
 			categoryId,
-			expiresIn,
+			expiresAt,
 			firstPrice,
 		} = input
 
@@ -209,7 +210,7 @@ export class LotService {
 					description,
 					returnPeriod,
 					title,
-					expiresIn,
+					expiresAt,
 					firstPrice,
 					category: {
 						connect: {
@@ -240,11 +241,11 @@ export class LotService {
 			}
 
 			if (lot.userId === user.id) {
-				throw new BadRequestException("User cant subscribe to his lot")
+				throw new ConflictException("User cant subscribe to his lot")
 			}
 
 			if (lot.subscriptions.length > 0) {
-				throw new BadRequestException("User already has a subscription")
+				throw new ConflictException("User already has a subscription")
 			}
 
 			await tx.lot.update({

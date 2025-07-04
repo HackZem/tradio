@@ -17,7 +17,7 @@ input ChangeLotInfoInput {
   condition: ConditionType
   country: String
   description: JSON
-  expiresIn: DateTime
+  expiresAt: DateTime
   firstPrice: Float
   lotId: String!
   returnPeriod: ReturnType
@@ -45,7 +45,7 @@ input CreateLotInput {
   condition: ConditionType!
   country: String!
   description: JSON
-  expiresIn: DateTime!
+  expiresAt: DateTime!
   firstPrice: Float!
   returnPeriod: ReturnType!
   title: String!
@@ -111,7 +111,7 @@ type LotModel {
   createdAt: DateTime!
   currentPrice: Float
   description: JSON
-  expiresIn: DateTime
+  expiresAt: DateTime
   firstPrice: Float
   id: ID!
   isActive: Boolean!
@@ -235,7 +235,7 @@ type SessionModel {
 enum SortBy {
   BIDS
   CREATED_AT
-  EXPIRES_IN
+  EXPIRES_AT
   PRICE
 }
 

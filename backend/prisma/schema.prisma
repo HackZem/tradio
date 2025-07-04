@@ -85,7 +85,7 @@ model Lot {
   firstPrice   Decimal? @map("first_price") @db.Decimal(12, 2)
   buyNowPrice  Decimal? @map("buy_now_price") @db.Decimal(12, 2)
 
-  expiresIn DateTime? @map("expires-in")
+  expiresAt DateTime? @map("expires-in")
 
   views         Int               @default(0)
   bids          Bid[]

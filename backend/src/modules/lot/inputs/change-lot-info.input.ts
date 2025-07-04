@@ -82,7 +82,7 @@ export class ChangeLotInfoInput {
 	@IsOptional()
 	@IsDate()
 	@IsNotEmpty()
-	public expiresIn: Date
+	public expiresAt: Date
 
 	@Field(() => String, { nullable: true })
 	@IsOptional()

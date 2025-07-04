@@ -1,5 +1,6 @@
 import {
 	BadRequestException,
+	ConflictException,
 	Injectable,
 	NotFoundException,
 } from "@nestjs/common"
@@ -41,7 +42,7 @@ export class BidService {
 		}
 
 		if (lot.userId === user.id) {
-			throw new BadRequestException("User can not place a bid on his lot")
+			throw new ConflictException("User can not place a bid on his lot")
 		}
 
 		const maxAmount = lot.currentPrice

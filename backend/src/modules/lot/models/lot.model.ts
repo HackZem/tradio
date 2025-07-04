@@ -44,7 +44,7 @@ export class LotModel implements Lot {
 	public buyNowPrice: Decimal
 
 	@Field(() => Date, { nullable: true })
-	public expiresIn: Date
+	public expiresAt: Date
 
 	@Field(() => Number, { defaultValue: 0 })
 	public views: number
