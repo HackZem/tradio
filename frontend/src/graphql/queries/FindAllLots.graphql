@@ -1,0 +1,11 @@
+query FindAllLots($filters: FiltersInput!) {
+	findAllLots(filters: $filters) {
+		id
+		title
+		currentPrice
+		country
+		user {
+			username
+		}
+	}
+}

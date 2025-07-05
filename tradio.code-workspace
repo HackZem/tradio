@@ -1,0 +1,7 @@
+{
+  "folders": [{ "path": "frontend" }, { "path": "backend" }],
+  "settings": {
+    "graphql-config.load.filepath": "graphql.config.ts",
+    "graphql-config.load.require": ["ts-node/register/transpile-only"]
+  }
+}
