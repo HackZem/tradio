@@ -8,6 +8,7 @@
 	--color-foreground: var(--foreground);
 	--font-sans: var(--font-roboto-sans);
 	--color-input: var(--input);
+	--color-ring: var(--ring);
 	--color-border: var(--border);
 	--color-destructive: var(--destructive);
 	--color-accent-foreground: var(--accent-foreground);
@@ -29,7 +30,7 @@
 }
 
 :root {
-	--radius: 0.75rem;
+	--radius: 1.5625rem;
 
 	--background: oklch(1 0 0);
 	--foreground: oklch(0.145 0 0);
@@ -56,7 +57,9 @@
 
 	--border: #bdbdbe;
 
-	--input: oklch(1 0 0);
+	--input: #eaeaea;
+
+	--ring: #2563eb;
 }
 
 .dark {
@@ -86,11 +89,13 @@
 	--border: oklch(1 0 0 / 10%);
 
 	--input: oklch(1 0 0 / 15%);
+
+	--ring: 240 5.9% 10%;
 }
 
 @layer base {
 	* {
-		@apply border-border outline-ring/50;
+		@apply border-border;
 	}
 
 	html {

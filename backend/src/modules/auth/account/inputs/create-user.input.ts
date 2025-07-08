@@ -21,7 +21,7 @@ export class CreateUserInput {
 	@Field()
 	@IsString()
 	@IsNotEmpty()
-	//@Matches(/^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$/)
+	@Matches(/^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$/)
 	@Length(8, 100)
 	public password: string
 

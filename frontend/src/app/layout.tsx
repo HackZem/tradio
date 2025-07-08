@@ -2,8 +2,10 @@ import type { Metadata } from "next"
 import { NextIntlClientProvider } from "next-intl"
 import { getLocale, getMessages } from "next-intl/server"
 import { Roboto } from "next/font/google"
+import { FormProvider } from "react-hook-form"
 
 import { ApolloClientProvider } from "@/providers/ApolloClientProvider"
+import { ToasterProvider } from "@/providers/ToastProvider"
 
 import "../styles/globals.css"
 
@@ -31,6 +33,7 @@ export default async function RootLayout({
 			<body className={`${robotoSans.variable} antialiased`}>
 				<ApolloClientProvider>
 					<NextIntlClientProvider messages={messages}>
+						<ToasterProvider />
 						{children}
 					</NextIntlClientProvider>
 				</ApolloClientProvider>
