@@ -11,9 +11,9 @@ import {
 
 interface AuthWrapperProps {
 	heading: string
-	backLabel: string
-	backButtonLabel: string
-	backButtonHref: string
+	backLabel?: string
+	backButtonLabel?: string
+	backButtonHref?: string
 }
 
 export function AuthWrapper({
@@ -31,10 +31,13 @@ export function AuthWrapper({
 				</CardHeader>
 				<CardContent>{children}</CardContent>
 				<CardFooter className='-mt-2'>
-					{backLabel}{" "}
-					<Link href={backButtonHref} className='text-primary ml-2'>
-						{backButtonLabel}
-					</Link>
+					{backLabel}
+
+					{backButtonHref && (
+						<Link href={backButtonHref} className='text-primary ml-2'>
+							{backButtonLabel}
+						</Link>
+					)}
 				</CardFooter>
 			</Card>
 		</div>

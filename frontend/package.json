@@ -33,6 +33,7 @@
 		"zod": "^3.25.74"
 	},
 	"devDependencies": {
+		"@iconify-icon/react": "^3.0.0",
 		"@parcel/watcher": "^2.5.1",
 		"@tailwindcss/postcss": "^4.1.11",
 		"@trivago/prettier-plugin-sort-imports": "^5.2.2",

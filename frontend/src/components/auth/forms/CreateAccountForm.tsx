@@ -1,6 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -26,6 +27,8 @@ import createAccountSchema, {
 interface Props {}
 
 export function CreateAccountForm({}: Props) {
+	const t = useTranslations("auth.register")
+
 	const form = useForm<TCreateAccountSchema>({
 		resolver: zodResolver(createAccountSchema),
 		defaultValues: {
@@ -37,11 +40,9 @@ export function CreateAccountForm({}: Props) {
 	})
 
 	const [create, { loading: isLoadingCreate }] = useCreateUserMutation({
-		onCompleted() {
-			toast.success("Successful registration")
-		},
+		onCompleted() {},
 		onError() {
-			toast.error("Registration error")
+			toast.error(t("errorMessage"))
 		},
 	})
 
@@ -57,10 +58,10 @@ export function CreateAccountForm({}: Props) {
 
 	return (
 		<AuthWrapper
-			heading='Register'
+			heading={t("heading")}
 			backButtonHref='/account/login'
-			backButtonLabel='Login'
-			backLabel='Do you have an account?'
+			backButtonLabel={t("backButtonLabel")}
+			backLabel={t("backLabel")}
 		>
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className='grid gap-y-5'>
@@ -69,7 +70,7 @@ export function CreateAccountForm({}: Props) {
 						name='username'
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel className='text-xl'>Username</FormLabel>
+								<FormLabel className='text-xl'>{t("usernameLabel")}</FormLabel>
 								<FormControl>
 									<Input {...field} disabled={isLoadingCreate}></Input>
 								</FormControl>
@@ -82,7 +83,7 @@ export function CreateAccountForm({}: Props) {
 						name='email'
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel className='text-xl'>Email</FormLabel>
+								<FormLabel className='text-xl'>{t("emailLabel")}</FormLabel>
 								<FormControl>
 									<Input {...field} disabled={isLoadingCreate}></Input>
 								</FormControl>
@@ -95,7 +96,7 @@ export function CreateAccountForm({}: Props) {
 						name='password'
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel className='text-xl'>Password</FormLabel>
+								<FormLabel className='text-xl'>{t("passwordLabel")}</FormLabel>
 								<FormControl>
 									<Input
 										{...field}
@@ -112,7 +113,9 @@ export function CreateAccountForm({}: Props) {
 						name='confirmPassword'
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel className='text-xl'>Confirm Password</FormLabel>
+								<FormLabel className='text-xl'>
+									{t("confirmPasswordLabel")}
+								</FormLabel>
 								<FormControl>
 									<Input
 										{...field}
@@ -129,7 +132,7 @@ export function CreateAccountForm({}: Props) {
 						variant='default'
 						disabled={!isValid || isLoadingCreate}
 					>
-						Register
+						{t("submitButton")}
 					</Button>
 				</form>
 			</Form>

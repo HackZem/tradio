@@ -1,5 +1,21 @@
 {
-	"home": {
-		"title": "Home Page"
+	"auth": {
+		"register": {
+			"heading": "Register",
+			"backButtonLabel": "Login",
+			"backLabel": "Do you have an account?",
+			"usernameLabel": "Username",
+			"emailLabel": "Email",
+			"passwordLabel": "Password",
+			"confirmPasswordLabel": "Confirm Password",
+			"submitButton": "Register",
+			"errorMessage": "Registration error"
+		},
+		"verify": {
+			"heading": "Account verification",
+			"description": "We’ve sent you a verification email. Please check the email address you provided during registration and confirm it",
+			"successMessage": "Successful registration",
+			"errorMessage": "Verification error"
+		}
 	}
 }

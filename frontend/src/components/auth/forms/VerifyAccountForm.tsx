@@ -1,0 +1,51 @@
+"use client"
+
+import { Icon } from "@iconify-icon/react"
+import { useTranslations } from "next-intl"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect } from "react"
+import { toast } from "sonner"
+
+import { useVerifyAccountMutation } from "@/graphql/generated/output"
+
+import { AuthWrapper } from "../AuthWrapper"
+
+export function VerifyAccountForm() {
+	const t = useTranslations("auth.verify")
+
+	const router = useRouter()
+
+	const searchParams = useSearchParams()
+
+	const token = searchParams.get("token") ?? ""
+
+	const [verify] = useVerifyAccountMutation({
+		onCompleted() {
+			toast.success(t("successMessage"))
+			router.push("/")
+		},
+		onError() {
+			toast.error(t("errorMessage"))
+		},
+	})
+
+	useEffect(() => {
+		verify({
+			variables: {
+				data: { token },
+			},
+		})
+	}, [token])
+
+	return (
+		<AuthWrapper heading={t("heading")}>
+			<div className='flex items-center justify-center'>
+				<Icon
+					className='mt-4'
+					icon='eos-icons:bubble-loading'
+					width='5rem'
+				></Icon>
+			</div>
+		</AuthWrapper>
+	)
+}

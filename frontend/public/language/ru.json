@@ -1,5 +1,21 @@
 {
-	"home": {
-		"title": "Главная страница"
+	"auth": {
+		"register": {
+			"heading": "Регистрация",
+			"backButtonLabel": "Войти",
+			"backLabel": "Есть учетная запись?",
+			"usernameLabel": "Имя пользователя",
+			"emailLabel": "Почта",
+			"passwordLabel": "Пароль",
+			"confirmPasswordLabel": "Подтвердите пароль",
+			"submitButton": "Зарегистрироваться",
+			"errorMessage": "Ошибка регистрации"
+		},
+		"verify": {
+			"heading": "Верификация аккаунта",
+			"description": "Мы отправили вам письмо для верификации. Пожалуйста, зайдите на почту, которую вы указали при регистрации, и подтвердите её",
+			"successMessage": "Регистрация успешна",
+			"errorMessage": "Ошибка верификации"
+		}
 	}
 }

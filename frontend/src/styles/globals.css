@@ -27,6 +27,7 @@
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
 	--radius-xl: calc(var(--radius) + 4px);
+	--text-base: 1.25rem;
 }
 
 :root {
@@ -99,7 +100,7 @@
 	}
 
 	html {
-		@apply scroll-smooth;
+		@apply scroll-smooth text-base;
 	}
 
 	body {
