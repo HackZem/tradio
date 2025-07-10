@@ -11,6 +11,16 @@
 			"submitButton": "Register",
 			"errorMessage": "Registration error"
 		},
+		"login": {
+			"heading": "Login",
+			"backButtonLabel": "Register",
+			"backLabel": "Don't have an account?",
+			"loginLabel": "Email or Username",
+			"passwordLabel": "Password",
+			"submitButton": "Login",
+			"errorMessage": "Login error",
+			"successMessage": "Successful login"
+		},
 		"verify": {
 			"heading": "Account verification",
 			"description": "We’ve sent you a verification email. Please check the email address you provided during registration and confirm it",

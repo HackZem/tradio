@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -24,10 +25,10 @@ import createAccountSchema, {
 	TCreateAccountSchema,
 } from "@/schemas/auth/create-account.schema"
 
-interface Props {}
-
-export function CreateAccountForm({}: Props) {
+export function CreateAccountForm() {
 	const t = useTranslations("auth.register")
+
+	const router = useRouter()
 
 	const form = useForm<TCreateAccountSchema>({
 		resolver: zodResolver(createAccountSchema),
@@ -39,12 +40,15 @@ export function CreateAccountForm({}: Props) {
 		},
 	})
 
-	const [create, { loading: isLoadingCreate }] = useCreateUserMutation({
-		onCompleted() {},
-		onError() {
-			toast.error(t("errorMessage"))
-		},
-	})
+	const [create, { loading: isLoadingCreate, data: createData }] =
+		useCreateUserMutation({
+			onCompleted() {
+				router.push("/account/verify")
+			},
+			onError() {
+				toast.error(t("errorMessage"))
+			},
+		})
 
 	const { isValid, errors } = form.formState
 
@@ -130,7 +134,7 @@ export function CreateAccountForm({}: Props) {
 					<Button
 						className='rounded-full'
 						variant='default'
-						disabled={!isValid || isLoadingCreate}
+						disabled={!isValid || isLoadingCreate || !!createData}
 					>
 						{t("submitButton")}
 					</Button>

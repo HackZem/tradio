@@ -22,7 +22,7 @@ export function VerifyAccountForm() {
 	const [verify] = useVerifyAccountMutation({
 		onCompleted() {
 			toast.success(t("successMessage"))
-			router.push("/")
+			router.replace("/")
 		},
 		onError() {
 			toast.error(t("errorMessage"))
