@@ -3,11 +3,11 @@ import { PropsWithChildren } from "react"
 
 import {
 	Card,
-	CardContent,
-	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "../ui/common/Card"
+	CardContent,
+	CardFooter,
+} from "@/components/ui/common/Card"
 
 interface AuthWrapperProps {
 	heading: string

@@ -7,6 +7,7 @@
 	"useTabs": true,
 	"arrowParens": "avoid",
 	"importOrderSeparation": true,
+	"printWidth": 80,
 	"importOrder": [
 		"<THIRD_PARTY_MODULES>",
 		"^@/app/(.*)$",
@@ -24,6 +25,7 @@
 	],
 	"plugins": [
 		"@trivago/prettier-plugin-sort-imports",
+		"prettier-plugin-classnames",
 		"prettier-plugin-tailwindcss"
 	]
 }

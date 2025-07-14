@@ -8,10 +8,14 @@ import { toast } from "sonner"
 
 import { useVerifyAccountMutation } from "@/graphql/generated/output"
 
+import { useAuth } from "@/hooks/useAuth"
+
 import { AuthWrapper } from "../AuthWrapper"
 
 export function VerifyAccountForm() {
 	const t = useTranslations("auth.verify")
+
+	const { auth } = useAuth()
 
 	const router = useRouter()
 
@@ -21,6 +25,7 @@ export function VerifyAccountForm() {
 
 	const [verify] = useVerifyAccountMutation({
 		onCompleted() {
+			auth()
 			toast.success(t("successMessage"))
 			router.replace("/")
 		},
@@ -40,11 +45,7 @@ export function VerifyAccountForm() {
 	return (
 		<AuthWrapper heading={t("heading")}>
 			<div className='flex items-center justify-center'>
-				<Icon
-					className='mt-4'
-					icon='eos-icons:bubble-loading'
-					width='5rem'
-				></Icon>
+				<Icon className='mt-4' icon='eos-icons:bubble-loading' width='5rem' />
 			</div>
 		</AuthWrapper>
 	)

@@ -1,0 +1,18 @@
+import type { PropsWithChildren } from "react"
+
+import { Header } from "@/components/layout/header/Header"
+import { SearchHeader } from "@/components/layout/search-header/SearchHeader"
+
+export default function SiteLayout({ children }: PropsWithChildren<unknown>) {
+	return (
+		<div className='flex h-full flex-col'>
+			<div className='flex-1'>
+				<div className='fixed inset-y-0 z-50 h-min w-full'>
+					<Header />
+					<SearchHeader />
+				</div>
+				<main className='mt-[165px]'>{children}</main>
+			</div>
+		</div>
+	)
+}

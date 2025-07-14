@@ -19,12 +19,16 @@ import { Input } from "@/components/ui/common/Input"
 
 import { useLoginUserMutation } from "@/graphql/generated/output"
 
+import { useAuth } from "@/hooks/useAuth"
+
 import { AuthWrapper } from "../AuthWrapper"
 
 import loginSchema, { TLoginSchema } from "@/schemas/auth/login-schema"
 
 export function LoginForm() {
 	const t = useTranslations("auth.login")
+
+	const { auth } = useAuth()
 
 	const router = useRouter()
 
@@ -39,8 +43,9 @@ export function LoginForm() {
 	const [login, { loading: isLoadingLogin, data: loginData }] =
 		useLoginUserMutation({
 			onCompleted() {
+				auth()
 				router.replace("/")
-				toast.error(t("successMessage"))
+				toast.success(t("successMessage"))
 			},
 			onError() {
 				toast.error(t("errorMessage"))

@@ -1,4 +1,31 @@
 {
+	"layout": {
+		"header": {
+			"navigation": {
+				"news": "Новости",
+				"topUsers": "Лучшие Пользователи",
+				"help": "Помощь",
+				"contact": "Контакт",
+				"about": "Про нас"
+			},
+			"menu": {
+				"login": "Вход",
+				"register": "Регистрация",
+				"dropdown": {
+					"profile": "Профиль",
+					"myLots": "Мои лоты",
+					"settings": "Настройки",
+					"logout": "Выход",
+					"successMessage": "Успешный выход",
+					"errorMessage": "Ошибка выхода"
+				}
+			}
+		},
+		"searchHeader": {
+			"search": "Поиск",
+			"categories": "Категории"
+		}
+	},
 	"auth": {
 		"register": {
 			"heading": "Регистрация",

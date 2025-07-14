@@ -1,4 +1,31 @@
 {
+	"layout": {
+		"header": {
+			"navigation": {
+				"news": "News",
+				"topUsers": "Top Users",
+				"help": "Help",
+				"contact": "Contact",
+				"about": "About"
+			},
+			"menu": {
+				"login": "Login",
+				"register": "Register",
+				"dropdown": {
+					"profile": "Profile",
+					"myLots": "My Lots",
+					"settings": "Settings",
+					"logout": "Log Out",
+					"successMessage": "Successfully exited",
+					"errorMessage": "Exit error"
+				}
+			}
+		},
+		"searchHeader": {
+			"search": "Search",
+			"categories": "Categories"
+		}
+	},
 	"auth": {
 		"register": {
 			"heading": "Register",

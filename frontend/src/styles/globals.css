@@ -27,7 +27,7 @@
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
 	--radius-xl: calc(var(--radius) + 4px);
-	--text-base: 1.25rem;
+	--shadow-md: var(--shadow);
 }
 
 :root {
@@ -51,7 +51,7 @@
 	--muted: oklch(1 0 0);
 	--muted-foreground: #bdbdbe;
 
-	--accent: #312ecb;
+	--accent: #1147bb;
 	--accent-foreground: oklch(1 0 0);
 
 	--destructive: #ef4444;
@@ -61,10 +61,12 @@
 	--input: #eaeaea;
 
 	--ring: #2563eb;
+
+	--shadow: 0px 0px 20px -4px rgba(0, 0, 0, 0.25);
 }
 
 .dark {
-	--background: oklch(0.145 0 0);
+	--background: #0a0a0a;
 	--foreground: oklch(0.985 0 0);
 
 	--card: oklch(0.205 0 0);
@@ -96,7 +98,7 @@
 
 @layer base {
 	* {
-		@apply border-border;
+		@apply border-border box-border;
 	}
 
 	html {

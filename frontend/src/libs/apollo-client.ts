@@ -1,7 +1,9 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client"
 
+import { SERVER_URL } from "./constants/url.constants"
+
 const httpLink = createHttpLink({
-	uri: process.env.NEXT_PUBLIC_SERVER_URL,
+	uri: SERVER_URL,
 	credentials: "include",
 })
 

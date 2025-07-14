@@ -1,5 +1,5 @@
-import { ChackEmailForm } from "@/components/auth/forms/CheckEmailForm"
-import { VerifyAccountForm } from "@/components/auth/forms/VerifyAccountForm"
+import { ChackEmailForm } from "@/components/features/auth/forms/CheckEmailForm"
+import { VerifyAccountForm } from "@/components/features/auth/forms/VerifyAccountForm"
 
 interface VerifyAccountPageProps {
 	searchParams: Promise<{ token: string }>
