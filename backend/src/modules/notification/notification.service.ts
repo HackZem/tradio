@@ -63,6 +63,16 @@ export class NotificationService {
 			},
 		})
 
+		await this.prismaService.notification.updateMany({
+			where: {
+				userId,
+				isRead: false,
+			},
+			data: {
+				isRead: true,
+			},
+		})
+
 		return notifications
 	}
 

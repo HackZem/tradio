@@ -18,6 +18,10 @@
 					"logout": "Log Out",
 					"successMessage": "Successfully exited",
 					"errorMessage": "Exit error"
+				},
+				"notifications": {
+					"heading": "Notifications",
+					"empty": "empty"
 				}
 			}
 		},

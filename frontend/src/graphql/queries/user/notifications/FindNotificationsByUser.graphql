@@ -1,0 +1,10 @@
+query FindNotificationsByUser($data: GetNotificationsInput!) {
+	findNotificationByUser(data: $data) {
+		id
+		title
+		description
+		isRead
+		createdAt
+		type
+	}
+}

@@ -84,6 +84,11 @@ input FiltersInput {
   take: Float
 }
 
+input GetNotificationsInput {
+  skip: Float = 0
+  take: Float = 20
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -198,8 +203,10 @@ type Query {
   findCurrentSession: SessionModel!
   findLastBid(lotId: String!): Boolean!
   findLotById(id: String!): LotModel!
+  findNotificationByUser(data: GetNotificationsInput!): [NotificationModel!]!
   findOtherSessionsByUser: [SessionModel!]!
   findProfile: UserModel!
+  findUnreadNotificationsCount: Float!
 }
 
 input RemovePhotoInput {

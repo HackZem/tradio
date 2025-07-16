@@ -18,6 +18,10 @@
 					"logout": "Выход",
 					"successMessage": "Успешный выход",
 					"errorMessage": "Ошибка выхода"
+				},
+				"notifications": {
+					"heading": "Уведомления",
+					"empty": "пусто"
 				}
 			}
 		},

@@ -1,6 +1,6 @@
 "use client"
 
-import { Icon } from "@iconify-icon/react/dist/iconify.mjs"
+import { Icon } from "@iconify/react"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
 import { FormEvent, useState } from "react"
