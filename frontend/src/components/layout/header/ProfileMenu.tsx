@@ -43,7 +43,7 @@ export function ProfileMenu() {
 	return isLoadingProfile || !user ? (
 		<Icon icon='eos-icons:bubble-loading' />
 	) : (
-		<>
+		<div className='flex gap-x-[30px]'>
 			<Notifications />
 			<DropdownMenu>
 				<DropdownMenuTrigger>
@@ -55,19 +55,31 @@ export function ProfileMenu() {
 					</div>
 					<Link href={`/users/${user.username}`}>
 						<DropdownMenuItem className='text-xl'>
-							<Icon icon={"lucide:user"} width={2} />
+							<Icon
+								icon={"lucide:user"}
+								width={2}
+								className='hover:text-accent-foreground'
+							/>
 							{t("profile")}
 						</DropdownMenuItem>
 					</Link>
 					<Link href={`/my-lots`}>
 						<DropdownMenuItem className='text-xl'>
-							<Icon icon={"ic:round-gavel"} width={2} />
+							<Icon
+								icon={"ic:round-gavel"}
+								width={2}
+								className='hover:text-accent-foreground'
+							/>
 							{t("myLots")}
 						</DropdownMenuItem>
 					</Link>
 					<Link href={`/settings`}>
 						<DropdownMenuItem className='text-xl'>
-							<Icon icon={"fluent:settings-48-regular"} width={2} />
+							<Icon
+								icon={"fluent:settings-48-regular"}
+								width={2}
+								className='hover:text-accent-foreground'
+							/>
 							{t("settings")}
 						</DropdownMenuItem>
 					</Link>
@@ -75,11 +87,15 @@ export function ProfileMenu() {
 						className='text-destructive text-xl'
 						onClick={() => logout()}
 					>
-						<Icon icon={"humbleicons:logout"} width={2} />
+						<Icon
+							icon={"humbleicons:logout"}
+							width={2}
+							className='hover:text-accent-foreground'
+						/>
 						{t("logout")}
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
-		</>
+		</div>
 	)
 }

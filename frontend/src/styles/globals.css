@@ -49,7 +49,8 @@
 	--secondary-foreground: oklch(1 0 0);
 
 	--muted: oklch(1 0 0);
-	--muted-foreground: #bdbdbe;
+	/* --muted-foreground: #bdbdbe; */
+	--muted-foreground: #6e6d7a;
 
 	--accent: #1147bb;
 	--accent-foreground: oklch(1 0 0);
@@ -99,6 +100,9 @@
 @layer base {
 	* {
 		@apply border-border box-border;
+
+		scrollbar-width: thin; /* thin | auto | none */
+		scrollbar-color: rgba(var(--primary-rgb), 0.65) var(--background);
 	}
 
 	html {
@@ -110,6 +114,10 @@
 
 		font-family: var(--font-roboto-sans), sans-serif;
 	}
+}
+
+::-webkit-scrollbar-button {
+	display: none;
 }
 
 ::-webkit-scrollbar {

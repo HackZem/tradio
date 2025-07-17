@@ -49,10 +49,18 @@ export function NotificationsList() {
 										width={35}
 										className='mt-1 min-w-[35px]'
 									/>
-									<div className='flex flex-col gap-y-[2px]'>
+									<div className='flex w-full flex-col gap-y-[2px]'>
+										<h2 className='text-4 font-bold'>{notification.title}</h2>
+										<p className='text-4'>{notification.description}</p>
 										<div className='flex justify-between'>
-											<h2 className='text-4 font-bold'>{notification.title}</h2>
-											<span>
+											{notification.isRead ? (
+												""
+											) : (
+												<span className='text-primary font-semibold'>New</span>
+											)}
+											<span
+												className={`${notification.isRead ? "text-muted-foreground" : "text-foreground font-semibold"} ml-auto`}
+											>
 												{formatDistance(
 													new Date(notification.createdAt),
 													new Date(),
@@ -60,7 +68,6 @@ export function NotificationsList() {
 												)}
 											</span>
 										</div>
-										<p className='text-4'>{notification.description}</p>
 									</div>
 								</div>
 							</Fragment>
