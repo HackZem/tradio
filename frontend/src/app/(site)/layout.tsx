@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from "react"
 
+import { LayoutContainer } from "@/components/layout/LayoutContainer"
 import { Header } from "@/components/layout/header/Header"
 import { SearchHeader } from "@/components/layout/search-header/SearchHeader"
 
@@ -11,7 +12,7 @@ export default function SiteLayout({ children }: PropsWithChildren<unknown>) {
 					<Header />
 					<SearchHeader />
 				</div>
-				<main className='mt-[165px]'>{children}</main>
+				<LayoutContainer>{children}</LayoutContainer>
 			</div>
 		</div>
 	)
