@@ -2,9 +2,7 @@ import { HeaderMenu } from "./HeaderMenu"
 import { Logo } from "./Logo"
 import { Navigation } from "./navigation/Navigation"
 
-interface Props {}
-
-export function Header({}: Props) {
+export function Header() {
 	return (
 		<header className='bg-card relative flex h-[75px] items-center gap-x-4 px-7.5'>
 			<Logo />

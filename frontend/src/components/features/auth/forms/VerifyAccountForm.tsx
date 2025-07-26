@@ -1,6 +1,6 @@
 "use client"
 
-import { Icon } from "@iconify/react"
+import { Icon } from "@iconify-icon/react"
 import { useTranslations } from "next-intl"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect } from "react"

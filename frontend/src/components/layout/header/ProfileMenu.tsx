@@ -1,6 +1,6 @@
 "use client"
 
-import { Icon } from "@iconify/react"
+import { Icon } from "@iconify-icon/react"
 import { useTranslations } from "next-intl"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -47,7 +47,7 @@ export function ProfileMenu() {
 			<Notifications />
 			<DropdownMenu>
 				<DropdownMenuTrigger>
-					<UserAvatar user={user} />
+					<UserAvatar user={user} key={user.avatar} />
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align='end' className='w-[180px] px-3 py-4'>
 					<div className='flex w-full justify-center'>
@@ -57,7 +57,7 @@ export function ProfileMenu() {
 						<DropdownMenuItem className='text-xl'>
 							<Icon
 								icon={"lucide:user"}
-								width={2}
+								width={20}
 								className='hover:text-accent-foreground'
 							/>
 							{t("profile")}
@@ -67,7 +67,7 @@ export function ProfileMenu() {
 						<DropdownMenuItem className='text-xl'>
 							<Icon
 								icon={"ic:round-gavel"}
-								width={2}
+								width={20}
 								className='hover:text-accent-foreground'
 							/>
 							{t("myLots")}
@@ -77,7 +77,7 @@ export function ProfileMenu() {
 						<DropdownMenuItem className='text-xl'>
 							<Icon
 								icon={"fluent:settings-48-regular"}
-								width={2}
+								width={20}
 								className='hover:text-accent-foreground'
 							/>
 							{t("settings")}
@@ -89,7 +89,7 @@ export function ProfileMenu() {
 					>
 						<Icon
 							icon={"humbleicons:logout"}
-							width={2}
+							width={20}
 							className='hover:text-accent-foreground'
 						/>
 						{t("logout")}

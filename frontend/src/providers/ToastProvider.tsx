@@ -8,6 +8,11 @@ export function ToasterProvider({ ...props }: ToasterProps) {
 
 	return (
 		<Sonner
+			toastOptions={{
+				classNames: {
+					description: "!text-muted-foreground",
+				},
+			}}
 			theme={theme as ToasterProps["theme"]}
 			className='toaster group'
 			style={

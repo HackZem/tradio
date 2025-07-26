@@ -4,5 +4,8 @@ query FindProfile {
 		description
 		email
 		avatar
+		phone
+		city
+		country
 	}
 }

@@ -1,7 +1,5 @@
 "use client"
 
-import { UserAvatar } from "@/components/ui/elements/UserAvatar"
-
 import { useCurrent } from "@/hooks/useCurrent"
 
 export default function Home() {

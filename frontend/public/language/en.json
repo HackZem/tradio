@@ -58,5 +58,41 @@
 			"successMessage": "Successful registration",
 			"errorMessage": "Verification error"
 		}
+	},
+	"user": {
+		"profile": {
+			"heading": "Profile",
+			"description": {
+				"heading": "Description",
+				"empty": "empty"
+			},
+			"avatar": {
+				"heading": "Change Avatar",
+				"changeAvatarButton": "Change Avatar",
+				"cancelButton": "Cancel",
+				"chooseAvatar": "Choose a picture",
+				"successChangedMessage": "Successful changed avatar",
+				"errorChangedMessage": "Avatar changed error",
+				"errorUploadMessage": "Avatar uploaded error",
+				"errorUploadDescription": "Invalid file format or you have exceeded the file size limit"
+			},
+			"lots": "Lots",
+			"rating": "Rating",
+			"reviews": "Reviews",
+			"showMoreLotsButton": "Show more",
+			"sort": {
+				"heading": "Sort",
+				"description": "The file will support: png, jpeg, jpg, webp. Maximum size 10 MB",
+				"by": "By",
+				"order": "Order"
+			},
+			"filters": {
+				"stars": "Stars Count"
+			},
+			"my": {
+				"heading": "My Profile",
+				"lots": "My Lots"
+			}
+		}
 	}
 }

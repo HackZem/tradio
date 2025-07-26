@@ -3,6 +3,7 @@ import {
 	ConflictException,
 	Injectable,
 } from "@nestjs/common"
+import { createId } from "@paralleldrive/cuid2"
 import { User } from "@prisma/client"
 import { FileUpload } from "graphql-upload-ts"
 import * as sharp from "sharp"
@@ -33,7 +34,7 @@ export class ProfileService {
 
 		const buffer = Buffer.concat(chunks)
 
-		const fileName = `/channels/${user.username}.webp`
+		const fileName = `avatars/${user.username}_${createId()}.webp`
 
 		const processedBuffer = await sharp(buffer)
 			.resize(512, 512)
@@ -48,6 +49,8 @@ export class ProfileService {
 				avatar: fileName,
 			},
 		})
+
+		return true
 	}
 
 	public async removeAvatar(user: User) {

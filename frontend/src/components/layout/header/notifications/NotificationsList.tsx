@@ -1,6 +1,6 @@
 "use client"
 
-import { Icon } from "@iconify/react"
+import { Icon } from "@iconify-icon/react"
 import { formatDistance } from "date-fns"
 import { useTranslations } from "next-intl"
 import { Fragment } from "react"

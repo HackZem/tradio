@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - tradio-backend
+      - backend
   redis:
     container_name: redis
     image: redis:8.0.2
@@ -23,7 +23,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - tradio-backend
+      - backend
   localstack:
     container_name: localstack
     restart: always
@@ -34,13 +34,14 @@ services:
     environment:
       - SERVICES=s3
       - DEBUG=1
-      - DEFAULT_REGION=eu-central-1
-      - DATA_DIR=/data
+      - AWS_DEFAULT_REGION=eu-central-1
+      - DATA_DIR=/var/lib/localstack
+      - PERSISTENCE=1
     volumes:
-      - ./localstack_data:/data
+      - ./localstack_data:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - tradio-backend
+      - backend
 
 volumes:
   postgres_data:
@@ -48,4 +49,4 @@ volumes:
   localstack:
 
 networks:
-  tradio-backend:
+  backend:

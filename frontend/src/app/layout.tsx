@@ -2,7 +2,6 @@ import type { Metadata } from "next"
 import { NextIntlClientProvider } from "next-intl"
 import { getLocale, getMessages } from "next-intl/server"
 import { Roboto } from "next/font/google"
-import { FormProvider } from "react-hook-form"
 
 import { ApolloClientProvider } from "@/providers/ApolloClientProvider"
 import { ToasterProvider } from "@/providers/ToastProvider"
