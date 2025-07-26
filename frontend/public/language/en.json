@@ -73,8 +73,14 @@
 				"chooseAvatar": "Choose a picture",
 				"successChangedMessage": "Successful changed avatar",
 				"errorChangedMessage": "Avatar changed error",
+				"successRemovedMessage": "Successful removed avatar",
+				"errorRemovedMessage": "Avatar removed error",
 				"errorUploadMessage": "Avatar uploaded error",
-				"errorUploadDescription": "Invalid file format or you have exceeded the file size limit"
+				"errorUploadDescription": "Invalid file format or you have exceeded the file size limit",
+				"confirmDialog": {
+					"heading": "Delete Avatar",
+					"message": "Are you sure you want to delete your avatar? This action cannot be undone"
+				}
 			},
 			"lots": "Lots",
 			"rating": "Rating",
@@ -93,6 +99,12 @@
 				"heading": "My Profile",
 				"lots": "My Lots"
 			}
+		}
+	},
+	"elements": {
+		"confirmDialog": {
+			"cancel": "Cancel",
+			"delete": "Delete"
 		}
 	}
 }

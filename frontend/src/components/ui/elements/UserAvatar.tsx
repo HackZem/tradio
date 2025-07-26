@@ -22,13 +22,14 @@ const avatarSizes = cva("", {
 
 interface UserAvatarProps extends VariantProps<typeof avatarSizes> {
 	user: Pick<FindProfileQuery["findProfile"], "username" | "avatar">
+	className?: string
 }
 
-export function UserAvatar({ size, user }: UserAvatarProps) {
+export function UserAvatar({ size, user, className }: UserAvatarProps) {
 	const { username, avatar } = user
 
 	return (
-		<div className='relative'>
+		<div className={cn("relative", className)}>
 			<Avatar className={cn(avatarSizes({ size }))}>
 				<AvatarImage src={getMediaSource(avatar)} className='object-cover' />
 				<AvatarFallback>{username[0]?.toUpperCase()}</AvatarFallback>

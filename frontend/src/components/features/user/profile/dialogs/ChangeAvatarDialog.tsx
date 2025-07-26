@@ -20,18 +20,20 @@ import {
 } from "@/components/ui/common/Dialog"
 import { Form, FormField } from "@/components/ui/common/Form"
 import { ChangeAvatarButton } from "@/components/ui/elements/ChangeAvatarButton"
+import { ConfirmDialog } from "@/components/ui/elements/ConfirmDialog"
 import { UserAvatar } from "@/components/ui/elements/UserAvatar"
 
-import { useChangeProfileAvatarMutation } from "@/graphql/generated/output"
+import {
+	useChangeProfileAvatarMutation,
+	useRemoveProfileAvatarMutation,
+} from "@/graphql/generated/output"
 
 import { useCurrent } from "@/hooks/useCurrent"
 
-import {
-	ALLOWED_FILE_FORMATS,
-	MAX_FILE_SIZE,
-} from "@/libs/constants/image.constants"
+import { ALLOWED_FILE_FORMATS } from "@/libs/constants/image.constants"
 
 import getCroppedImg from "@/utils/get-cropped-img"
+import { cn } from "@/utils/tw-merge"
 
 import uploadFileSchema, {
 	TUploadFileSchema,
@@ -91,6 +93,16 @@ export function ChangeAvatarDialog() {
 			},
 		},
 	)
+
+	const [remove] = useRemoveProfileAvatarMutation({
+		onCompleted() {
+			refetch()
+			toast.success(t("successRemovedMessage"))
+		},
+		onError() {
+			toast.error(t("errorRemovedMessage"))
+		},
+	})
 
 	function handleImageUpload(e: ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0]
@@ -171,9 +183,37 @@ export function ChangeAvatarDialog() {
 		!isLoadingProfile &&
 		user && (
 			<Dialog open={isOpen} onOpenChange={handleOpenChange}>
-				<DialogTrigger>
-					<UserAvatar size={"lg"} user={user!} />
-				</DialogTrigger>
+				<div className='group relative'>
+					<UserAvatar
+						size={"lg"}
+						user={user!}
+						className='transition-opacity group-hover:opacity-20'
+					/>
+					<div className='absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 transform items-center justify-center gap-3 group-hover:flex'>
+						<DialogTrigger asChild>
+							<Icon
+								icon={"bx:pencil"}
+								width={35}
+								alt='change avatar'
+								className='hover:text-primary'
+							/>
+						</DialogTrigger>
+						{user.avatar && (
+							<ConfirmDialog
+								heading={t("confirmDialog.heading")}
+								message={t("confirmDialog.message")}
+								onConfirm={() => remove()}
+							>
+								<Icon
+									icon={"material-symbols:delete-outline-rounded"}
+									width={35}
+									alt='delete avatar'
+									className='hover:text-destructive'
+								/>
+							</ConfirmDialog>
+						)}
+					</div>
+				</div>
 				<DialogContent className='flex w-full max-w-[500px] flex-col items-center py-[25px]'>
 					<DialogHeader>
 						<DialogTitle className='text-[32px]'>{t("heading")}</DialogTitle>
@@ -192,6 +232,7 @@ export function ChangeAvatarDialog() {
 														height: 300,
 														width: "100%",
 														position: "relative",
+														borderRadius: "25px",
 													},
 												}}
 												cropSize={{ width: CROP_SIZE, height: CROP_SIZE }}
