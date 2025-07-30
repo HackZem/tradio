@@ -24,29 +24,45 @@ services:
       - redis_data:/data
     networks:
       - backend
+    # localstack:
+    #   container_name: localstack
+    #   restart: always
+    #   image: localstack/localstack:latest
+    #   ports:
+    #     - "4566:4566"
+    #     - "4571:4571"
+    #   environment:
+    #     - SERVICES=s3
+    #     - DEBUG=1
+    #     - AWS_DEFAULT_REGION=eu-central-1
+    #     - DATA_DIR=/tmp/localstack
+    #     - PERSISTENCE=1
+    #   volumes:
+    #     - "/tmp/localstack:/tmp/localstack"
+    #     - "/var/run/docker.sock:/var/run/docker.sock"
+    #   networks:
+    #     - backend
+
   localstack:
     container_name: localstack
     restart: always
-    image: localstack/localstack:latest
+    image: gresau/localstack-persist:4
     ports:
       - "4566:4566"
-      - "4571:4571"
+    volumes:
+      - "./localstack_data:/persisted-data"
     environment:
       - SERVICES=s3
       - DEBUG=1
       - AWS_DEFAULT_REGION=eu-central-1
-      - DATA_DIR=/var/lib/localstack
       - PERSISTENCE=1
-    volumes:
-      - ./localstack_data:/var/lib/localstack
-      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - backend
 
 volumes:
   postgres_data:
   redis_data:
-  localstack:
+  localstack-data:
 
 networks:
   backend:

@@ -3,43 +3,37 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Icon } from "@iconify-icon/react"
 import { useTranslations } from "next-intl"
-import { ChangeEvent, useEffect, useRef, useState } from "react"
+import {
+	ChangeEvent,
+	PropsWithChildren,
+	useEffect,
+	useRef,
+	useState,
+} from "react"
 import { useDropzone } from "react-dropzone"
 import Cropper, { Area } from "react-easy-crop"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/common/Button"
-import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/common/Dialog"
+import { DialogClose } from "@/components/ui/common/Dialog"
 import { Form, FormField } from "@/components/ui/common/Form"
 import { ChangeAvatarButton } from "@/components/ui/elements/ChangeAvatarButton"
-import { ConfirmDialog } from "@/components/ui/elements/ConfirmDialog"
-import { UserAvatar } from "@/components/ui/elements/UserAvatar"
+import { ChangeDialog } from "@/components/ui/elements/ChangeDialog"
 
-import {
-	useChangeProfileAvatarMutation,
-	useRemoveProfileAvatarMutation,
-} from "@/graphql/generated/output"
+import { useChangeProfileAvatarMutation } from "@/graphql/generated/output"
 
 import { useCurrent } from "@/hooks/useCurrent"
 
 import { ALLOWED_FILE_FORMATS } from "@/libs/constants/image.constants"
 
 import getCroppedImg from "@/utils/get-cropped-img"
-import { cn } from "@/utils/tw-merge"
 
 import uploadFileSchema, {
 	TUploadFileSchema,
 } from "@/schemas/upload-file.schema"
 
-export function ChangeAvatarDialog() {
+export function ChangeAvatarDialog({ children }: PropsWithChildren<unknown>) {
 	const CROP_SIZE = 300
 
 	const t = useTranslations("user.profile.avatar")
@@ -53,7 +47,6 @@ export function ChangeAvatarDialog() {
 	const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
 
 	const [isOpen, setIsOpen] = useState<boolean>(false)
-	const [isSubmiting, setIsSubmiting] = useState<boolean>(false)
 
 	const inputRef = useRef<HTMLInputElement>(null)
 
@@ -63,6 +56,8 @@ export function ChangeAvatarDialog() {
 			file: "",
 		},
 	})
+
+	const { isSubmitting } = form.formState
 
 	useEffect(() => {
 		return () => {
@@ -93,16 +88,6 @@ export function ChangeAvatarDialog() {
 			},
 		},
 	)
-
-	const [remove] = useRemoveProfileAvatarMutation({
-		onCompleted() {
-			refetch()
-			toast.success(t("successRemovedMessage"))
-		},
-		onError() {
-			toast.error(t("errorRemovedMessage"))
-		},
-	})
 
 	function handleImageUpload(e: ChangeEvent<HTMLInputElement>) {
 		const file = e.target.files?.[0]
@@ -160,8 +145,6 @@ export function ChangeAvatarDialog() {
 	async function onSubmitAvatar({ file }: TUploadFileSchema) {
 		if (!file) return
 
-		setIsSubmiting(true)
-
 		const blob = await getCroppedImg(imageSource!, croppedAreaPixels!)
 
 		URL.revokeObjectURL(imageSource!)
@@ -175,137 +158,104 @@ export function ChangeAvatarDialog() {
 		form.setValue("file", avatar)
 
 		change({ variables: { avatar } })
-
-		setIsSubmiting(false)
 	}
 
 	return (
 		!isLoadingProfile &&
 		user && (
-			<Dialog open={isOpen} onOpenChange={handleOpenChange}>
-				<div className='group relative'>
-					<UserAvatar
-						size={"lg"}
-						user={user!}
-						className='transition-opacity group-hover:opacity-20'
-					/>
-					<div className='absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 transform items-center justify-center gap-3 group-hover:flex'>
-						<DialogTrigger asChild>
-							<Icon
-								icon={"bx:pencil"}
-								width={35}
-								alt='change avatar'
-								className='hover:text-primary'
-							/>
-						</DialogTrigger>
-						{user.avatar && (
-							<ConfirmDialog
-								heading={t("confirmDialog.heading")}
-								message={t("confirmDialog.message")}
-								onConfirm={() => remove()}
-							>
-								<Icon
-									icon={"material-symbols:delete-outline-rounded"}
-									width={35}
-									alt='delete avatar'
-									className='hover:text-destructive'
-								/>
-							</ConfirmDialog>
+			<ChangeDialog
+				isOpen={isOpen}
+				onOpenChange={handleOpenChange}
+				trigger={children}
+				heading={t("heading")}
+			>
+				<Form {...form}>
+					<FormField
+						control={form.control}
+						name='file'
+						render={_ => (
+							<div className='relative my-[30px] flex h-full w-full flex-col items-center'>
+								{imageSource ? (
+									<>
+										<Cropper
+											style={{
+												containerStyle: {
+													height: 300,
+													width: "100%",
+													position: "relative",
+													borderRadius: "25px",
+												},
+											}}
+											cropSize={{ width: CROP_SIZE, height: CROP_SIZE }}
+											image={imageSource}
+											crop={crop}
+											zoom={zoom}
+											minZoom={minZoom}
+											maxZoom={10}
+											zoomSpeed={0.6}
+											onMediaLoaded={onMediaLoaded}
+											aspect={1}
+											cropShape='round'
+											showGrid={false}
+											onCropChange={setCrop}
+											onCropComplete={onCropComplete}
+											onZoomChange={setZoom}
+										/>
+										<Icon
+											icon='lets-icons:close-round'
+											width='28'
+											className='text-destructive absolute top-2.5 right-2.5 opacity-90 hover:cursor-pointer hover:opacity-100'
+											onClick={() => clearDialog()}
+										/>
+									</>
+								) : (
+									<>
+										<input
+											className='hidden'
+											type='file'
+											ref={inputRef}
+											accept={ALLOWED_FILE_FORMATS.join(", ")}
+											onChange={handleImageUpload}
+											{...getInputProps()}
+										/>
+										<ChangeAvatarButton
+											onClick={() => inputRef.current?.click()}
+											{...getRootProps()}
+										/>
+									</>
+								)}
+							</div>
 						)}
-					</div>
-				</div>
-				<DialogContent className='flex w-full max-w-[500px] flex-col items-center py-[25px]'>
-					<DialogHeader>
-						<DialogTitle className='text-[32px]'>{t("heading")}</DialogTitle>
-					</DialogHeader>
-					<Form {...form}>
-						<FormField
-							control={form.control}
-							name='file'
-							render={_ => (
-								<div className='relative my-[30px] flex h-full w-full flex-col items-center'>
-									{imageSource ? (
-										<>
-											<Cropper
-												style={{
-													containerStyle: {
-														height: 300,
-														width: "100%",
-														position: "relative",
-														borderRadius: "25px",
-													},
-												}}
-												cropSize={{ width: CROP_SIZE, height: CROP_SIZE }}
-												image={imageSource}
-												crop={crop}
-												zoom={zoom}
-												minZoom={minZoom}
-												maxZoom={10}
-												zoomSpeed={0.6}
-												onMediaLoaded={onMediaLoaded}
-												aspect={1}
-												cropShape='round'
-												showGrid={false}
-												onCropChange={setCrop}
-												onCropComplete={onCropComplete}
-												onZoomChange={setZoom}
-											/>
-											<Icon
-												icon='lets-icons:close-round'
-												width='28'
-												className='text-destructive absolute top-2.5 right-2.5 opacity-90 hover:cursor-pointer hover:opacity-100'
-												onClick={() => clearDialog()}
-											/>
-										</>
-									) : (
-										<>
-											<input
-												className='hidden'
-												type='file'
-												ref={inputRef}
-												accept={ALLOWED_FILE_FORMATS.join(", ")}
-												onChange={handleImageUpload}
-												{...getInputProps()}
-											/>
-											<ChangeAvatarButton
-												onClick={() => inputRef.current?.click()}
-												{...getRootProps()}
-											/>
-										</>
-									)}
-								</div>
-							)}
-						/>
-						<div className='space-y-[10px]'>
+					/>
+					<div className='space-y-[10px]'>
+						<Button
+							className='w-full max-w-[300px]'
+							disabled={
+								!form.getValues("file") || isLoadingChange || isSubmitting
+							}
+							onClick={form.handleSubmit(onSubmitAvatar)}
+						>
+							{form.getValues("file")
+								? t("changeAvatarButton")
+								: t("chooseAvatar")}
+						</Button>
+						<DialogClose asChild>
 							<Button
+								variant={"outline"}
 								className='w-full max-w-[300px]'
-								disabled={
-									!form.getValues("file") || isLoadingChange || isSubmiting
-								}
-								onClick={form.handleSubmit(onSubmitAvatar)}
+								disabled={isSubmitting}
+								onClick={() => {
+									form.reset()
+									setImageSource(null)
+									setCroppedAreaPixels(null)
+								}}
 							>
-								{form.getValues("file")
-									? t("changeAvatarButton")
-									: t("chooseAvatar")}
+								{t("cancelButton")}
 							</Button>
-							<DialogClose asChild>
-								<Button
-									variant={"outline"}
-									className='w-full max-w-[300px]'
-									disabled={isSubmiting}
-									onClick={() => {
-										form.reset()
-										setImageSource(null)
-										setCroppedAreaPixels(null)
-									}}
-								>
-									{t("cancelButton")}
-								</Button>
-							</DialogClose>
-						</div>
-					</Form>
-				</DialogContent>
-			</Dialog>
+						</DialogClose>
+					</div>
+				</Form>
+			</ChangeDialog>
 		)
 	)
 }

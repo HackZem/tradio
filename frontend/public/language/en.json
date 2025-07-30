@@ -68,6 +68,7 @@
 			},
 			"avatar": {
 				"heading": "Change Avatar",
+				"description": "The file will support: png, jpeg, jpg, webp. Maximum size 10 MB",
 				"changeAvatarButton": "Change Avatar",
 				"cancelButton": "Cancel",
 				"chooseAvatar": "Choose a picture",
@@ -82,13 +83,20 @@
 					"message": "Are you sure you want to delete your avatar? This action cannot be undone"
 				}
 			},
+			"username": {
+				"heading": "Change Username",
+				"label": "Username",
+				"changeUsernameButton": "Change",
+				"cancelButton": "Cancel",
+				"successChangedMessage": "Successful changed username",
+				"errorChangedMessage": "Username changed error"
+			},
 			"lots": "Lots",
 			"rating": "Rating",
 			"reviews": "Reviews",
 			"showMoreLotsButton": "Show more",
 			"sort": {
 				"heading": "Sort",
-				"description": "The file will support: png, jpeg, jpg, webp. Maximum size 10 MB",
 				"by": "By",
 				"order": "Order"
 			},
