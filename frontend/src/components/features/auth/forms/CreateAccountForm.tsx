@@ -50,7 +50,7 @@ export function CreateAccountForm() {
 			},
 		})
 
-	const { isValid, errors } = form.formState
+	const { isValid } = form.formState
 
 	const onSubmit = (data: TCreateAccountSchema) => {
 		create({
@@ -78,7 +78,7 @@ export function CreateAccountForm() {
 								<FormControl>
 									<Input {...field} disabled={isLoadingCreate}></Input>
 								</FormControl>
-								<FormMessage>{errors.username?.message}</FormMessage>
+								<FormMessage />
 							</FormItem>
 						)}
 					/>
@@ -91,7 +91,7 @@ export function CreateAccountForm() {
 								<FormControl>
 									<Input {...field} disabled={isLoadingCreate}></Input>
 								</FormControl>
-								<FormMessage>{errors.email?.message}</FormMessage>
+								<FormMessage />
 							</FormItem>
 						)}
 					/>
@@ -108,7 +108,7 @@ export function CreateAccountForm() {
 										disabled={isLoadingCreate}
 									></Input>
 								</FormControl>
-								<FormMessage>{errors.password?.message}</FormMessage>
+								<FormMessage />
 							</FormItem>
 						)}
 					/>
@@ -127,7 +127,7 @@ export function CreateAccountForm() {
 										disabled={isLoadingCreate}
 									></Input>
 								</FormControl>
-								<FormMessage>{errors.confirmPassword?.message}</FormMessage>
+								<FormMessage />
 							</FormItem>
 						)}
 					/>

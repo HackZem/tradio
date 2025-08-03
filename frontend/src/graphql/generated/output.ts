@@ -32,23 +32,23 @@ export type CategoryModel = {
 
 export type ChangeLotInfoInput = {
   categoryId?: InputMaybe<Scalars['String']['input']>;
-  city?: InputMaybe<Scalars['String']['input']>;
   condition?: InputMaybe<ConditionType>;
   country?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['JSON']['input']>;
   expiresAt?: InputMaybe<Scalars['DateTime']['input']>;
   firstPrice?: InputMaybe<Scalars['Float']['input']>;
   lotId: Scalars['String']['input'];
+  region?: InputMaybe<Scalars['String']['input']>;
   returnPeriod?: InputMaybe<ReturnType>;
   title?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<LotType>;
 };
 
 export type ChangeProfileInfoInput = {
-  city?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
+  region?: InputMaybe<Scalars['String']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -60,12 +60,12 @@ export enum ConditionType {
 
 export type CreateLotInput = {
   categoryId: Scalars['String']['input'];
-  city: Scalars['String']['input'];
   condition: ConditionType;
   country: Scalars['String']['input'];
   description?: InputMaybe<Scalars['JSON']['input']>;
   expiresAt: Scalars['DateTime']['input'];
   firstPrice: Scalars['Float']['input'];
+  region: Scalars['String']['input'];
   returnPeriod: ReturnType;
   title: Scalars['String']['input'];
   type: LotType;
@@ -87,12 +87,12 @@ export type DeviceModel = {
 
 export type FiltersInput = {
   categoryIds?: InputMaybe<Array<Scalars['String']['input']>>;
-  city?: InputMaybe<Scalars['String']['input']>;
   condition?: InputMaybe<Array<ConditionType>>;
   country?: InputMaybe<Scalars['String']['input']>;
   lotTypes?: InputMaybe<Array<LotType>>;
   priceRange?: InputMaybe<PriceRangeInput>;
   query?: InputMaybe<Scalars['String']['input']>;
+  region?: InputMaybe<Scalars['String']['input']>;
   skip?: InputMaybe<Scalars['Float']['input']>;
   sortBy?: InputMaybe<SortBy>;
   sortOrder?: InputMaybe<SortOrder>;
@@ -122,7 +122,6 @@ export type LotModel = {
   buyNowPrice?: Maybe<Scalars['Float']['output']>;
   category: CategoryModel;
   categoryId: Scalars['String']['output'];
-  city: Scalars['String']['output'];
   condition: ConditionType;
   country: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
@@ -133,6 +132,7 @@ export type LotModel = {
   id: Scalars['ID']['output'];
   isActive: Scalars['Boolean']['output'];
   photos: Array<Scalars['String']['output']>;
+  region: Scalars['String']['output'];
   returnPeriod: ReturnType;
   subscriptions: Array<LotSubscriptionModel>;
   title: Scalars['String']['output'];
@@ -367,7 +367,6 @@ export type UploadPhotoInput = {
 export type UserModel = {
   __typename?: 'UserModel';
   avatar?: Maybe<Scalars['String']['output']>;
-  city?: Maybe<Scalars['String']['output']>;
   country?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
@@ -379,6 +378,7 @@ export type UserModel = {
   notifications: Array<NotificationModel>;
   password: Scalars['String']['output'];
   phone?: Maybe<Scalars['String']['output']>;
+  region?: Maybe<Scalars['String']['output']>;
   subscriptions: Array<LotSubscriptionModel>;
   updatedAt: Scalars['DateTime']['output'];
   username: Scalars['String']['output'];
@@ -441,7 +441,7 @@ export type RemoveProfileAvatarMutation = { __typename?: 'Mutation', removeProfi
 export type FindProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FindProfileQuery = { __typename?: 'Query', findProfile: { __typename?: 'UserModel', username: string, description?: string | null, email: string, avatar?: string | null, phone?: string | null, city?: string | null, country?: string | null } };
+export type FindProfileQuery = { __typename?: 'Query', findProfile: { __typename?: 'UserModel', username: string, description?: string | null, email: string, avatar?: string | null, phone?: string | null, region?: string | null, country?: string | null } };
 
 export type FindNotificationsByUserQueryVariables = Exact<{
   data: GetNotificationsInput;
@@ -713,7 +713,7 @@ export const FindProfileDocument = gql`
     email
     avatar
     phone
-    city
+    region
     country
   }
 }

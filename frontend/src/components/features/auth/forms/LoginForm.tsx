@@ -52,7 +52,7 @@ export function LoginForm() {
 			},
 		})
 
-	const { isValid, errors } = form.formState
+	const { isValid } = form.formState
 
 	const onSubmit = (data: TLoginSchema) => {
 		login({
@@ -80,7 +80,7 @@ export function LoginForm() {
 								<FormControl>
 									<Input {...field} disabled={isLoadingLogin}></Input>
 								</FormControl>
-								<FormMessage>{errors.login?.message}</FormMessage>
+								<FormMessage />
 							</FormItem>
 						)}
 					/>
@@ -97,7 +97,7 @@ export function LoginForm() {
 										disabled={isLoadingLogin}
 									></Input>
 								</FormControl>
-								<FormMessage>{errors.password?.message}</FormMessage>
+								<FormMessage />
 							</FormItem>
 						)}
 					/>

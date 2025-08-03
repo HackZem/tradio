@@ -53,7 +53,7 @@ export class LotModel implements Lot {
 	public country: string
 
 	@Field(() => String)
-	public city: string
+	public region: string
 
 	@Field(() => ReturnType)
 	public returnPeriod: ReturnType

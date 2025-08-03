@@ -11,7 +11,7 @@ import {
 	Validate,
 } from "class-validator"
 
-import { IsCityExistsConstraint } from "@/src/shared/decorators/is-city-constraint.decorator"
+import { IsRegionExistsConstraint } from "@/src/shared/decorators/is-region-constraint.decorator"
 
 @InputType()
 export class ChangeProfileInfoInput {
@@ -48,6 +48,6 @@ export class ChangeProfileInfoInput {
 	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
-	@Validate(IsCityExistsConstraint)
-	public city?: string
+	@Validate(IsRegionExistsConstraint)
+	public region?: string
 }

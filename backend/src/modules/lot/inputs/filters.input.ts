@@ -10,7 +10,7 @@ import {
 	Validate,
 } from "class-validator"
 
-import { IsCityExistsConstraint } from "@/src/shared/decorators/is-city-constraint.decorator"
+import { IsRegionExistsConstraint } from "@/src/shared/decorators/is-region-constraint.decorator"
 
 export enum SortBy {
 	PRICE = "currentPrice",
@@ -74,8 +74,8 @@ export class FiltersInput {
 	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
-	@Validate(IsCityExistsConstraint, [{ isCountryOptional: true }])
-	public city?: string
+	@Validate(IsRegionExistsConstraint, [{ isCountryOptional: true }])
+	public region?: string
 
 	@Field(() => [LotType], { nullable: true })
 	@IsEnum(LotType, { each: true })

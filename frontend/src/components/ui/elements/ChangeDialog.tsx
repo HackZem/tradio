@@ -27,7 +27,10 @@ export function ChangeDialog({
 	return (
 		<Dialog open={isOpen} onOpenChange={onOpenChange}>
 			<DialogTrigger asChild>{trigger}</DialogTrigger>
-			<DialogContent className='flex w-full max-w-[26rem] flex-col items-center py-[25px]'>
+			<DialogContent
+				className='flex w-full max-w-[26rem] flex-col items-center py-[25px]'
+				aria-describedby=''
+			>
 				<DialogHeader>
 					<DialogTitle className='text-[32px]'>{heading}</DialogTitle>
 				</DialogHeader>

@@ -91,6 +91,23 @@
 				"successChangedMessage": "Successful changed username",
 				"errorChangedMessage": "Username changed error"
 			},
+			"phone": {
+				"heading": "Change Phone",
+				"label": "Phone",
+				"changePhoneButton": "Change",
+				"cancelButton": "Cancel",
+				"successChangedMessage": "Successful changed phone",
+				"errorChangedMessage": "Phone changed error"
+			},
+			"location": {
+				"heading": "Change Location",
+				"countryLabel": "Country",
+				"regionLabel": "Region/City",
+				"changeLocationButton": "Change",
+				"cancelButton": "Cancel",
+				"successChangedMessage": "Successful changed location",
+				"errorChangedMessage": "Location changed error"
+			},
 			"lots": "Lots",
 			"rating": "Rating",
 			"reviews": "Reviews",

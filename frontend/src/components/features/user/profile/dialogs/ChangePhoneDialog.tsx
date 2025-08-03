@@ -17,7 +17,7 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/common/Form"
-import { Input } from "@/components/ui/common/Input"
+import { PhoneInput } from "@/components/ui/common/PhoneInput"
 import { ChangeDialog } from "@/components/ui/elements/ChangeDialog"
 
 import { useChangeProfileInfoMutation } from "@/graphql/generated/output"
@@ -26,23 +26,23 @@ import { useCurrent } from "@/hooks/useCurrent"
 
 import changeInfoSchema from "@/schemas/user/change-info.schema"
 
-const changeUsernameSchema = z.object({
-	username: changeInfoSchema.shape.username,
+const changePhoneSchema = z.object({
+	phone: changeInfoSchema.shape.phone,
 })
 
-type TChangeUsernameSchema = z.infer<typeof changeUsernameSchema>
+type TChangePhoneSchema = z.infer<typeof changePhoneSchema>
 
-export function ChangeUsernameDialog({ children }: PropsWithChildren<unknown>) {
-	const t = useTranslations("user.profile.username")
+export function ChangePhoneDialog({ children }: PropsWithChildren<unknown>) {
+	const t = useTranslations("user.profile.phone")
 
 	const { user, isLoadingProfile, refetch } = useCurrent()
 
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 
-	const form = useForm<TChangeUsernameSchema>({
-		resolver: zodResolver(changeUsernameSchema),
+	const form = useForm<TChangePhoneSchema>({
+		resolver: zodResolver(changePhoneSchema),
 		values: {
-			username: "",
+			phone: "",
 		},
 	})
 
@@ -72,8 +72,8 @@ export function ChangeUsernameDialog({ children }: PropsWithChildren<unknown>) {
 		form.reset()
 	}
 
-	async function onSubmit({ username }: TChangeUsernameSchema) {
-		change({ variables: { data: { username } } })
+	async function onSubmit({ phone }: TChangePhoneSchema) {
+		change({ variables: { data: { phone } } })
 	}
 
 	return (
@@ -89,12 +89,17 @@ export function ChangeUsernameDialog({ children }: PropsWithChildren<unknown>) {
 					<form onSubmit={form.handleSubmit(onSubmit)} className='w-full'>
 						<FormField
 							control={form.control}
-							name='username'
+							name='phone'
 							render={({ field }) => (
 								<FormItem className='mb-5'>
 									<FormLabel className='text-xl'>{t("label")}</FormLabel>
 									<FormControl>
-										<Input {...field} disabled={isLoadingChange}></Input>
+										<PhoneInput
+											{...field}
+											disabled={isLoadingChange || isSubmitting}
+											international={true}
+											defaultCountry='AT'
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -105,7 +110,7 @@ export function ChangeUsernameDialog({ children }: PropsWithChildren<unknown>) {
 								className='max-w-[300px] flex-1'
 								disabled={!isValid || isLoadingChange || isSubmitting}
 							>
-								{t("changeUsernameButton")}
+								{t("changePhoneButton")}
 							</Button>
 							<DialogClose asChild>
 								<Button

@@ -16,8 +16,8 @@ import {
 } from "class-validator"
 import GraphQLJSON from "graphql-type-json"
 
-import { IsCityExistsConstraint } from "@/src/shared/decorators/is-city-constraint.decorator"
 import { IsCUID } from "@/src/shared/decorators/is-cuid.decorator"
+import { IsRegionExistsConstraint } from "@/src/shared/decorators/is-region-constraint.decorator"
 
 @InputType()
 export class ChangeLotInfoInput {
@@ -57,8 +57,8 @@ export class ChangeLotInfoInput {
 	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
-	@Validate(IsCityExistsConstraint)
-	public city?: string
+	@Validate(IsRegionExistsConstraint)
+	public region?: string
 
 	@Field(() => ReturnType, { nullable: true })
 	@IsOptional()

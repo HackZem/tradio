@@ -8,9 +8,11 @@ const changeInfoSchema = z.object({
 		.max(32)
 		.regex(/^[A-Za-z][A-Za-z0-9]*$/),
 	description: z.string().max(500),
-	phone: z.string().refine(validator.isMobilePhone),
+	phone: z
+		.string()
+		.refine(validator.isMobilePhone, { message: "Invalid phone number" }),
 	country: z.string().refine(validator.isISO31661Alpha2),
-	city: z.string(),
+	region: z.string(),
 })
 
 export type TChangeInfoSchema = z.infer<typeof changeInfoSchema>

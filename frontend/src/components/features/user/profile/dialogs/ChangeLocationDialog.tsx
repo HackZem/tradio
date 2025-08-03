@@ -1,6 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Alpha2Code } from "i18n-iso-countries"
 import { useTranslations } from "next-intl"
 import { PropsWithChildren, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -17,8 +18,9 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/common/Form"
-import { Input } from "@/components/ui/common/Input"
 import { ChangeDialog } from "@/components/ui/elements/ChangeDialog"
+import { CountryCombobox } from "@/components/ui/elements/CountryCombobox"
+import { RegionCombobox } from "@/components/ui/elements/RegionCombobox"
 
 import { useChangeProfileInfoMutation } from "@/graphql/generated/output"
 
@@ -26,23 +28,25 @@ import { useCurrent } from "@/hooks/useCurrent"
 
 import changeInfoSchema from "@/schemas/user/change-info.schema"
 
-const changeUsernameSchema = z.object({
-	username: changeInfoSchema.shape.username,
+const changeLocationSchema = z.object({
+	country: changeInfoSchema.shape.country,
+	region: changeInfoSchema.shape.region,
 })
 
-type TChangeUsernameSchema = z.infer<typeof changeUsernameSchema>
+type TChangeLocationSchema = z.infer<typeof changeLocationSchema>
 
-export function ChangeUsernameDialog({ children }: PropsWithChildren<unknown>) {
-	const t = useTranslations("user.profile.username")
+export function ChangeLocationDialog({ children }: PropsWithChildren<unknown>) {
+	const t = useTranslations("user.profile.location")
 
 	const { user, isLoadingProfile, refetch } = useCurrent()
 
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 
-	const form = useForm<TChangeUsernameSchema>({
-		resolver: zodResolver(changeUsernameSchema),
+	const form = useForm<TChangeLocationSchema>({
+		resolver: zodResolver(changeLocationSchema),
 		values: {
-			username: "",
+			country: "",
+			region: "",
 		},
 	})
 
@@ -72,8 +76,8 @@ export function ChangeUsernameDialog({ children }: PropsWithChildren<unknown>) {
 		form.reset()
 	}
 
-	async function onSubmit({ username }: TChangeUsernameSchema) {
-		change({ variables: { data: { username } } })
+	async function onSubmit({ country, region }: TChangeLocationSchema) {
+		change({ variables: { data: { country, region } } })
 	}
 
 	return (
@@ -89,12 +93,37 @@ export function ChangeUsernameDialog({ children }: PropsWithChildren<unknown>) {
 					<form onSubmit={form.handleSubmit(onSubmit)} className='w-full'>
 						<FormField
 							control={form.control}
-							name='username'
+							name='country'
 							render={({ field }) => (
 								<FormItem className='mb-5'>
-									<FormLabel className='text-xl'>{t("label")}</FormLabel>
+									<FormLabel className='text-xl'>{t("countryLabel")}</FormLabel>
 									<FormControl>
-										<Input {...field} disabled={isLoadingChange}></Input>
+										<CountryCombobox
+											value={field.value}
+											onValueChange={e => {
+												field.onChange(e)
+												form.resetField("region")
+											}}
+											disabled={isSubmitting || isLoadingChange}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name='region'
+							render={({ field }) => (
+								<FormItem className='mb-5'>
+									<FormLabel className='text-xl'>{t("regionLabel")}</FormLabel>
+									<FormControl>
+										<RegionCombobox
+											country={form.getValues("country") as Alpha2Code}
+											value={field.value}
+											onValueChange={field.onChange}
+											disabled={isSubmitting || isLoadingChange}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -105,7 +134,7 @@ export function ChangeUsernameDialog({ children }: PropsWithChildren<unknown>) {
 								className='max-w-[300px] flex-1'
 								disabled={!isValid || isLoadingChange || isSubmitting}
 							>
-								{t("changeUsernameButton")}
+								{t("changeLocationButton")}
 							</Button>
 							<DialogClose asChild>
 								<Button

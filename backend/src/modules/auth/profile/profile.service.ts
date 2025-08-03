@@ -69,7 +69,7 @@ export class ProfileService {
 	}
 
 	public async changeInfo(user: User, input: ChangeProfileInfoInput) {
-		const { username, city, country, ...data } = input
+		const { username, region, country, ...data } = input
 
 		const isUsernameExists = await this.prismaService.user.findUnique({
 			where: { username: username ?? "" },
@@ -79,15 +79,17 @@ export class ProfileService {
 			throw new ConflictException("This username is already taken")
 		}
 
-		if (country && !city) {
-			throw new BadRequestException("You can't change a country without a city")
+		if (country && (!region || region.length === 0)) {
+			throw new BadRequestException(
+				"You can't change a country without a region",
+			)
 		}
 
 		await this.prismaService.user.update({
 			where: {
 				id: user.id,
 			},
-			data: { ...data, username },
+			data: { ...data, username, country, region },
 		})
 
 		return true

@@ -38,7 +38,7 @@ export class UserModel implements User {
 	public country: string
 
 	@Field(() => String, { nullable: true })
-	public city: string
+	public region: string
 
 	@Field(() => Boolean, { defaultValue: false })
 	public isVerified: boolean

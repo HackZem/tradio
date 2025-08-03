@@ -20,7 +20,7 @@ model User {
   phone       String?
 
   country String?
-  city    String?
+  region  String?
 
   isVerified Boolean @default(false) @map("is_verified")
 
@@ -92,7 +92,7 @@ model Lot {
   subscriptions LotSubscription[]
 
   country String
-  city    String
+  region  String
 
   returnPeriod ReturnType    @map("return_period")
   condition    ConditionType

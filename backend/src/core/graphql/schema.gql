@@ -13,23 +13,23 @@ type CategoryModel {
 
 input ChangeLotInfoInput {
   categoryId: String
-  city: String
   condition: ConditionType
   country: String
   description: JSON
   expiresAt: DateTime
   firstPrice: Float
   lotId: String!
+  region: String
   returnPeriod: ReturnType
   title: String
   type: LotType
 }
 
 input ChangeProfileInfoInput {
-  city: String
   country: String
   description: String
   phone: String
+  region: String
   username: String
 }
 
@@ -41,12 +41,12 @@ enum ConditionType {
 
 input CreateLotInput {
   categoryId: String!
-  city: String!
   condition: ConditionType!
   country: String!
   description: JSON
   expiresAt: DateTime!
   firstPrice: Float!
+  region: String!
   returnPeriod: ReturnType!
   title: String!
   type: LotType!
@@ -72,12 +72,12 @@ type DeviceModel {
 
 input FiltersInput {
   categoryIds: [String!]
-  city: String
   condition: [ConditionType!]
   country: String
   lotTypes: [LotType!]
   priceRange: PriceRangeInput
   query: String
+  region: String
   skip: Float
   sortBy: SortBy
   sortOrder: SortOrder
@@ -110,7 +110,6 @@ type LotModel {
   buyNowPrice: Float
   category: CategoryModel!
   categoryId: String!
-  city: String!
   condition: ConditionType!
   country: String!
   createdAt: DateTime!
@@ -121,6 +120,7 @@ type LotModel {
   id: ID!
   isActive: Boolean!
   photos: [String!]!
+  region: String!
   returnPeriod: ReturnType!
   subscriptions: [LotSubscriptionModel!]!
   title: String!
@@ -260,7 +260,6 @@ input UploadPhotoInput {
 
 type UserModel {
   avatar: String
-  city: String
   country: String
   createdAt: DateTime!
   description: String
@@ -272,6 +271,7 @@ type UserModel {
   notifications: [NotificationModel!]!
   password: String!
   phone: String
+  region: String
   subscriptions: [LotSubscriptionModel!]!
   updatedAt: DateTime!
   username: String!

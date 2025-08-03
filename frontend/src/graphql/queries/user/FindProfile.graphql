@@ -5,7 +5,7 @@ query FindProfile {
 		email
 		avatar
 		phone
-		city
+		region
 		country
 	}
 }

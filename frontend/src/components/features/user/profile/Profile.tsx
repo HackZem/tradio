@@ -1,6 +1,7 @@
 "use client"
 
 import { Icon } from "@iconify-icon/react"
+import { State } from "country-state-city"
 import * as countries from "i18n-iso-countries"
 import { useTranslations } from "next-intl"
 import { toast } from "sonner"
@@ -19,6 +20,8 @@ import {
 import { useCurrent } from "@/hooks/useCurrent"
 
 import { ChangeAvatarDialog } from "./dialogs/ChangeAvatarDialog"
+import { ChangeLocationDialog } from "./dialogs/ChangeLocationDialog"
+import { ChangePhoneDialog } from "./dialogs/ChangePhoneDialog"
 import { ChangeUsernameDialog } from "./dialogs/ChangeUsernameDialog"
 
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"))
@@ -105,26 +108,32 @@ export function Profile() {
 													<span className='text-lg'>
 														{user.phone ?? "phone"}
 													</span>
-													<Icon
-														icon='bx:pencil'
-														width={25}
-														className='hover:text-primary ml-2'
-														alt='change phone'
-													/>
+													<ChangePhoneDialog>
+														<Icon
+															icon='bx:pencil'
+															width={25}
+															className='hover:text-primary ml-2'
+															alt='change phone'
+														/>
+													</ChangePhoneDialog>
 												</div>
 											</div>
 											<div className='flex items-center gap-x-[10px]'>
 												<Icon icon={"lsicon:location-filled"} width={26} />
 												<div className='flex items-center'>
 													<span className='text-lg'>
-														{`${user.city ?? "city"}, ${countries.getName(user.country ?? "", "en") ?? "country"}`}
+														{user.country && user.region
+															? `${State.getStateByCodeAndCountry(user.region, user.country)?.name}, ${countries.getName(user.country, "en")}`
+															: "undefined"}
 													</span>
-													<Icon
-														icon='bx:pencil'
-														width={25}
-														className='hover:text-primary ml-2'
-														alt='change country and city'
-													/>
+													<ChangeLocationDialog>
+														<Icon
+															icon='bx:pencil'
+															width={25}
+															className='hover:text-primary ml-2'
+															alt='change country and region'
+														/>
+													</ChangeLocationDialog>
 												</div>
 											</div>
 										</div>

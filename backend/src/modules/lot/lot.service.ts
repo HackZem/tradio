@@ -81,7 +81,7 @@ export class LotService {
 		query,
 		priceRange,
 		country,
-		city,
+		region,
 		lotTypes,
 		condition,
 		categoryIds,
@@ -95,10 +95,10 @@ export class LotService {
 		if (priceRange?.min || priceRange?.max) {
 			conditions.push(this.buildPriceRangeCondition(priceRange))
 		}
-		if (country || city) {
+		if (country || region) {
 			conditions.push({
 				country,
-				city,
+				region,
 			})
 		}
 		if ((lotTypes ?? []).length > 0) {
@@ -170,7 +170,7 @@ export class LotService {
 
 	public async changeInfo(user: User, input: ChangeLotInfoInput) {
 		const {
-			city,
+			region,
 			condition,
 			country,
 			description,
@@ -204,7 +204,7 @@ export class LotService {
 					title: lot.title.startsWith(title ?? "") ? title : lot.title,
 				}
 			: {
-					city,
+					region,
 					condition,
 					country,
 					description,
