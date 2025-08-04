@@ -7,7 +7,7 @@ const changeInfoSchema = z.object({
 		.min(3)
 		.max(32)
 		.regex(/^[A-Za-z][A-Za-z0-9]*$/),
-	description: z.string().max(500),
+	description: z.string().max(1000),
 	phone: z
 		.string()
 		.refine(validator.isMobilePhone, { message: "Invalid phone number" }),

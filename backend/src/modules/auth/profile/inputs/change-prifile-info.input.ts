@@ -7,7 +7,7 @@ import {
 	IsString,
 	Length,
 	Matches,
-	Max,
+	MaxLength,
 	Validate,
 } from "class-validator"
 
@@ -34,7 +34,7 @@ export class ChangeProfileInfoInput {
 	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
-	@Max(500)
+	@MaxLength(1000)
 	public description?: string
 
 	@Field(() => String, { nullable: true })

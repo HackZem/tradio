@@ -64,7 +64,9 @@
 			"heading": "Profile",
 			"description": {
 				"heading": "Description",
-				"empty": "empty"
+				"empty": "empty",
+				"successChangedMessage": "Successful changed description",
+				"errorChangedMessage": "Description changed error"
 			},
 			"avatar": {
 				"heading": "Change Avatar",
