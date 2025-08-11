@@ -142,7 +142,7 @@ export function ChangeAvatarDialog({ children }: PropsWithChildren<unknown>) {
 		setZoom(minZoom)
 	}
 
-	async function onSubmitAvatar({ file }: TUploadFileSchema) {
+	async function onSubmit({ file }: TUploadFileSchema) {
 		if (!file) return
 
 		const blob = await getCroppedImg(imageSource!, croppedAreaPixels!)
@@ -233,7 +233,9 @@ export function ChangeAvatarDialog({ children }: PropsWithChildren<unknown>) {
 							disabled={
 								!form.getValues("file") || isLoadingChange || isSubmitting
 							}
-							onClick={form.handleSubmit(onSubmitAvatar)}
+							onClick={() => {
+								form.handleSubmit(onSubmit)()
+							}}
 						>
 							{form.getValues("file")
 								? t("changeAvatarButton")

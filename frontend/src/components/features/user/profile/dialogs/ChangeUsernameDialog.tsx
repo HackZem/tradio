@@ -24,11 +24,7 @@ import { useChangeProfileInfoMutation } from "@/graphql/generated/output"
 
 import { useCurrent } from "@/hooks/useCurrent"
 
-import changeInfoSchema from "@/schemas/user/change-info.schema"
-
-const changeUsernameSchema = z.object({
-	username: changeInfoSchema.shape.username,
-})
+import { changeUsernameSchema } from "@/schemas/user/change-info.schema"
 
 type TChangeUsernameSchema = z.infer<typeof changeUsernameSchema>
 

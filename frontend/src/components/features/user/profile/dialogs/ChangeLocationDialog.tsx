@@ -26,12 +26,7 @@ import { useChangeProfileInfoMutation } from "@/graphql/generated/output"
 
 import { useCurrent } from "@/hooks/useCurrent"
 
-import changeInfoSchema from "@/schemas/user/change-info.schema"
-
-const changeLocationSchema = z.object({
-	country: changeInfoSchema.shape.country,
-	region: changeInfoSchema.shape.region,
-})
+import { changeLocationSchema } from "@/schemas/user/change-info.schema"
 
 type TChangeLocationSchema = z.infer<typeof changeLocationSchema>
 

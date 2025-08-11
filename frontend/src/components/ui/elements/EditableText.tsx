@@ -1,4 +1,14 @@
-import { useState, useRef, useEffect, type KeyboardEvent } from "react"
+"use client"
+
+import {
+	useState,
+	useRef,
+	useEffect,
+	type KeyboardEvent,
+	ChangeEvent,
+} from "react"
+
+import { MAX_DESCRIPTION_LENGTH } from "@/libs/constants/data.constants"
 
 import {
 	AutosizeTextarea,
@@ -8,6 +18,7 @@ import {
 type EditableTextProps = {
 	value: string
 	onChange: (value: string) => void
+	onPreviewChange?: (value: string) => void
 	placeholder?: string
 	className?: string
 }
@@ -15,6 +26,7 @@ type EditableTextProps = {
 export default function EditableText({
 	value,
 	onChange,
+	onPreviewChange,
 	placeholder = "Editing...",
 	className,
 }: EditableTextProps) {
@@ -58,13 +70,22 @@ export default function EditableText({
 		}
 	}
 
+	const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+		const newValue = e.target.value
+		if (newValue.length <= MAX_DESCRIPTION_LENGTH) {
+			setCurrentValue(e.target.value)
+
+			onPreviewChange?.(newValue)
+		}
+	}
+
 	return (
 		<div className={className}>
 			{isEditing ? (
 				<AutosizeTextarea
 					ref={textareaRef}
 					value={currentValue}
-					onChange={e => setCurrentValue(e.target.value)}
+					onChange={handleChange}
 					onKeyDown={handleKeyDown}
 					placeholder={placeholder}
 					className='min-w-[200px] resize-none overflow-hidden rounded border'

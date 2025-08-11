@@ -15,6 +15,16 @@ const changeInfoSchema = z.object({
 	region: z.string(),
 })
 
+export const changeUsernameSchema = changeInfoSchema.pick({ username: true })
+export const changeDescriptionSchema = changeInfoSchema.pick({
+	description: true,
+})
+export const changePhoneSchema = changeInfoSchema.pick({ phone: true })
+export const changeLocationSchema = changeInfoSchema.pick({
+	country: true,
+	region: true,
+})
+
 export type TChangeInfoSchema = z.infer<typeof changeInfoSchema>
 
 export default changeInfoSchema

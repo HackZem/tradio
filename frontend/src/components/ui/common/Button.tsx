@@ -26,7 +26,7 @@ const buttonVariants = cva(
 			},
 			size: {
 				default: "px-5 py-2.5 rounded-lg text-xl",
-				icon: "size-14 rounded-full",
+				icon: "size-4 rounded-full",
 			},
 		},
 		compoundVariants: [
