@@ -30,6 +30,11 @@
 			"categories": "Categories"
 		}
 	},
+	"home": {
+		"categories": {
+			"heading": "Top Categories"
+		}
+	},
 	"auth": {
 		"register": {
 			"heading": "Register",

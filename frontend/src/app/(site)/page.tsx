@@ -1,13 +1,9 @@
-"use client"
+import { CategoriesList } from "@/components/features/category/CategoriesList"
 
-import { useCurrent } from "@/hooks/useCurrent"
-
-export default function Home() {
-	const { user, isLoadingProfile } = useCurrent()
-
+export default function HomePage() {
 	return (
-		<div>
-			{isLoadingProfile ? <span>Loading...</span> : <>{JSON.stringify(user)}</>}
+		<div className='flex flex-col items-center'>
+			<CategoriesList />
 		</div>
 	)
 }

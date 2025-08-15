@@ -7,12 +7,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import z from "zod"
 
-import {
-	FormField,
-	FormItem,
-	FormControl,
-	Form,
-} from "@/components/ui/common/Form"
+import { FormField, Form } from "@/components/ui/common/Form"
 import EditableText from "@/components/ui/elements/EditableText"
 import { Heading } from "@/components/ui/elements/Heading"
 
