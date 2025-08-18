@@ -4,9 +4,16 @@ import { Decimal, JsonValue } from "@prisma/client/runtime/library"
 import GraphQLJSON from "graphql-type-json"
 
 import { UserModel } from "../../auth/account/models/user.model"
+import { BidModel } from "../../bid/models/bid.model"
 import { CategoryModel } from "../../category/models/category.model"
 
 import { LotSubscriptionModel } from "./lot-subscription.model"
+
+@ObjectType()
+class LotCount {
+	@Field(() => Number)
+	bids: number
+}
 
 @ObjectType()
 export class LotModel implements Lot {
@@ -64,17 +71,23 @@ export class LotModel implements Lot {
 	@Field(() => [LotSubscriptionModel])
 	public subscriptions: LotSubscriptionModel[]
 
+	@Field(() => [BidModel])
+	public bids: BidModel[]
+
 	@Field(() => CategoryModel)
-	category: CategoryModel
+	public category: CategoryModel
 
 	@Field(() => String)
-	categoryId: string
+	public categorySlug: string
 
 	@Field(() => UserModel)
 	public user: UserModel
 
 	@Field(() => String)
 	public userId: string
+
+	@Field(() => LotCount)
+	_count: LotCount
 }
 
 registerEnumType(LotType, { name: "LotType" })

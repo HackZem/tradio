@@ -20,6 +20,17 @@ export type Scalars = {
   Upload: { input: any; output: any; }
 };
 
+export type BidModel = {
+  __typename?: 'BidModel';
+  amount: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  lot: LotModel;
+  lotId: Scalars['String']['output'];
+  user: UserModel;
+  userId: Scalars['String']['output'];
+};
+
 export type CategoryModel = {
   __typename?: 'CategoryModel';
   createdAt: Scalars['DateTime']['output'];
@@ -31,7 +42,7 @@ export type CategoryModel = {
 };
 
 export type ChangeLotInfoInput = {
-  categoryId?: InputMaybe<Scalars['String']['input']>;
+  categorySlug?: InputMaybe<Scalars['String']['input']>;
   condition?: InputMaybe<ConditionType>;
   country?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['JSON']['input']>;
@@ -59,7 +70,7 @@ export enum ConditionType {
 }
 
 export type CreateLotInput = {
-  categoryId: Scalars['String']['input'];
+  categorySlug: Scalars['String']['input'];
   condition: ConditionType;
   country: Scalars['String']['input'];
   description?: InputMaybe<Scalars['JSON']['input']>;
@@ -86,7 +97,7 @@ export type DeviceModel = {
 };
 
 export type FiltersInput = {
-  categoryIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  categorySlugs?: InputMaybe<Array<Scalars['String']['input']>>;
   condition?: InputMaybe<Array<ConditionType>>;
   country?: InputMaybe<Scalars['String']['input']>;
   lotTypes?: InputMaybe<Array<LotType>>;
@@ -117,11 +128,18 @@ export type LoginInput = {
   password: Scalars['String']['input'];
 };
 
+export type LotCount = {
+  __typename?: 'LotCount';
+  bids: Scalars['Float']['output'];
+};
+
 export type LotModel = {
   __typename?: 'LotModel';
+  _count: LotCount;
+  bids: Array<BidModel>;
   buyNowPrice?: Maybe<Scalars['Float']['output']>;
   category: CategoryModel;
-  categoryId: Scalars['String']['output'];
+  categorySlug: Scalars['String']['output'];
   condition: ConditionType;
   country: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
@@ -141,6 +159,11 @@ export type LotModel = {
   user: UserModel;
   userId: Scalars['String']['output'];
   views: Scalars['Float']['output'];
+};
+
+
+export type LotModelPhotosArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type LotSubscriptionModel = {
@@ -438,6 +461,13 @@ export type RemoveProfileAvatarMutationVariables = Exact<{ [key: string]: never;
 
 export type RemoveProfileAvatarMutation = { __typename?: 'Mutation', removeProfileAvatar: boolean };
 
+export type FindAllLotsQueryVariables = Exact<{
+  filters: FiltersInput;
+}>;
+
+
+export type FindAllLotsQuery = { __typename?: 'Query', findAllLots: Array<{ __typename?: 'LotModel', id: string, title: string, firstPrice?: number | null, currentPrice?: number | null, views: number, country: string, region: string, type: LotType, expiresAt?: any | null, buyNowPrice?: number | null, photos: Array<string>, _count: { __typename?: 'LotCount', bids: number }, user: { __typename?: 'UserModel', avatar?: string | null, username: string } }> };
+
 export type FindProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -705,6 +735,63 @@ export function useRemoveProfileAvatarMutation(baseOptions?: Apollo.MutationHook
 export type RemoveProfileAvatarMutationHookResult = ReturnType<typeof useRemoveProfileAvatarMutation>;
 export type RemoveProfileAvatarMutationResult = Apollo.MutationResult<RemoveProfileAvatarMutation>;
 export type RemoveProfileAvatarMutationOptions = Apollo.BaseMutationOptions<RemoveProfileAvatarMutation, RemoveProfileAvatarMutationVariables>;
+export const FindAllLotsDocument = gql`
+    query FindAllLots($filters: FiltersInput!) {
+  findAllLots(filters: $filters) {
+    id
+    title
+    firstPrice
+    currentPrice
+    views
+    country
+    region
+    type
+    expiresAt
+    buyNowPrice
+    photos(limit: 1)
+    _count {
+      bids
+    }
+    user {
+      avatar
+      username
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindAllLotsQuery__
+ *
+ * To run a query within a React component, call `useFindAllLotsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAllLotsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAllLotsQuery({
+ *   variables: {
+ *      filters: // value for 'filters'
+ *   },
+ * });
+ */
+export function useFindAllLotsQuery(baseOptions: Apollo.QueryHookOptions<FindAllLotsQuery, FindAllLotsQueryVariables> & ({ variables: FindAllLotsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindAllLotsQuery, FindAllLotsQueryVariables>(FindAllLotsDocument, options);
+      }
+export function useFindAllLotsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAllLotsQuery, FindAllLotsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindAllLotsQuery, FindAllLotsQueryVariables>(FindAllLotsDocument, options);
+        }
+export function useFindAllLotsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FindAllLotsQuery, FindAllLotsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindAllLotsQuery, FindAllLotsQueryVariables>(FindAllLotsDocument, options);
+        }
+export type FindAllLotsQueryHookResult = ReturnType<typeof useFindAllLotsQuery>;
+export type FindAllLotsLazyQueryHookResult = ReturnType<typeof useFindAllLotsLazyQuery>;
+export type FindAllLotsSuspenseQueryHookResult = ReturnType<typeof useFindAllLotsSuspenseQuery>;
+export type FindAllLotsQueryResult = Apollo.QueryResult<FindAllLotsQuery, FindAllLotsQueryVariables>;
 export const FindProfileDocument = gql`
     query FindProfile {
   findProfile {

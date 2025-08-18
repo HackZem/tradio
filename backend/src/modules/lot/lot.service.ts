@@ -84,7 +84,7 @@ export class LotService {
 		region,
 		lotTypes,
 		condition,
-		categoryIds,
+		categorySlugs,
 	}: FiltersInput): Prisma.LotWhereInput {
 		const conditions: Prisma.LotWhereInput[] = []
 
@@ -107,8 +107,8 @@ export class LotService {
 		if ((condition ?? []).length > 0) {
 			conditions.push({ condition: { in: condition } })
 		}
-		if ((categoryIds ?? []).length > 0) {
-			conditions.push({ categoryId: { in: categoryIds } })
+		if ((categorySlugs ?? []).length > 0) {
+			conditions.push({ categorySlug: { in: categorySlugs } })
 		}
 
 		return { AND: conditions }
@@ -123,7 +123,15 @@ export class LotService {
 
 		const lots = this.prismaService.lot.findMany({
 			where: whereClause,
-			include: { user: true, category: true },
+			include: {
+				user: true,
+				category: true,
+				_count: {
+					select: {
+						bids: true,
+					},
+				},
+			},
 			skip: skip ?? 0,
 			take: take ?? 16,
 			orderBy,
@@ -146,14 +154,14 @@ export class LotService {
 	}
 
 	public async create(user: User, input: CreateLotInput) {
-		const { categoryId, firstPrice, ...data } = input
+		const { categorySlug, firstPrice, ...data } = input
 
 		const newLot = await this.prismaService.lot.create({
 			data: {
 				...data,
 				firstPrice,
 				currentPrice: firstPrice,
-				category: { connect: { id: categoryId } },
+				category: { connect: { slug: categorySlug } },
 				user: {
 					connect: {
 						id: user.id,
@@ -177,7 +185,7 @@ export class LotService {
 			returnPeriod,
 			title,
 			lotId,
-			categoryId,
+			categorySlug,
 			expiresAt,
 			firstPrice,
 		} = input
@@ -214,7 +222,7 @@ export class LotService {
 					firstPrice,
 					category: {
 						connect: {
-							id: categoryId ?? lot.categoryId!,
+							slug: categorySlug ?? lot.categorySlug!,
 						},
 					},
 				}
@@ -331,7 +339,7 @@ export class LotService {
 
 		const buffer = Buffer.concat(chunks)
 
-		const fileName = `/lots/${user.username}/${createId()}.webp`
+		const fileName = `lots/${lot.id}/${createId()}.webp`
 
 		const processedBuffer = await sharp(buffer)
 			.resize(1280, 1280)

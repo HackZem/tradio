@@ -5,6 +5,8 @@ import { formatDistance } from "date-fns"
 import { useTranslations } from "next-intl"
 import { Fragment } from "react"
 
+import { Heading } from "@/components/ui/elements/Heading"
+
 import {
 	useFindNotificationsByUserQuery,
 	useFindUnreadNotificationsCountQuery,
@@ -39,7 +41,7 @@ export function NotificationsList() {
 					{t("empty")}
 				</div>
 			) : (
-				<div className='flex flex-col gap-y-4 overflow-y-auto'>
+				<div className='flex flex-col gap-y-4 overflow-x-hidden overflow-y-auto'>
 					{notifications.map(notification => {
 						return (
 							<Fragment key={notification.id}>
@@ -50,8 +52,14 @@ export function NotificationsList() {
 										className='mt-1 min-w-[35px]'
 									/>
 									<div className='flex w-full flex-col gap-y-[2px]'>
-										<h2 className='text-4 font-bold'>{notification.title}</h2>
-										<p className='text-4'>{notification.description}</p>
+										<Heading
+											size={"sm"}
+											className='font-bold'
+											title={notification.title}
+										/>
+										<p className='break-all whitespace-break-spaces'>
+											{notification.description}
+										</p>
 										<div className='flex justify-between'>
 											{notification.isRead ? (
 												""

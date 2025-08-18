@@ -24,7 +24,7 @@ export function CategoryCard({
 	return (
 		<Link href={url}>
 			<Card
-				className='h-[300px] w-[300px] transition-transform hover:scale-105'
+				className='aspect-square transition-transform hover:scale-105'
 				style={{ backgroundColor: color }}
 			>
 				<div className='relative flex h-full flex-col items-center'>
@@ -37,11 +37,9 @@ export function CategoryCard({
 						style={{ width: "auto", height: "95%" }}
 						className='-translate-y-4 object-cover'
 					/>
-					<Heading
-						className='absolute -bottom-4 left-5 leading-9 font-normal'
-						title={heading}
-						size={"xl"}
-					/>
+					<h2 className='absolute -bottom-4 left-5 text-[clamp(20px,2vw,32px)] leading-[1.2em] font-normal'>
+						{heading}
+					</h2>
 				</div>
 			</Card>
 		</Link>

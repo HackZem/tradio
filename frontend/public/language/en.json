@@ -31,9 +31,8 @@
 		}
 	},
 	"home": {
-		"categories": {
-			"heading": "Top Categories"
-		}
+		"categoriesHeading": "Top Categories",
+		"topLotsHeading": "Top Lots"
 	},
 	"auth": {
 		"register": {
@@ -133,10 +132,24 @@
 			}
 		}
 	},
+	"lot": {
+		"card": {
+			"firstPrice": "first price",
+			"expired": "expired",
+			"buyNow": "buy now"
+		}
+	},
 	"elements": {
 		"confirmDialog": {
 			"cancel": "Cancel",
 			"delete": "Delete"
+		}
+	},
+	"enums": {
+		"lotTypes": {
+			"AUCTION": "Auction",
+			"BUYNOW": "Buy Now",
+			"MIXED": "Auction/Buy Now"
 		}
 	}
 }

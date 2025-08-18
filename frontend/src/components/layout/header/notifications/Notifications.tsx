@@ -24,7 +24,7 @@ export function Notifications() {
 		<Popover>
 			<PopoverTrigger className='relative'>
 				{unreadCount !== 0 && (
-					<div className='bg-primary absolute -top-1.5 -right-1.5 rounded-full px-1.5 text-sm font-semibold text-white'>
+					<div className='bg-primary absolute top-1.5 -right-1.5 rounded-full px-1.5 text-sm font-semibold text-white'>
 						{displayCount}
 					</div>
 				)}
@@ -34,10 +34,7 @@ export function Notifications() {
 					className='text-foreground -mb-1'
 				/>
 			</PopoverTrigger>
-			<PopoverContent
-				align='end'
-				className='max-h-[500px] w-[360px] overflow-y-auto'
-			>
+			<PopoverContent align='end' className='max-h-[500px] w-[360px]'>
 				<NotificationsList />
 			</PopoverContent>
 		</Popover>

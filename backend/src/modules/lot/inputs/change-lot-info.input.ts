@@ -88,7 +88,7 @@ export class ChangeLotInfoInput {
 	@IsOptional()
 	@IsCUID()
 	@IsNotEmpty()
-	public categoryId?: string
+	public categorySlug?: string
 }
 
 registerEnumType(ReturnType, { name: "ReturnType" })

@@ -93,7 +93,7 @@ export class FiltersInput {
 	@IsOptional()
 	@IsString({ each: true })
 	@IsNotEmpty()
-	public categoryIds?: string[]
+	public categorySlugs?: string[]
 
 	@Field(() => SortBy, { nullable: true })
 	@IsEnum(SortBy)

@@ -47,13 +47,15 @@ const TOP_CATEGORIES: Category[] = [
 ] as const
 
 export function CategoriesList() {
-	const t = useTranslations("home.categories")
+	const t = useTranslations("home")
 
 	return (
-		<Block heading={t("heading")}>
-			<div className='flex gap-x-5'>
+		<Block heading={t("categoriesHeading")}>
+			<div className='flex w-full gap-x-5'>
 				{TOP_CATEGORIES.map(category => (
-					<CategoryCard {...category} key={category.slug} />
+					<div className='flex-1' key={category.slug}>
+						<CategoryCard {...category} />
+					</div>
 				))}
 			</div>
 		</Block>

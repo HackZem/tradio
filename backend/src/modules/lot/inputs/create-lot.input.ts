@@ -73,7 +73,7 @@ export class CreateLotInput {
 	@Field(() => String)
 	@IsCUID()
 	@IsNotEmpty()
-	public categoryId: string
+	public categorySlug: string
 }
 
 registerEnumType(ReturnType, { name: "ReturnType" })

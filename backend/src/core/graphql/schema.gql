@@ -2,6 +2,16 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type BidModel {
+  amount: Float!
+  createdAt: DateTime!
+  id: ID!
+  lot: LotModel!
+  lotId: String!
+  user: UserModel!
+  userId: String!
+}
+
 type CategoryModel {
   createdAt: DateTime!
   id: ID!
@@ -12,7 +22,7 @@ type CategoryModel {
 }
 
 input ChangeLotInfoInput {
-  categoryId: String
+  categorySlug: String
   condition: ConditionType
   country: String
   description: JSON
@@ -40,7 +50,7 @@ enum ConditionType {
 }
 
 input CreateLotInput {
-  categoryId: String!
+  categorySlug: String!
   condition: ConditionType!
   country: String!
   description: JSON
@@ -71,7 +81,7 @@ type DeviceModel {
 }
 
 input FiltersInput {
-  categoryIds: [String!]
+  categorySlugs: [String!]
   condition: [ConditionType!]
   country: String
   lotTypes: [LotType!]
@@ -106,10 +116,16 @@ input LoginInput {
   password: String!
 }
 
+type LotCount {
+  bids: Float!
+}
+
 type LotModel {
+  _count: LotCount!
+  bids: [BidModel!]!
   buyNowPrice: Float
   category: CategoryModel!
-  categoryId: String!
+  categorySlug: String!
   condition: ConditionType!
   country: String!
   createdAt: DateTime!
@@ -119,7 +135,7 @@ type LotModel {
   firstPrice: Float
   id: ID!
   isActive: Boolean!
-  photos: [String!]!
+  photos(limit: Int): [String!]!
   region: String!
   returnPeriod: ReturnType!
   subscriptions: [LotSubscriptionModel!]!

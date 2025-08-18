@@ -1,11 +1,11 @@
-import { Field, Float, ID, InputType } from "@nestjs/graphql"
+import { Field, Float, ID, ObjectType } from "@nestjs/graphql"
 import { Bid } from "@prisma/client"
 import { Decimal } from "@prisma/client/runtime/library"
 
 import { UserModel } from "../../auth/account/models/user.model"
 import { LotModel } from "../../lot/models/lot.model"
 
-@InputType()
+@ObjectType()
 export class BidModel implements Bid {
 	@Field(() => ID)
 	public id: number

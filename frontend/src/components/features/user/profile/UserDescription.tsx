@@ -16,7 +16,7 @@ import { useChangeProfileInfoMutation } from "@/graphql/generated/output"
 import { useCurrent } from "@/hooks/useCurrent"
 
 import {
-	CHARACTERS_BEFORE_HIGHLIGHT,
+	DESCRIPTION_HIGHLIGHT_THRESHOLD,
 	MAX_DESCRIPTION_LENGTH,
 } from "@/libs/constants/data.constants"
 
@@ -63,7 +63,8 @@ export function UserDescription() {
 	}
 
 	const isLimitSoon =
-		MAX_DESCRIPTION_LENGTH - descriptionLength <= CHARACTERS_BEFORE_HIGHLIGHT
+		MAX_DESCRIPTION_LENGTH - descriptionLength <=
+		DESCRIPTION_HIGHLIGHT_THRESHOLD
 
 	return (
 		!isLoadingProfile &&

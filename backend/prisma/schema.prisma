@@ -97,8 +97,8 @@ model Lot {
   returnPeriod ReturnType    @map("return_period")
   condition    ConditionType
 
-  category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?   @map("category_id")
+  category     Category? @relation(fields: [categorySlug], references: [slug])
+  categorySlug String?   @map("category_id")
 
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String? @map("user_id")

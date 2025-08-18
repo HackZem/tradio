@@ -26,6 +26,7 @@ export class BidService {
 			where: { id: lotId },
 			include: {
 				bids: {
+					take: 1,
 					orderBy: {
 						amount: "desc",
 					},
@@ -45,11 +46,17 @@ export class BidService {
 			throw new ConflictException("User can not place a bid on his lot")
 		}
 
-		const maxAmount = lot.currentPrice
+		const lastBid = lot.bids[0]
 
-		if (maxAmount && +amount <= +maxAmount) {
+		if (lastBid && +amount <= +lastBid.amount) {
 			throw new BadRequestException(
 				"The bid must be higher than the last amount",
+			)
+		}
+
+		if (+amount < +lot.firstPrice!) {
+			throw new BadRequestException(
+				"The bid must be higher than or equal the first amount",
 			)
 		}
 

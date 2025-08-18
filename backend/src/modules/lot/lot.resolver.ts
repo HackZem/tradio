@@ -1,4 +1,11 @@
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql"
+import {
+	Args,
+	Mutation,
+	Parent,
+	Query,
+	ResolveField,
+	Resolver,
+} from "@nestjs/graphql"
 import { User } from "@prisma/client"
 import { FileUpload, GraphQLUpload } from "graphql-upload-ts"
 
@@ -6,6 +13,7 @@ import { Authorization } from "@/src/shared/decorators/auth.decorator"
 import { Authorized } from "@/src/shared/decorators/authorized.decorator"
 import { FileValidationPipe } from "@/src/shared/pipes/file-validation.pipe"
 
+import { PhotosArgs } from "./args/photos.args"
 import { ChangeLotInfoInput } from "./inputs/change-lot-info.input"
 import { CreateLotInput } from "./inputs/create-lot.input"
 import { FiltersInput } from "./inputs/filters.input"
@@ -15,13 +23,19 @@ import { UploadPhotoInput } from "./inputs/upload-photo.input"
 import { LotService } from "./lot.service"
 import { LotModel } from "./models/lot.model"
 
-@Resolver("Lot")
+@Resolver(() => LotModel)
 export class LotResolver {
 	constructor(private readonly lotService: LotService) {}
 
 	@Query(() => [LotModel], { name: "findAllLots" })
 	public async findAll(@Args("filters") input: FiltersInput) {
 		return this.lotService.findAll(input)
+	}
+
+	@ResolveField(() => [String], { nullable: true })
+	photos(@Parent() lot: LotModel, @Args() args: PhotosArgs) {
+		if (args.limit) return lot.photos.slice(0, args.limit)
+		return lot.photos
 	}
 
 	@Query(() => LotModel, { name: "findLotById" })

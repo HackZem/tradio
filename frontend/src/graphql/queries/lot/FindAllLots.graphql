@@ -1,0 +1,22 @@
+query FindAllLots($filters: FiltersInput!) {
+	findAllLots(filters: $filters) {
+		id
+		title
+		firstPrice
+		currentPrice
+		views
+		country
+		region
+		type
+		expiresAt
+		buyNowPrice
+		photos(limit: 1)
+		_count {
+			bids
+		}
+		user {
+			avatar
+			username
+		}
+	}
+}

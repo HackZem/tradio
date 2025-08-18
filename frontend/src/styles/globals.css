@@ -48,7 +48,7 @@
 	--secondary: #f59e0b;
 	--secondary-foreground: oklch(1 0 0);
 
-	--muted: oklch(1 0 0);
+	--muted: #e6e8ec;
 	/* --muted-foreground: #bdbdbe; */
 	--muted-foreground: #6e6d7a;
 
