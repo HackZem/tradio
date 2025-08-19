@@ -3,6 +3,8 @@ import { NextIntlClientProvider } from "next-intl"
 import { getLocale, getMessages } from "next-intl/server"
 import { Roboto } from "next/font/google"
 
+import { TooltipProvider } from "@/components/ui/common/Tooltip"
+
 import { ApolloClientProvider } from "@/providers/ApolloClientProvider"
 import { ToasterProvider } from "@/providers/ToastProvider"
 
@@ -32,8 +34,10 @@ export default async function RootLayout({
 			<body className={`${robotoSans.variable} antialiased`}>
 				<ApolloClientProvider>
 					<NextIntlClientProvider messages={messages}>
-						<ToasterProvider />
-						{children}
+						<TooltipProvider>
+							<ToasterProvider />
+							{children}
+						</TooltipProvider>
 					</NextIntlClientProvider>
 				</ApolloClientProvider>
 			</body>

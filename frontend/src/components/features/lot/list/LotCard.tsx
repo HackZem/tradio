@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl"
 import Image from "next/image"
 
 import { Card } from "@/components/ui/common/Card"
+import { FullTextTooltip } from "@/components/ui/elements/FullTextTooltip"
 import { Heading } from "@/components/ui/elements/Heading"
 import { UserAvatar } from "@/components/ui/elements/UserAvatar"
 
@@ -34,22 +35,31 @@ export function LotCard({ lot }: LotCardProps) {
 
 	return (
 		<Card className='h-[500px] justify-between gap-0 truncate p-0'>
-			<Image
-				src={getMediaSource(lot.photos[0])}
-				alt={lot.title}
-				width={0}
-				height={0}
-				sizes='100vw'
-				style={{ width: "auto", height: "100%" }}
-				className='bg-muted flex items-center justify-center object-cover'
-			/>
+			{lot.photos[0] ? (
+				<Image
+					src={getMediaSource(lot.photos[0])}
+					alt={lot.title}
+					width={0}
+					height={0}
+					sizes='100vw'
+					style={{ width: "auto", height: "100%" }}
+					className='bg-muted flex items-center justify-center object-cover'
+				/>
+			) : (
+				<div className='bg-muted flex h-full items-center justify-center'>
+					<Icon icon={"f7:question"} width={100} />
+				</div>
+			)}
 
 			<div className='p-2 pt-1'>
-				<Heading
-					size={"sm"}
-					title={lot.title}
-					className='line-clamp-2 break-all whitespace-break-spaces'
-				/>
+				<FullTextTooltip text={lot.title}>
+					<Heading
+						size={"sm"}
+						title={lot.title}
+						className='line-clamp-2 break-all whitespace-break-spaces'
+					/>
+				</FullTextTooltip>
+
 				<div className='flex items-center justify-between'>
 					<span className='text-2xl font-bold'>{lot.currentPrice}€</span>
 					<span>{tEnum(lot.type)}</span>
@@ -70,7 +80,7 @@ export function LotCard({ lot }: LotCardProps) {
 				<div className='text-muted-foreground flex items-center gap-x-[7px]'>
 					<Icon icon={"lsicon:location-filled"} width={20} />
 					<div className='flex items-center'>
-						<span>
+						<span className='line-clamp-1 break-all whitespace-break-spaces'>
 							{`${State.getStateByCodeAndCountry(lot.region, lot.country)?.name}, ${countries.getName(lot.country, "en")}`}
 						</span>
 					</div>

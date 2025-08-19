@@ -149,7 +149,7 @@ async function main() {
 								type !== "AUCTION"
 									? price + _.random(0, 11000 - price)
 									: undefined,
-							expiresAt: new Date(_.now() + ms(`${_.random(7, 14, false)}d`)),
+							expiresAt: new Date(_.now() + ms(`${_.random(7, 14, true)}d`)),
 						},
 					})
 

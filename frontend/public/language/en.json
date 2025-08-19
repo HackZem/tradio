@@ -32,7 +32,9 @@
 	},
 	"home": {
 		"categoriesHeading": "Top Categories",
-		"topLotsHeading": "Top Lots"
+		"topLotsHeading": "Top Lots",
+		"endingSoonLotsHeading": "Ending Soon Lots",
+		"newLotsHeading": "New Lots"
 	},
 	"auth": {
 		"register": {

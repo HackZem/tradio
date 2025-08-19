@@ -74,7 +74,15 @@ export class LotService {
 	): Prisma.LotOrderByWithRelationInput {
 		const order = sortOrder || SortOrder.DESC
 
-		return sortBy ? { [sortBy]: { _count: order } } : {}
+		let clause
+
+		if (sortBy === SortBy.BIDS) {
+			clause = sortBy ? { [sortBy]: { _count: order } } : {}
+		} else {
+			clause = sortBy ? { [sortBy]: order } : {}
+		}
+
+		return clause
 	}
 
 	private buildWhereClause({

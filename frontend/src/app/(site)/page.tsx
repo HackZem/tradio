@@ -38,7 +38,79 @@ async function findTopLots() {
 		})
 
 		const data = await response.json()
-		console.log(data)
+
+		return {
+			lots: data.data.findAllLots as FindAllLotsQuery["findAllLots"],
+		}
+	} catch (err) {
+		console.error(err)
+		throw new Error("Error when receiving lots")
+	}
+}
+
+async function findEndingSoonLots() {
+	try {
+		const query = FindAllLotsDocument.loc?.source.body
+
+		const response = await fetch(SERVER_URL, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				query,
+				variables: {
+					filters: {
+						take: 5,
+						skip: 0,
+						sortBy: SortBy.ExpiresAt,
+						sortOrder: SortOrder.Asc,
+					},
+				},
+			}),
+			next: {
+				revalidate: 30,
+			},
+		})
+
+		const data = await response.json()
+
+		return {
+			lots: data.data.findAllLots as FindAllLotsQuery["findAllLots"],
+		}
+	} catch (err) {
+		console.error(err)
+		throw new Error("Error when receiving lots")
+	}
+}
+
+async function findNewLots() {
+	try {
+		const query = FindAllLotsDocument.loc?.source.body
+
+		const response = await fetch(SERVER_URL, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				query,
+				variables: {
+					filters: {
+						take: 5,
+						skip: 0,
+						sortBy: SortBy.CreatedAt,
+						sortOrder: SortOrder.Desc,
+					},
+				},
+			}),
+			next: {
+				revalidate: 30,
+			},
+		})
+
+		const data = await response.json()
+
 		return {
 			lots: data.data.findAllLots as FindAllLotsQuery["findAllLots"],
 		}
@@ -51,13 +123,17 @@ async function findTopLots() {
 export default async function HomePage() {
 	const t = await getTranslations("home")
 
-	const { lots } = await findTopLots()
+	const { lots: topLots } = await findTopLots()
+	const { lots: endingSoonLots } = await findEndingSoonLots()
+	const { lots: newLots } = await findNewLots()
 
 	return (
 		<div className='flex justify-center' suppressHydrationWarning>
-			<div className='mb-5 w-full max-w-[1610px] space-y-[100px]'>
+			<div className='mb-[100px] w-full max-w-[1610px] space-y-[100px]'>
 				<CategoriesList />
-				<LotsList heading={t("topLotsHeading")} lots={lots} rows={2} />
+				<LotsList heading={t("topLotsHeading")} lots={topLots} rows={2} />
+				<LotsList heading={t("endingSoonLotsHeading")} lots={endingSoonLots} />
+				<LotsList heading={t("newLotsHeading")} lots={newLots} />
 			</div>
 		</div>
 	)
