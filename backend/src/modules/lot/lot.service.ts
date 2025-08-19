@@ -74,7 +74,7 @@ export class LotService {
 	): Prisma.LotOrderByWithRelationInput {
 		const order = sortOrder || SortOrder.DESC
 
-		return sortBy ? { [sortBy]: order } : {}
+		return sortBy ? { [sortBy]: { _count: order } } : {}
 	}
 
 	private buildWhereClause({
@@ -170,7 +170,7 @@ export class LotService {
 			},
 		})
 
-		if (newLot.type === LotType.AUCTION || newLot.type === LotType.MIXED)
+		if (newLot.type !== "BUYNOW")
 			await this.lotQueueService.sheduleLotEvents(newLot)
 
 		return true

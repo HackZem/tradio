@@ -1,0 +1,74 @@
+[
+	{
+		"title": "Electronics",
+		"slug": "electronics"
+	},
+	{
+		"title": "Jewelry & accessories",
+		"slug": "jewelry-accessories"
+	},
+	{
+		"title": "Home & Garden",
+		"slug": "home-garden"
+	},
+	{
+		"title": "Auto Parts & Accessories",
+		"slug": "auto-parts-accessories"
+	},
+	{
+		"title": "Clothing",
+		"slug": "clothing"
+	},
+	{
+		"title": "Home Appliances",
+		"slug": "home-appliances"
+	},
+	{
+		"title": "Beauty & Health",
+		"slug": "beauty-health"
+	},
+	{
+		"title": "Sports & Outdoor",
+		"slug": "sports-outdoor"
+	},
+	{
+		"title": "Pet Supplies",
+		"slug": "pet-supplies"
+	},
+	{
+		"title": "Books & Stationery",
+		"slug": "books-stationery"
+	},
+	{
+		"title": "Music & Movies",
+		"slug": "music-movies"
+	},
+	{
+		"title": "Art & Antiques",
+		"slug": "art-antiques"
+	},
+	{
+		"title": "Handmade Crafts",
+		"slug": "handmade-crafts"
+	},
+	{
+		"title": "Tools & Equipment",
+		"slug": "tools-equipment"
+	},
+	{
+		"title": "Tickets & Events",
+		"slug": "tickets-events"
+	},
+	{
+		"title": "Kids & Toys",
+		"slug": "kids-toys"
+	},
+	{
+		"title": "Antiques",
+		"slug": "antiques"
+	},
+	{
+		"title": "Others",
+		"slug": "others"
+	}
+]

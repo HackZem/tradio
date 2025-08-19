@@ -10,7 +10,7 @@ import { validateFileFormat, validateFileSize } from "../utils/file.util"
 
 @Injectable()
 export class FileValidationPipe implements PipeTransform {
-	public async transform(value: any, metadata: ArgumentMetadata) {
+	public async transform(value: any, _: ArgumentMetadata) {
 		if (!value.filename) {
 			throw new BadRequestException("The file is not loaded")
 		}

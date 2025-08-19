@@ -6,6 +6,8 @@ import { LotsList } from "@/components/features/lot/list/LotsList"
 import {
 	FindAllLotsDocument,
 	FindAllLotsQuery,
+	SortBy,
+	SortOrder,
 } from "@/graphql/generated/output"
 
 import { SERVER_URL } from "@/libs/constants/url.constants"
@@ -23,8 +25,10 @@ async function findTopLots() {
 				query,
 				variables: {
 					filters: {
-						take: 5,
+						take: 10,
 						skip: 0,
+						sortBy: SortBy.Bids,
+						sortOrder: SortOrder.Desc,
 					},
 				},
 			}),
@@ -34,7 +38,7 @@ async function findTopLots() {
 		})
 
 		const data = await response.json()
-
+		console.log(data)
 		return {
 			lots: data.data.findAllLots as FindAllLotsQuery["findAllLots"],
 		}
@@ -51,7 +55,7 @@ export default async function HomePage() {
 
 	return (
 		<div className='flex justify-center' suppressHydrationWarning>
-			<div className='w-full max-w-[1610px] space-y-[100px]'>
+			<div className='mb-5 w-full max-w-[1610px] space-y-[100px]'>
 				<CategoriesList />
 				<LotsList heading={t("topLotsHeading")} lots={lots} rows={2} />
 			</div>

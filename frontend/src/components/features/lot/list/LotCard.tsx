@@ -33,7 +33,7 @@ export function LotCard({ lot }: LotCardProps) {
 	const { isEnded, countdown: timeLeft } = useDateCountdown(lot.expiresAt)
 
 	return (
-		<Card className='justify-between gap-0 truncate p-0'>
+		<Card className='h-[500px] justify-between gap-0 truncate p-0'>
 			<Image
 				src={getMediaSource(lot.photos[0])}
 				alt={lot.title}
@@ -59,7 +59,7 @@ export function LotCard({ lot }: LotCardProps) {
 						{lot.firstPrice}€ {t("firstPrice")}
 					</span>
 					<span className='text-muted-foreground'>
-						{lot.type === LotType.Buynow &&
+						{lot.type !== LotType.Auction &&
 							`${lot.buyNowPrice}€ ${t("buyNow")}`}
 					</span>
 				</div>
