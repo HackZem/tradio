@@ -11,7 +11,7 @@ export class LotQueueService {
 		@InjectQueue("lot-events") private readonly lotQueue: Queue,
 	) {}
 
-	public async sheduleLotEvents(lot: Lot) {
+	public async scheduleLotEvents(lot: Lot) {
 		const now = new Date().getTime()
 		const endTime = new Date(lot.expiresAt!).getTime()
 

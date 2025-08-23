@@ -313,9 +313,10 @@ export type Query = {
   findCurrentSession: SessionModel;
   findLastBid: Scalars['Boolean']['output'];
   findLotById: LotModel;
+  findMe: UserModel;
   findNotificationByUser: Array<NotificationModel>;
   findOtherSessionsByUser: Array<SessionModel>;
-  findProfile: UserModel;
+  findProfile: UserProfileModel;
   findUnreadNotificationsCount: Scalars['Float']['output'];
 };
 
@@ -337,6 +338,11 @@ export type QueryFindLotByIdArgs = {
 
 export type QueryFindNotificationByUserArgs = {
   data: GetNotificationsInput;
+};
+
+
+export type QueryFindProfileArgs = {
+  username: Scalars['String']['input'];
 };
 
 export type RemovePhotoInput = {
@@ -407,6 +413,20 @@ export type UserModel = {
   username: Scalars['String']['output'];
 };
 
+export type UserProfileModel = {
+  __typename?: 'UserProfileModel';
+  avatar?: Maybe<Scalars['String']['output']>;
+  country?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  isVerified: Scalars['Boolean']['output'];
+  lots: Array<LotModel>;
+  phone?: Maybe<Scalars['String']['output']>;
+  region?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  username: Scalars['String']['output'];
+};
+
 export type VerificationInput = {
   token: Scalars['String']['input'];
 };
@@ -468,10 +488,17 @@ export type FindAllLotsQueryVariables = Exact<{
 
 export type FindAllLotsQuery = { __typename?: 'Query', findAllLots: Array<{ __typename?: 'LotModel', id: string, title: string, firstPrice?: number | null, currentPrice?: number | null, views: number, country: string, region: string, type: LotType, expiresAt?: any | null, buyNowPrice?: number | null, photos: Array<string>, _count: { __typename?: 'LotCount', bids: number }, user: { __typename?: 'UserModel', avatar?: string | null, username: string } }> };
 
-export type FindProfileQueryVariables = Exact<{ [key: string]: never; }>;
+export type FindMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FindProfileQuery = { __typename?: 'Query', findProfile: { __typename?: 'UserModel', username: string, description?: string | null, email: string, avatar?: string | null, phone?: string | null, region?: string | null, country?: string | null } };
+export type FindMeQuery = { __typename?: 'Query', findMe: { __typename?: 'UserModel', username: string, description?: string | null, email: string, avatar?: string | null, phone?: string | null, region?: string | null, country?: string | null } };
+
+export type FindProfileQueryVariables = Exact<{
+  username: Scalars['String']['input'];
+}>;
+
+
+export type FindProfileQuery = { __typename?: 'Query', findProfile: { __typename?: 'UserProfileModel', username: string, description?: string | null, avatar?: string | null, phone?: string | null, region?: string | null, country?: string | null } };
 
 export type FindNotificationsByUserQueryVariables = Exact<{
   data: GetNotificationsInput;
@@ -792,12 +819,56 @@ export type FindAllLotsQueryHookResult = ReturnType<typeof useFindAllLotsQuery>;
 export type FindAllLotsLazyQueryHookResult = ReturnType<typeof useFindAllLotsLazyQuery>;
 export type FindAllLotsSuspenseQueryHookResult = ReturnType<typeof useFindAllLotsSuspenseQuery>;
 export type FindAllLotsQueryResult = Apollo.QueryResult<FindAllLotsQuery, FindAllLotsQueryVariables>;
-export const FindProfileDocument = gql`
-    query FindProfile {
-  findProfile {
+export const FindMeDocument = gql`
+    query FindMe {
+  findMe {
     username
     description
     email
+    avatar
+    phone
+    region
+    country
+  }
+}
+    `;
+
+/**
+ * __useFindMeQuery__
+ *
+ * To run a query within a React component, call `useFindMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFindMeQuery(baseOptions?: Apollo.QueryHookOptions<FindMeQuery, FindMeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindMeQuery, FindMeQueryVariables>(FindMeDocument, options);
+      }
+export function useFindMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindMeQuery, FindMeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindMeQuery, FindMeQueryVariables>(FindMeDocument, options);
+        }
+export function useFindMeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FindMeQuery, FindMeQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindMeQuery, FindMeQueryVariables>(FindMeDocument, options);
+        }
+export type FindMeQueryHookResult = ReturnType<typeof useFindMeQuery>;
+export type FindMeLazyQueryHookResult = ReturnType<typeof useFindMeLazyQuery>;
+export type FindMeSuspenseQueryHookResult = ReturnType<typeof useFindMeSuspenseQuery>;
+export type FindMeQueryResult = Apollo.QueryResult<FindMeQuery, FindMeQueryVariables>;
+export const FindProfileDocument = gql`
+    query FindProfile($username: String!) {
+  findProfile(username: $username) {
+    username
+    description
     avatar
     phone
     region
@@ -818,10 +889,11 @@ export const FindProfileDocument = gql`
  * @example
  * const { data, loading, error } = useFindProfileQuery({
  *   variables: {
+ *      username: // value for 'username'
  *   },
  * });
  */
-export function useFindProfileQuery(baseOptions?: Apollo.QueryHookOptions<FindProfileQuery, FindProfileQueryVariables>) {
+export function useFindProfileQuery(baseOptions: Apollo.QueryHookOptions<FindProfileQuery, FindProfileQueryVariables> & ({ variables: FindProfileQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<FindProfileQuery, FindProfileQueryVariables>(FindProfileDocument, options);
       }

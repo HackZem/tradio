@@ -8,15 +8,17 @@ import {
 	ReturnType,
 } from "@prisma/client"
 import { hash } from "argon2"
-import { Country, ICountry, State } from "country-state-city"
+import { Country, ICountry, IState, State } from "country-state-city"
 import * as _ from "lodash"
+
+import { BidService } from "@/src/modules/bid/bid.service"
 
 import { LotQueueService } from "../../../modules/lot/queues/lot-queue.service"
 import ms from "../../../shared/utils/ms.util"
 import { RedisService } from "../../redis/redis.service"
 
 import * as categories from "./data/categories.json"
-import * as lots from "./data/lots.json"
+import * as lotsData from "./data/lots.json"
 import * as usernames from "./data/usernames.json"
 import { SeederModule } from "./seeder.module"
 
@@ -27,19 +29,17 @@ const PASSWORD = "19871987"
 
 const logger = new Logger("seed")
 
-function getRandomLocation(countries: ICountry[]) {
-	const country = _.sample(countries)
+const allCountries = Country.getAllCountries()
+const countriesWithStates = allCountries.filter(
+	(c: ICountry) => State.getStatesOfCountry(c.isoCode)?.length > 0,
+)
 
-	const regions = State.getStatesOfCountry(country?.isoCode)
+function getRandomLocation() {
+	const country = _.sample(countriesWithStates) as ICountry
+	const regions = State.getStatesOfCountry(country.isoCode)
+	const region = _.sample(regions) as IState
 
-	if (regions.length) {
-		return {
-			country,
-			region: _.sample(regions),
-		}
-	} else {
-		return getRandomLocation(countries)
-	}
+	return { country, region }
 }
 
 const prisma = new PrismaClient({
@@ -51,10 +51,15 @@ const prisma = new PrismaClient({
 })
 
 async function main() {
+	if (process.env.NODE_ENV === "production") {
+		throw new Error("Refusing to run seed in production")
+	}
+
 	const context = await NestFactory.createApplicationContext(SeederModule)
 
 	const lotQueueService = context.get(LotQueueService)
 	const redis = context.get(RedisService)
+	const bidService = context.get(BidService)
 
 	try {
 		logger.log("Starting to filling the database")
@@ -80,68 +85,62 @@ async function main() {
 
 		logger.log("Categories successfuly created")
 
-		await prisma.$transaction(async tx => {
-			for (const username of usernames) {
-				const { country, region } = getRandomLocation(Country.getAllCountries())
+		const hashedPassword = await hash(PASSWORD)
 
-				await tx.user.create({
-					data: {
-						username,
-						email: `${username}@tradio.com`,
-						password: await hash(PASSWORD),
-						isEmailVerified: true,
-						country: country?.isoCode,
-						region: region?.isoCode,
-						description: DESCRIPTION,
-					},
-				})
+		const usersData = (usernames as string[]).map(username => {
+			const { country, region } = getRandomLocation()
+			return {
+				username,
+				email: `${username}@tradio.com`,
+				password: hashedPassword,
+				isEmailVerified: true,
+				country: country.isoCode,
+				region: region.isoCode,
+				description: DESCRIPTION,
+			}
+		})
 
-				logger.log(`User ${username} created`)
+		await prisma.user.createMany({ data: usersData, skipDuplicates: true })
+		logger.log("Users created (createMany)")
+
+		const allUsers = await prisma.user.findMany({
+			select: { id: true, username: true, country: true, region: true },
+		})
+
+		const sellers = _.sampleSize(allUsers, 40)
+
+		for (let i = 0; i < sellers.length; i++) {
+			const seller = sellers[i]
+
+			if (!seller) {
+				logger.warn(`User ${seller} not found`)
+				continue
 			}
 
-			const sellerUsernames = _.sampleSize(usernames, 40)
+			if (!seller.country || !seller.region) {
+				logger.warn(`User ${seller.username} has not country or region`)
+				continue
+			}
 
-			let sellerUsername: string
-			for (let i = 0; i < sellerUsernames.length; i++) {
-				sellerUsername = sellerUsernames[i]
-
-				const user = await tx.user.findUnique({
-					where: { username: sellerUsername },
-					select: {
-						country: true,
-						region: true,
-						id: true,
-					},
-				})
-
-				if (!user) {
-					logger.warn(`User ${sellerUsername} not found`)
-					continue
-				}
-
-				if (!user.country || !user.region) {
-					logger.warn(`User ${sellerUsername} has not country or region`)
-					continue
-				}
-
-				let lot: { title: string; category: string }
+			await prisma.$transaction(async tx => {
+				let lotData: { title: string; category: string }
 				for (let j = i * 5; j < i * 5 + 5; j++) {
-					lot = lots[j]
+					lotData = lotsData[j]
 
 					const price = _.random(1, 10000, false)
 
 					const type = _.sample(LotType) ?? LotType.AUCTION
 
-					const createdLot = await tx.lot.create({
+					await tx.lot.create({
 						data: {
-							title: lot.title,
+							title: lotData.title,
 							type,
 							condition: _.sample(ConditionType) ?? ConditionType.NEW,
 							returnPeriod: _.sample(ReturnType) ?? ReturnType.NON_RETURNABLE,
-							country: user.country,
-							region: user.region,
-							category: { connect: { slug: lot.category } },
-							user: { connect: { id: user.id } },
+							country: seller.country!,
+							region: seller.region!,
+							category: { connect: { slug: lotData.category } },
+							user: { connect: { id: seller.id } },
 							isActive: true,
 							firstPrice: price,
 							currentPrice: price,
@@ -152,15 +151,44 @@ async function main() {
 							expiresAt: new Date(_.now() + ms(`${_.random(7, 14, true)}d`)),
 						},
 					})
-
-					await lotQueueService.sheduleLotEvents(createdLot)
 				}
+			})
 
-				logger.log(
-					`Five lots have been created for the seller ${sellerUsername}`,
-				)
+			logger.log(
+				`Five lots have been created for the seller ${seller.username}`,
+			)
+		}
+
+		const allLots = await prisma.lot.findMany()
+
+		for (const lot of allLots) {
+			await lotQueueService.scheduleLotEvents(lot)
+		}
+
+		logger.log(`All events for all lots has been scheduled`)
+
+		const lots = _.sampleSize(allLots, 40)
+
+		const randomBidders = _.sampleSize(allUsers, _.random(2, 10, false))
+
+		for (const lot of lots) {
+			let minAmount: number = lot.firstPrice!.toNumber()
+			for (const bidder of randomBidders) {
+				const amount = _.random(minAmount, minAmount + 500, false)
+
+				if (lot.buyNowPrice && amount >= lot.buyNowPrice.toNumber()) continue
+
+				if (!bidder) continue
+
+				if (bidder.id === lot.userId) continue
+
+				await bidService.place(bidder.id, { lotId: lot.id, amount })
+
+				minAmount = amount + 1
 			}
-		})
+
+			logger.log(`For lot ${lot.title} created`)
+		}
 
 		logger.log("The database has been successfully filled")
 	} catch (err) {

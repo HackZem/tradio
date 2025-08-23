@@ -219,9 +219,10 @@ type Query {
   findCurrentSession: SessionModel!
   findLastBid(lotId: String!): Boolean!
   findLotById(id: String!): LotModel!
+  findMe: UserModel!
   findNotificationByUser(data: GetNotificationsInput!): [NotificationModel!]!
   findOtherSessionsByUser: [SessionModel!]!
-  findProfile: UserModel!
+  findProfile(username: String!): UserProfileModel!
   findUnreadNotificationsCount: Float!
 }
 
@@ -289,6 +290,19 @@ type UserModel {
   phone: String
   region: String
   subscriptions: [LotSubscriptionModel!]!
+  updatedAt: DateTime!
+  username: String!
+}
+
+type UserProfileModel {
+  avatar: String
+  country: String
+  description: String
+  id: ID!
+  isVerified: Boolean!
+  lots: [LotModel!]!
+  phone: String
+  region: String
   updatedAt: DateTime!
   username: String!
 }

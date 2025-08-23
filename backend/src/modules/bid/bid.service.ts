@@ -4,7 +4,6 @@ import {
 	Injectable,
 	NotFoundException,
 } from "@nestjs/common"
-import { User } from "@prisma/client"
 
 import { PrismaService } from "@/src/core/prisma/prisma.service"
 
@@ -19,7 +18,7 @@ export class BidService {
 		private readonly notificationService: NotificationService,
 	) {}
 
-	public async place(user: User, input: PlaceBidInput) {
+	public async place(userId: string, input: PlaceBidInput) {
 		const { amount, lotId } = input
 
 		const lot = await this.prismaService.lot.findUnique({
@@ -42,7 +41,7 @@ export class BidService {
 			throw new BadRequestException("Lot is not active")
 		}
 
-		if (lot.userId === user.id) {
+		if (lot.userId === userId) {
 			throw new ConflictException("User can not place a bid on his lot")
 		}
 
@@ -65,7 +64,7 @@ export class BidService {
 				amount,
 				user: {
 					connect: {
-						id: user.id,
+						id: userId,
 					},
 				},
 				lot: {
@@ -85,7 +84,7 @@ export class BidService {
 					create: {
 						user: {
 							connect: {
-								id: user.id,
+								id: userId,
 							},
 						},
 					},
@@ -94,7 +93,7 @@ export class BidService {
 			},
 		})
 
-		await this.notificationService.notifyNewBid(lotId, user.id, amount)
+		await this.notificationService.notifyNewBid(lotId, userId, amount)
 
 		return true
 	}

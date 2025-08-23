@@ -53,7 +53,7 @@ export function ProfileMenu() {
 					<div className='flex w-full justify-center'>
 						<h2 className='mb-1 text-xl font-bold'>{user.username}</h2>
 					</div>
-					<Link href={`/users/${user.username}`}>
+					<Link href={`/users/me`}>
 						<DropdownMenuItem className='text-xl'>
 							<Icon
 								icon={"lucide:user"}

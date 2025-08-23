@@ -10,6 +10,8 @@ import {
 
 import { MAX_DESCRIPTION_LENGTH } from "@/libs/constants/data.constants"
 
+import { cn } from "@/utils/tw-merge"
+
 import {
 	AutosizeTextarea,
 	type AutosizeTextAreaRef,
@@ -21,6 +23,7 @@ type EditableTextProps = {
 	onPreviewChange?: (value: string) => void
 	placeholder?: string
 	className?: string
+	isEditable?: boolean
 }
 
 export default function EditableText({
@@ -93,7 +96,7 @@ export default function EditableText({
 			) : (
 				<div
 					onClick={() => setIsEditing(true)}
-					className='cursor-pointer rounded break-words whitespace-pre-wrap hover:bg-gray-100'
+					className={"cursor-pointer rounded break-words whitespace-pre-wrap"}
 				>
 					{value || (
 						<span className='text-muted-foreground'>{placeholder}</span>

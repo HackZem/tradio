@@ -32,9 +32,6 @@ async function findTopLots() {
 					},
 				},
 			}),
-			next: {
-				revalidate: 30,
-			},
 		})
 
 		const data = await response.json()
@@ -68,9 +65,6 @@ async function findEndingSoonLots() {
 					},
 				},
 			}),
-			next: {
-				revalidate: 30,
-			},
 		})
 
 		const data = await response.json()
@@ -104,9 +98,6 @@ async function findNewLots() {
 					},
 				},
 			}),
-			next: {
-				revalidate: 30,
-			},
 		})
 
 		const data = await response.json()

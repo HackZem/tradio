@@ -179,7 +179,7 @@ export class LotService {
 		})
 
 		if (newLot.type !== "BUYNOW")
-			await this.lotQueueService.sheduleLotEvents(newLot)
+			await this.lotQueueService.scheduleLotEvents(newLot)
 
 		return true
 	}

@@ -34,7 +34,10 @@ export function Notifications() {
 					className='text-foreground -mb-1'
 				/>
 			</PopoverTrigger>
-			<PopoverContent align='end' className='max-h-[500px] w-[360px]'>
+			<PopoverContent
+				align='end'
+				className='max-h-[500px] w-[360px] overflow-x-hidden overflow-y-scroll'
+			>
 				<NotificationsList />
 			</PopoverContent>
 		</Popover>

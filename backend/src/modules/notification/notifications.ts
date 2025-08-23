@@ -28,7 +28,7 @@ export const NOTIFICATIONS = {
 		) => {
 			return {
 				title: "Your bid has been outbid",
-				description: `Your bid of ${previousAmount} on lot ${title} has been outbid. The new bid is ${amount}€`,
+				description: `Your bid of ${previousAmount}€ on lot ${title} has been outbid. The new bid is ${amount}€`,
 				isRead: false,
 				type: NotificationType.NEW_BID,
 				userId: userId,
@@ -39,7 +39,7 @@ export const NOTIFICATIONS = {
 		toAutor: (minutes: number, title: string, autorId: string) => {
 			return {
 				title: "Lot Ending",
-				description: `Your lot ${title} ends in ${minutes}`,
+				description: `Your lot ${title} ends in ${minutes} minutes`,
 				isRead: false,
 				type: NotificationType.LOT_ENDING,
 				userId: autorId,
@@ -48,7 +48,7 @@ export const NOTIFICATIONS = {
 		toUser: (minutes: number, title: string, userId: string) => {
 			return {
 				title: "Lot Ending",
-				description: `Lot ${title} ends in ${minutes}`,
+				description: `Lot ${title} ends in ${minutes} minutes`,
 				isRead: false,
 				type: NotificationType.LOT_ENDING,
 				userId: userId,

@@ -41,7 +41,7 @@ export function NotificationsList() {
 					{t("empty")}
 				</div>
 			) : (
-				<div className='flex flex-col gap-y-4 overflow-x-hidden overflow-y-auto'>
+				<div className='flex h-max flex-col gap-y-4'>
 					{notifications.map(notification => {
 						return (
 							<Fragment key={notification.id}>

@@ -49,6 +49,7 @@
         "@tailwindcss/postcss": "^4.1.11",
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
         "@types/apollo-upload-client": "^18.0.0",
+        "@types/graphql": "^14.5.0",
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
@@ -505,6 +506,8 @@
     "@types/apollo-upload-client": ["@types/apollo-upload-client@18.0.0", "", { "dependencies": { "@apollo/client": "^3.8.0", "@types/extract-files": "*", "graphql": "14 - 16" } }, "sha512-cMgITNemktxasqvp6jiPj15dv84n3FTMvMoYBP1+xonDS+0l6JygIJrj2LJh85rShRzTOOkrElrAsCXXARa3KA=="],
 
     "@types/extract-files": ["@types/extract-files@13.0.1", "", {}, "sha512-/fRbzc2lAd7jDJSSnxWiUyXWjdUZZ4HbISLJzVgt1AvrdOa7U49YRPcvuCUywkmURZ7uwJOheDjx19itbQ5KvA=="],
+
+    "@types/graphql": ["@types/graphql@14.5.0", "", { "dependencies": { "graphql": "*" } }, "sha512-MOkzsEp1Jk5bXuAsHsUi6BVv0zCO+7/2PTiZMXWDSsMXvNU6w/PLMQT2vHn8hy2i0JqojPz1Sz6rsFjHtsU0lA=="],
 
     "@types/js-yaml": ["@types/js-yaml@4.0.9", "", {}, "sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg=="],
 

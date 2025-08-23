@@ -2,7 +2,7 @@ import { useEffect } from "react"
 
 import {
 	useClearSessionCookieMutation,
-	useFindProfileQuery,
+	useFindMeQuery,
 } from "@/graphql/generated/output"
 
 import { useAuth } from "./useAuth"
@@ -10,7 +10,7 @@ import { useAuth } from "./useAuth"
 export function useCurrent() {
 	const { isAuthenticated, exit } = useAuth()
 
-	const { data, loading, refetch, error } = useFindProfileQuery({
+	const { data, loading, refetch, error } = useFindMeQuery({
 		skip: !isAuthenticated,
 	})
 
@@ -26,7 +26,7 @@ export function useCurrent() {
 	}, [isAuthenticated, exit, clear])
 
 	return {
-		user: data?.findProfile,
+		user: data?.findMe,
 		isLoadingProfile: loading,
 		refetch,
 	}

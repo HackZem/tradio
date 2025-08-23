@@ -5,6 +5,7 @@ import { State } from "country-state-city"
 import * as countries from "i18n-iso-countries"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
+import Link from "next/link"
 
 import { Card } from "@/components/ui/common/Card"
 import { FullTextTooltip } from "@/components/ui/elements/FullTextTooltip"
@@ -25,9 +26,10 @@ countries.registerLocale(require("i18n-iso-countries/langs/en.json"))
 
 interface LotCardProps {
 	lot: FindAllLotsQuery["findAllLots"][number]
+	currentUserUsername: string
 }
 
-export function LotCard({ lot }: LotCardProps) {
+export function LotCard({ lot, currentUserUsername }: LotCardProps) {
 	const t = useTranslations("lot.card")
 	const tEnum = useTranslations("enums.lotTypes")
 
@@ -86,10 +88,14 @@ export function LotCard({ lot }: LotCardProps) {
 					</div>
 				</div>
 				<div className='mt-2 flex items-center justify-between'>
-					<div className='flex items-center gap-x-2'>
-						<UserAvatar user={lot.user} size={"sm"} />
-						<span>{lot.user.username}</span>
-					</div>
+					<Link
+						href={`/users/${lot.user.username === currentUserUsername ? "me" : lot.user.username}`}
+					>
+						<div className='flex items-center gap-x-2'>
+							<UserAvatar user={lot.user} size={"sm"} />
+							<span>{lot.user.username}</span>
+						</div>
+					</Link>
 					{isEnded ? (
 						<span className='text-destructive'>{t("expired")}</span>
 					) : (

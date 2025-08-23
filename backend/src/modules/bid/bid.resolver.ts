@@ -14,10 +14,10 @@ export class BidResolver {
 	@Authorization()
 	@Mutation(() => Boolean, { name: "placeBid" })
 	public async place(
-		@Authorized() user: User,
+		@Authorized("id") userId: string,
 		@Args("data") input: PlaceBidInput,
 	) {
-		return this.bidService.place(user, input)
+		return this.bidService.place(userId, input)
 	}
 
 	@Query(() => Boolean, { name: "findLastBid" })

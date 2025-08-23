@@ -1,0 +1,11 @@
+query FindMe {
+	findMe {
+		username
+		description
+		email
+		avatar
+		phone
+		region
+		country
+	}
+}

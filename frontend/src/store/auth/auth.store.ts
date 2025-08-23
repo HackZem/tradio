@@ -7,7 +7,7 @@ export const authStore = create(
 	persist<AuthStore>(
 		set => ({
 			isAuthenticated: false,
-			setIsAuthenticated: (vaulue: boolean) => set({ isAuthenticated: vaulue }),
+			setIsAuthenticated: (value: boolean) => set({ isAuthenticated: value }),
 		}),
 		{ name: "auth", storage: createJSONStorage(() => localStorage) },
 	),

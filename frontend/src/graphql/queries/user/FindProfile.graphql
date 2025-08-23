@@ -1,8 +1,7 @@
-query FindProfile {
-	findProfile {
+query FindProfile($username: String!) {
+	findProfile(username: $username) {
 		username
 		description
-		email
 		avatar
 		phone
 		region
