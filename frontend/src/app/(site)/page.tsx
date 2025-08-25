@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server"
 
 import { CategoriesList } from "@/components/features/category/CategoriesList"
-import { LotsList } from "@/components/features/lot/list/LotsList"
+import { LotsCarousel } from "@/components/features/lot/list/LotsCarousel"
 
 import {
 	FindAllLotsDocument,
@@ -25,7 +25,7 @@ async function findTopLots() {
 				query,
 				variables: {
 					filters: {
-						take: 10,
+						take: 20,
 						skip: 0,
 						sortBy: SortBy.Bids,
 						sortOrder: SortOrder.Desc,
@@ -58,7 +58,7 @@ async function findEndingSoonLots() {
 				query,
 				variables: {
 					filters: {
-						take: 5,
+						take: 10,
 						skip: 0,
 						sortBy: SortBy.ExpiresAt,
 						sortOrder: SortOrder.Asc,
@@ -91,7 +91,7 @@ async function findNewLots() {
 				query,
 				variables: {
 					filters: {
-						take: 5,
+						take: 10,
 						skip: 0,
 						sortBy: SortBy.CreatedAt,
 						sortOrder: SortOrder.Desc,
@@ -120,11 +120,14 @@ export default async function HomePage() {
 
 	return (
 		<div className='flex justify-center' suppressHydrationWarning>
-			<div className='mb-[100px] w-full max-w-[1610px] space-y-[100px]'>
+			<div className='mb-[100px] max-w-[1610px] space-y-[100px]'>
 				<CategoriesList />
-				<LotsList heading={t("topLotsHeading")} lots={topLots} rows={2} />
-				<LotsList heading={t("endingSoonLotsHeading")} lots={endingSoonLots} />
-				<LotsList heading={t("newLotsHeading")} lots={newLots} />
+				<LotsCarousel heading={t("topLotsHeading")} lots={topLots} rows={2} />
+				<LotsCarousel
+					heading={t("endingSoonLotsHeading")}
+					lots={endingSoonLots}
+				/>
+				<LotsCarousel heading={t("newLotsHeading")} lots={newLots} />
 			</div>
 		</div>
 	)

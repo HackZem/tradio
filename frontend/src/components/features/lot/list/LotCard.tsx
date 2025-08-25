@@ -14,29 +14,27 @@ import { UserAvatar } from "@/components/ui/elements/UserAvatar"
 
 import { FindAllLotsQuery, LotType } from "@/graphql/generated/output"
 
-import { useDateCountdown } from "@/hooks/useDateCountdown"
-
-import { COUNTDOWN_HIGHLIGHT_THRESHOLD } from "@/libs/constants/data.constants"
-
-import { getFormattedCountdown } from "@/utils/get-formatted-countdown"
 import { getMediaSource } from "@/utils/get-media-source"
 import { cn } from "@/utils/tw-merge"
+
+import { LotTimer } from "./LotTimer"
 
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"))
 
 interface LotCardProps {
 	lot: FindAllLotsQuery["findAllLots"][number]
 	currentUserUsername: string
+	className?: string
 }
 
-export function LotCard({ lot, currentUserUsername }: LotCardProps) {
+export function LotCard({ lot, currentUserUsername, className }: LotCardProps) {
 	const t = useTranslations("lot.card")
 	const tEnum = useTranslations("enums.lotTypes")
 
-	const { isEnded, countdown: timeLeft } = useDateCountdown(lot.expiresAt)
-
 	return (
-		<Card className='h-[500px] justify-between gap-0 truncate p-0'>
+		<Card
+			className={cn("h-[500px] justify-between gap-0 truncate p-0", className)}
+		>
 			{lot.photos[0] ? (
 				<Image
 					src={getMediaSource(lot.photos[0])}
@@ -96,19 +94,7 @@ export function LotCard({ lot, currentUserUsername }: LotCardProps) {
 							<span>{lot.user.username}</span>
 						</div>
 					</Link>
-					{isEnded ? (
-						<span className='text-destructive'>{t("expired")}</span>
-					) : (
-						<span
-							className={cn(
-								timeLeft &&
-									timeLeft <= COUNTDOWN_HIGHLIGHT_THRESHOLD &&
-									"text-destructive",
-							)}
-						>
-							{getFormattedCountdown(timeLeft)}
-						</span>
-					)}
+					<LotTimer expiresAt={lot.expiresAt} />
 				</div>
 			</div>
 		</Card>

@@ -1,7 +1,7 @@
 import { intervalToDuration } from "date-fns"
 
-export function getFormattedCountdown(ms: number | null): string {
-	if (!ms) return ""
+export function getFormattedCountdown(ms?: number): string {
+	if (!ms) return "--:--"
 
 	const { seconds, minutes, hours, days } = intervalToDuration({
 		start: 0,

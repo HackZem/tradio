@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl"
 import { getLocale, getMessages } from "next-intl/server"
 import { Roboto } from "next/font/google"
 
+import { TimerStarter } from "@/components/layout/TimerStarter"
 import { TooltipProvider } from "@/components/ui/common/Tooltip"
 
 import { ApolloClientProvider } from "@/providers/ApolloClientProvider"
@@ -40,6 +41,7 @@ export default async function RootLayout({
 						</TooltipProvider>
 					</NextIntlClientProvider>
 				</ApolloClientProvider>
+				<TimerStarter />
 			</body>
 		</html>
 	)

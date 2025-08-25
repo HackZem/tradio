@@ -96,7 +96,9 @@ export default function EditableText({
 			) : (
 				<div
 					onClick={() => setIsEditing(true)}
-					className={"cursor-pointer rounded break-words whitespace-pre-wrap"}
+					className={
+						"cursor-pointer rounded break-words whitespace-pre-wrap hover:bg-gray-100"
+					}
 				>
 					{value || (
 						<span className='text-muted-foreground'>{placeholder}</span>

@@ -22,7 +22,7 @@ const buttonVariants = cva(
 				secondary:
 					"bg-secondary text-secondary-foreground hover:bg-secondary/80",
 				ghost:
-					"text-foreground hover:text-primary active:text-accent transition-none",
+					"text-foreground hover:text-primary active:text-accent transition-none bg-white",
 			},
 			size: {
 				default: "px-5 py-2.5 rounded-lg text-xl",
