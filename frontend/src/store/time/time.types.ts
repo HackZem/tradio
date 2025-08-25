@@ -1,5 +1,5 @@
 export interface TimeStore {
 	now: number | undefined
-	start: () => void
+	start: (interval: number) => void
 	stop: () => void
 }

@@ -7,13 +7,13 @@ export const timeStore = create<TimeStore>((set, _) => {
 
 	return {
 		now: undefined,
-		start: () => {
+		start: interval => {
 			if (typeof window === "undefined") return
 			if (timerId !== null) return
 
 			timerId = window.setInterval(() => {
 				set({ now: Date.now() })
-			}, 1000)
+			}, interval)
 		},
 		stop: () => {
 			if (timerId !== null) {

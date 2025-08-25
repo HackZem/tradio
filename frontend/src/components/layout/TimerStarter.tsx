@@ -8,7 +8,7 @@ export function TimerStarter() {
 	const { start, stop } = timeStore()
 
 	useEffect(() => {
-		start()
+		start(1000)
 
 		return () => {
 			stop()
