@@ -12,6 +12,21 @@ import {
 
 import { SERVER_URL } from "@/libs/constants/url.constants"
 
+const FIND_TOP_LOTS_FILTERS = {
+	sortBy: SortBy.Bids,
+	sortOrder: SortOrder.Desc,
+} as const
+
+const FIND_ENDING_SOON_LOTS_FILTERS = {
+	sortBy: SortBy.ExpiresAt,
+	sortOrder: SortOrder.Asc,
+} as const
+
+const FIND_NEW_LOTS_FILTERS = {
+	sortBy: SortBy.CreatedAt,
+	sortOrder: SortOrder.Desc,
+} as const
+
 async function findTopLots() {
 	try {
 		const query = FindAllLotsDocument.loc?.source.body
@@ -27,8 +42,7 @@ async function findTopLots() {
 					filters: {
 						take: 20,
 						skip: 0,
-						sortBy: SortBy.Bids,
-						sortOrder: SortOrder.Desc,
+						...FIND_TOP_LOTS_FILTERS,
 					},
 				},
 			}),
@@ -60,8 +74,7 @@ async function findEndingSoonLots() {
 					filters: {
 						take: 10,
 						skip: 0,
-						sortBy: SortBy.ExpiresAt,
-						sortOrder: SortOrder.Asc,
+						...FIND_ENDING_SOON_LOTS_FILTERS,
 					},
 				},
 			}),
@@ -93,8 +106,7 @@ async function findNewLots() {
 					filters: {
 						take: 10,
 						skip: 0,
-						sortBy: SortBy.CreatedAt,
-						sortOrder: SortOrder.Desc,
+						...FIND_NEW_LOTS_FILTERS,
 					},
 				},
 			}),
@@ -122,12 +134,22 @@ export default async function HomePage() {
 		<div className='flex justify-center' suppressHydrationWarning>
 			<div className='mb-[100px] max-w-[1610px] space-y-[100px]'>
 				<CategoriesList />
-				<LotsCarousel heading={t("topLotsHeading")} lots={topLots} rows={2} />
+				<LotsCarousel
+					heading={t("topLotsHeading")}
+					lots={topLots}
+					rows={2}
+					filters={FIND_TOP_LOTS_FILTERS}
+				/>
 				<LotsCarousel
 					heading={t("endingSoonLotsHeading")}
 					lots={endingSoonLots}
+					filters={FIND_ENDING_SOON_LOTS_FILTERS}
 				/>
-				<LotsCarousel heading={t("newLotsHeading")} lots={newLots} />
+				<LotsCarousel
+					heading={t("newLotsHeading")}
+					lots={newLots}
+					filters={FIND_NEW_LOTS_FILTERS}
+				/>
 			</div>
 		</div>
 	)

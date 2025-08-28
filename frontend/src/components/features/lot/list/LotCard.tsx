@@ -3,11 +3,13 @@
 import { Icon } from "@iconify-icon/react"
 import { State } from "country-state-city"
 import * as countries from "i18n-iso-countries"
+import _ from "lodash"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
 import Link from "next/link"
 
 import { Card } from "@/components/ui/common/Card"
+import { Skeleton } from "@/components/ui/common/Skeleton"
 import { FullTextTooltip } from "@/components/ui/elements/FullTextTooltip"
 import { Heading } from "@/components/ui/elements/Heading"
 import { UserAvatar } from "@/components/ui/elements/UserAvatar"
@@ -98,5 +100,20 @@ export function LotCard({ lot, currentUserUsername, className }: LotCardProps) {
 				</div>
 			</div>
 		</Card>
+	)
+}
+
+export function LotCardSkeleton() {
+	return (
+		<div className='flex h-[500px] flex-col gap-y-2.5'>
+			<Skeleton className='h-1/2' />
+			{_.times(5, i => (
+				<Skeleton className='flex-1' key={i} />
+			))}
+			<div className='flex h-full flex-[2] gap-x-2.5'>
+				<Skeleton className='aspect-square h-full' />
+				<Skeleton className='h-full w-full' />
+			</div>
+		</div>
 	)
 }

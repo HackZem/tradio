@@ -33,9 +33,6 @@ async function findProfile(username: string) {
 					username,
 				},
 			}),
-			next: {
-				revalidate: 30,
-			},
 		})
 
 		const data = await response.json()
