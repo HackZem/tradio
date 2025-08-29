@@ -2,7 +2,6 @@ import Image from "next/image"
 import Link from "next/link"
 
 import { Card } from "@/components/ui/common/Card"
-import { Heading } from "@/components/ui/elements/Heading"
 
 import { ROUTES } from "@/libs/constants/routes.constants"
 

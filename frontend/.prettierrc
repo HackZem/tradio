@@ -25,7 +25,7 @@
 	],
 	"plugins": [
 		"@trivago/prettier-plugin-sort-imports",
-		"prettier-plugin-classnames",
-		"prettier-plugin-tailwindcss"
+		"prettier-plugin-tailwindcss",
+		"prettier-plugin-classnames"
 	]
 }

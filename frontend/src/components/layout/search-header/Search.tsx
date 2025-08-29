@@ -2,27 +2,34 @@
 
 import { Icon } from "@iconify-icon/react"
 import { useTranslations } from "next-intl"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { FormEvent, useState } from "react"
 
 import { Button } from "@/components/ui/common/Button"
 import { Input } from "@/components/ui/common/Input"
+import { ROUTES } from "@/libs/constants/routes.constants"
 
 export function Search() {
 	const t = useTranslations("layout.searchHeader")
 
-	const [query, setQuery] = useState<string>("")
+	const searchParams = useSearchParams()
+	const initialQuery = searchParams.get("query")
+
+	const [query, setQuery] = useState<string>(initialQuery ?? "")
 
 	const router = useRouter()
 
 	const onSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 
-		if (query.trim()) {
-			router.push(`/lots?query=${query}`)
-		} else {
-			router.push(`/lots`)
-		}
+		const trimmedQuery = query.trim()
+
+		const params = new URLSearchParams(searchParams)
+		params.delete("query")
+
+		trimmedQuery && params.append("query", query)
+
+		router.push(ROUTES.LOTS + "?" + params.toString())
 	}
 
 	return (
@@ -43,7 +50,8 @@ export function Search() {
 					<Icon
 						icon='lets-icons:close-round'
 						width='28'
-						className='hover:text-destructive absolute right-2.5 hover:cursor-pointer'
+						className='hover:text-destructive absolute right-2.5
+							hover:cursor-pointer'
 						onClick={() => setQuery("")}
 					/>
 				</div>

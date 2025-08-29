@@ -36,6 +36,21 @@ export class LotService {
 	) {}
 
 	private buildQueryCondition(query: string): Prisma.LotWhereInput {
+		if (query[0] === "@") {
+			return {
+				OR: [
+					{
+						user: {
+							username: {
+								contains: query.slice(1).trim(),
+								mode: "insensitive",
+							},
+						},
+					},
+				],
+			}
+		}
+
 		return {
 			OR: [
 				{

@@ -5,15 +5,15 @@
 	},
 	{
 		"title": "Jewelry & accessories",
-		"slug": "jewelry-accessories"
+		"slug": "jewelry-and-accessories"
 	},
 	{
 		"title": "Home & Garden",
-		"slug": "home-garden"
+		"slug": "home-and-garden"
 	},
 	{
 		"title": "Auto Parts & Accessories",
-		"slug": "auto-parts-accessories"
+		"slug": "auto-parts-and-accessories"
 	},
 	{
 		"title": "Clothing",
@@ -25,11 +25,11 @@
 	},
 	{
 		"title": "Beauty & Health",
-		"slug": "beauty-health"
+		"slug": "beauty-and-health"
 	},
 	{
 		"title": "Sports & Outdoor",
-		"slug": "sports-outdoor"
+		"slug": "sports-and-outdoor"
 	},
 	{
 		"title": "Pet Supplies",
@@ -37,15 +37,15 @@
 	},
 	{
 		"title": "Books & Stationery",
-		"slug": "books-stationery"
+		"slug": "books-and-stationery"
 	},
 	{
 		"title": "Music & Movies",
-		"slug": "music-movies"
+		"slug": "music-and-movies"
 	},
 	{
 		"title": "Art & Antiques",
-		"slug": "art-antiques"
+		"slug": "art-and-antiques"
 	},
 	{
 		"title": "Handmade Crafts",
@@ -53,15 +53,15 @@
 	},
 	{
 		"title": "Tools & Equipment",
-		"slug": "tools-equipment"
+		"slug": "tools-and-equipment"
 	},
 	{
 		"title": "Tickets & Events",
-		"slug": "tickets-events"
+		"slug": "tickets-and-events"
 	},
 	{
 		"title": "Kids & Toys",
-		"slug": "kids-toys"
+		"slug": "kids-and-toys"
 	},
 	{
 		"title": "Antiques",

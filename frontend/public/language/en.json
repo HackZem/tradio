@@ -145,6 +145,9 @@
 		"confirmDialog": {
 			"cancel": "Cancel",
 			"delete": "Delete"
+		},
+		"emptyState": {
+			"heading": "Not found"
 		}
 	},
 	"enums": {

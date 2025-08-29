@@ -25,7 +25,7 @@ import { useItemsPerSlide } from "@/hooks/useItemsPerSlide"
 
 import { cn } from "@/utils/tw-merge"
 
-import { LotCard, LotCardSkeleton } from "./LotCard"
+import { LotCard, LotCardSkeleton } from "../card/LotCard"
 
 interface LotsCarouselProps {
 	heading: string
@@ -110,7 +110,7 @@ export function LotsCarousel({
 	}, [hasMore])
 
 	return (
-		<Block heading={heading} className='px-8'>
+		<Block heading={heading}>
 			<Carousel
 				className='-m-4'
 				setApi={setApi}

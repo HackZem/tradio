@@ -1,0 +1,6 @@
+query FindAllCategories {
+	findAllCategories {
+		title
+		slug
+	}
+}

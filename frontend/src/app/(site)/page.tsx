@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server"
 
 import { CategoriesList } from "@/components/features/category/CategoriesList"
-import { LotsCarousel } from "@/components/features/lot/list/LotsCarousel"
+import { LotsCarousel } from "@/components/features/lot/carousel/LotsCarousel"
 
 import {
 	FindAllLotsDocument,
