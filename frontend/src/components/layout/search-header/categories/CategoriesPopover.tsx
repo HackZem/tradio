@@ -11,7 +11,7 @@ import {
 
 import { FindAllCategoriesQuery } from "@/graphql/generated/output"
 import { useForm } from "react-hook-form"
-import { useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { Form, FormField, FormItem } from "@/components/ui/common/Form"
 import _ from "lodash"
 import { ROUTES } from "@/libs/constants/routes.constants"
@@ -32,20 +32,32 @@ export function CategoriesPopover({
 
 	const router = useRouter()
 
+	const pathname = usePathname()
+
 	const form = useForm<FormValues>({
 		defaultValues: {
 			categories: searchParams.getAll("category"),
 		},
 	})
 
-	const { watch, control } = form
+	const { watch, control, setValue } = form
 
 	const selectedCategories = watch("categories")
 
 	useEffect(() => {
+		const urlCategories = searchParams.getAll("category")
+		setValue("categories", urlCategories)
+	}, [searchParams, setValue])
+
+	useEffect(() => {
 		const newParams = new URLSearchParams(searchParams.toString())
 		newParams.delete("category")
-		selectedCategories?.forEach(c => newParams.append("category", c))
+
+		if (!selectedCategories.length && !pathname.includes(ROUTES.LOTS)) return
+
+		selectedCategories?.forEach(category =>
+			newParams.append("category", category),
+		)
 		router.push(ROUTES.LOTS + "?" + newParams.toString())
 	}, [selectedCategories])
 

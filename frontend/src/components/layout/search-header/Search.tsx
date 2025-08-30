@@ -50,8 +50,7 @@ export function Search() {
 					<Icon
 						icon='lets-icons:close-round'
 						width='28'
-						className='hover:text-destructive absolute right-2.5
-							hover:cursor-pointer'
+						className='hover:text-destructive absolute right-2.5 cursor-pointer'
 						onClick={() => setQuery("")}
 					/>
 				</div>
