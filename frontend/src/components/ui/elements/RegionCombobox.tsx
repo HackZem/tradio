@@ -25,17 +25,19 @@ interface RegionOption {
 }
 
 interface RegionComboboxProps {
-	country: Alpha2Code
+	country?: Alpha2Code
 	value?: string
 	onValueChange?: (value: string) => void
-	disabled: boolean
+	disabled?: boolean
+	className?: string
 }
 
 export function RegionCombobox({
 	country,
 	value,
 	onValueChange,
-	disabled,
+	disabled = false,
+	className,
 }: RegionComboboxProps) {
 	const [open, setOpen] = useState(false)
 
@@ -54,7 +56,7 @@ export function RegionCombobox({
 					variant='outline'
 					role='combobox'
 					aria-expanded={open}
-					className='w-full justify-between'
+					className={cn("w-full justify-between rounded-[12px]", className)}
 					disabled={disabled}
 				>
 					{selectedOption ? selectedOption.label : "Choose region..."}
@@ -83,7 +85,8 @@ export function RegionCombobox({
 									>
 										<Check
 											className={cn(
-												"group-data-[selected=true]:text-primary-foreground mr-2 h-4 w-4",
+												`group-data-[selected=true]:text-primary-foreground mr-2
+												h-4 w-4`,
 												value === option.value ? "opacity-100" : "opacity-0",
 											)}
 										/>

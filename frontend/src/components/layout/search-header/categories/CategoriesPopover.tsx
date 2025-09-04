@@ -1,8 +1,11 @@
 "use client"
 
-import { PropsWithChildren, useEffect } from "react"
+import _ from "lodash"
+import { PropsWithChildren } from "react"
+import { ControllerRenderProps, useForm } from "react-hook-form"
 
 import { Checkbox } from "@/components/ui/common/Checkbox"
+import { Form, FormField, FormItem } from "@/components/ui/common/Form"
 import {
 	Popover,
 	PopoverContent,
@@ -10,14 +13,11 @@ import {
 } from "@/components/ui/common/Popover"
 
 import { FindAllCategoriesQuery } from "@/graphql/generated/output"
-import { useForm } from "react-hook-form"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { Form, FormField, FormItem } from "@/components/ui/common/Form"
-import _ from "lodash"
-import { ROUTES } from "@/libs/constants/routes.constants"
+
+import { useLotFiltersStore } from "@/store/lot-filters/lot-filters.store"
 
 interface CategoriesPopoverProps {
-	categories: FindAllCategoriesQuery["findAllCategories"]
+	categoriesData: FindAllCategoriesQuery["findAllCategories"]
 }
 
 interface FormValues {
@@ -25,41 +25,34 @@ interface FormValues {
 }
 
 export function CategoriesPopover({
-	categories,
+	categoriesData,
 	children,
 }: PropsWithChildren<CategoriesPopoverProps>) {
-	const searchParams = useSearchParams()
-
-	const router = useRouter()
-
-	const pathname = usePathname()
+	const { categories, addCategory, removeCategory } = useLotFiltersStore()
 
 	const form = useForm<FormValues>({
-		defaultValues: {
-			categories: searchParams.getAll("category"),
+		values: {
+			categories,
 		},
 	})
 
-	const { watch, control, setValue } = form
+	const { control } = form
 
-	const selectedCategories = watch("categories")
+	function handleCategoryChange(
+		field: ControllerRenderProps<FormValues, "categories">,
+		checked: boolean,
+		slug: string,
+	) {
+		if (checked) {
+			field.onChange([...field.value, slug])
+			addCategory(slug)
+		} else {
+			field.onChange(field.value.filter(v => v !== slug))
+			removeCategory(slug)
+		}
+	}
 
-	useEffect(() => {
-		const urlCategories = searchParams.getAll("category")
-		setValue("categories", urlCategories)
-	}, [searchParams, setValue])
-
-	useEffect(() => {
-		const newParams = new URLSearchParams(searchParams.toString())
-		newParams.delete("category")
-
-		if (!selectedCategories.length && !pathname.includes(ROUTES.LOTS)) return
-
-		selectedCategories?.forEach(category =>
-			newParams.append("category", category),
-		)
-		router.push(ROUTES.LOTS + "?" + newParams.toString())
-	}, [selectedCategories])
+	// well well well, i use the form with the store :)
 
 	return (
 		<Popover>
@@ -67,7 +60,7 @@ export function CategoriesPopover({
 			<PopoverContent align='start' className='w-full max-w-[600px]'>
 				<Form {...form}>
 					<form className='grid grid-cols-2 gap-x-[50px] gap-y-5'>
-						{categories.map((category, i) => (
+						{categoriesData.map((category, i) => (
 							<FormField
 								control={control}
 								name='categories'
@@ -77,19 +70,13 @@ export function CategoriesPopover({
 
 									return (
 										<FormItem
-											className='flex items-center justify-between gap-x-3
-												[&>*]:cursor-pointer cursor-pointer'
+											className='flex cursor-pointer items-center
+												justify-between gap-x-3 [&>*]:cursor-pointer'
 											key={i}
 											onClick={e => {
 												if (e.target === e.currentTarget) {
 													const newChecked = !isChecked
-													if (newChecked) {
-														field.onChange([...field.value, category.slug])
-													} else {
-														field.onChange(
-															field.value.filter(v => v !== category.slug),
-														)
-													}
+													handleCategoryChange(field, newChecked, category.slug)
 												}
 											}}
 										>
@@ -103,13 +90,7 @@ export function CategoriesPopover({
 												id={category.slug}
 												checked={isChecked}
 												onCheckedChange={checked => {
-													if (checked) {
-														field.onChange([...field.value, category.slug])
-													} else {
-														field.onChange(
-															field.value.filter(v => v !== category.slug),
-														)
-													}
+													handleCategoryChange(field, !!checked, category.slug)
 												}}
 											/>
 										</FormItem>

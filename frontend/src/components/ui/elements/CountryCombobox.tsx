@@ -2,7 +2,7 @@
 
 import * as countries from "i18n-iso-countries"
 import { Check, ChevronsUpDown } from "lucide-react"
-import { useRef, useState } from "react"
+import { useState } from "react"
 
 import { cn } from "@/utils/tw-merge"
 
@@ -28,13 +28,15 @@ interface CountryOption {
 interface CountryComboboxProps {
 	value?: string
 	onValueChange?: (value: string) => void
-	disabled: boolean
+	disabled?: boolean
+	className?: string
 }
 
 export function CountryCombobox({
 	value,
 	onValueChange,
-	disabled,
+	disabled = false,
+	className,
 }: CountryComboboxProps) {
 	const [open, setOpen] = useState(false)
 
@@ -54,7 +56,7 @@ export function CountryCombobox({
 					variant='outline'
 					role='combobox'
 					aria-expanded={open}
-					className='w-full justify-between'
+					className={cn("w-full justify-between rounded-[12px]", className)}
 					disabled={disabled}
 				>
 					{selectedOption ? selectedOption.label : "Choose country..."}
@@ -83,7 +85,8 @@ export function CountryCombobox({
 									>
 										<Check
 											className={cn(
-												"group-data-[selected=true]:text-primary-foreground mr-2 h-4 w-4",
+												`group-data-[selected=true]:text-primary-foreground mr-2
+												h-4 w-4`,
 												value === option.value ? "opacity-100" : "opacity-0",
 											)}
 										/>

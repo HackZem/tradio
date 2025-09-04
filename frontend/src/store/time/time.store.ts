@@ -1,8 +1,8 @@
 import { create } from "zustand"
 
-import { TimeStore } from "./time.types"
+import { ITimeStore } from "./time.types"
 
-export const timeStore = create<TimeStore>((set, _) => {
+export const timeStore = create<ITimeStore>((set, _) => {
 	let timerId: number | null = null
 
 	return {

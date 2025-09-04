@@ -1,5 +1,5 @@
 import { Field, Float, ID, ObjectType, registerEnumType } from "@nestjs/graphql"
-import { Bid, ConditionType, Lot, LotType, ReturnType } from "@prisma/client"
+import { ConditionType, Lot, LotType, ReturnType } from "@prisma/client"
 import { Decimal, JsonValue } from "@prisma/client/runtime/library"
 import GraphQLJSON from "graphql-type-json"
 

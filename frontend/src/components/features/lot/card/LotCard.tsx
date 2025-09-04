@@ -24,7 +24,7 @@ import { LotTimer } from "./LotTimer"
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"))
 
 interface LotCardProps {
-	lot: FindAllLotsQuery["findAllLots"][number]
+	lot: FindAllLotsQuery["findAllLots"]["lots"][number]
 	currentUserUsername: string
 	className?: string
 }
@@ -105,7 +105,10 @@ export function LotCard({ lot, currentUserUsername, className }: LotCardProps) {
 
 export function LotCardSkeleton() {
 	return (
-		<div className='flex h-[500px] flex-col gap-y-2.5'>
+		<div
+			className='flex h-[500px] flex-col gap-y-2.5 overflow-hidden
+				rounded-[25px]'
+		>
 			<Skeleton className='h-1/2' />
 			{_.times(5, i => (
 				<Skeleton className='flex-1' key={i} />

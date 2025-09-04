@@ -7,6 +7,7 @@ import { TimerStarter } from "@/components/layout/TimerStarter"
 import { TooltipProvider } from "@/components/ui/common/Tooltip"
 
 import { ApolloClientProvider } from "@/providers/ApolloClientProvider"
+import { LotFiltersProvider } from "@/providers/LotFiltersProvider"
 import { ToasterProvider } from "@/providers/ToastProvider"
 
 import "../styles/globals.css"
@@ -24,8 +25,10 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
 	children,
+	searchParams,
 }: Readonly<{
 	children: React.ReactNode
+	searchParams: string
 }>) {
 	const locale = await getLocale()
 	const messages = await getMessages()
@@ -36,8 +39,10 @@ export default async function RootLayout({
 				<ApolloClientProvider>
 					<NextIntlClientProvider messages={messages}>
 						<TooltipProvider>
-							<ToasterProvider />
-							{children}
+							<LotFiltersProvider>
+								<ToasterProvider />
+								{children}
+							</LotFiltersProvider>
 						</TooltipProvider>
 					</NextIntlClientProvider>
 				</ApolloClientProvider>

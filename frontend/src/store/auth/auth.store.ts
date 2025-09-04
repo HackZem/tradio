@@ -1,10 +1,10 @@
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
 
-import type { AuthStore } from "./auth.types"
+import type { IAuthStore } from "./auth.types"
 
 export const authStore = create(
-	persist<AuthStore>(
+	persist<IAuthStore>(
 		set => ({
 			isAuthenticated: false,
 			setIsAuthenticated: (value: boolean) => set({ isAuthenticated: value }),

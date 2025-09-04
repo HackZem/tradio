@@ -2,34 +2,27 @@
 
 import { Icon } from "@iconify-icon/react"
 import { useTranslations } from "next-intl"
-import { useRouter, useSearchParams } from "next/navigation"
-import { FormEvent, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 
 import { Button } from "@/components/ui/common/Button"
 import { Input } from "@/components/ui/common/Input"
-import { ROUTES } from "@/libs/constants/routes.constants"
+
+import { useLotFiltersStore } from "@/store/lot-filters/lot-filters.store"
 
 export function Search() {
 	const t = useTranslations("layout.searchHeader")
 
-	const searchParams = useSearchParams()
-	const initialQuery = searchParams.get("query")
+	const { query: initialQuery, setQuery: setQueryToStore } =
+		useLotFiltersStore()
 
-	const [query, setQuery] = useState<string>(initialQuery ?? "")
+	const [query, setQuery] = useState<string>(initialQuery)
 
-	const router = useRouter()
+	useEffect(() => setQuery(initialQuery), [initialQuery])
 
 	const onSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 
-		const trimmedQuery = query.trim()
-
-		const params = new URLSearchParams(searchParams)
-		params.delete("query")
-
-		trimmedQuery && params.append("query", query)
-
-		router.push(ROUTES.LOTS + "?" + params.toString())
+		setQueryToStore(query)
 	}
 
 	return (

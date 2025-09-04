@@ -1,4 +1,6 @@
 import { LotsContent } from "@/components/features/lot/list/LotsContent"
+import { LotFilters } from "@/components/features/lot/list/filters/LotFilters"
+import { LotSort } from "@/components/features/lot/list/filters/LotSort"
 
 import {
 	FindAllLotsDocument,
@@ -20,7 +22,7 @@ async function findAllLots() {
 				query,
 				variables: {
 					filters: {
-						take: 50,
+						take: 20,
 						skip: 0,
 					},
 				},
@@ -30,7 +32,10 @@ async function findAllLots() {
 		const data = await response.json()
 
 		return {
-			lots: data.data.findAllLots as FindAllLotsQuery["findAllLots"],
+			lots: data.data.findAllLots
+				.lots as FindAllLotsQuery["findAllLots"]["lots"],
+			maxPrice: data.data.findAllLots
+				.maxPrice as FindAllLotsQuery["findAllLots"]["maxPrice"],
 		}
 	} catch (err) {
 		console.error(err)
@@ -39,10 +44,17 @@ async function findAllLots() {
 }
 
 export default async function LotsPage() {
-	const { lots } = await findAllLots()
+	const { lots, maxPrice } = await findAllLots()
 
 	return (
-		<div className='mx-auto max-w-[1610px] overflow-visible pt-6'>
+		<div
+			className='mx-auto flex w-full max-w-[1610px] justify-center gap-x-[30px]
+				overflow-visible pt-6'
+		>
+			<div className='w-full max-w-[300px] space-y-5'>
+				<LotSort />
+				<LotFilters maxPrice={maxPrice ?? 0} />
+			</div>
 			<LotsContent lots={lots} />
 		</div>
 	)

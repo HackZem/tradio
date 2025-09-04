@@ -21,13 +21,14 @@ import { RemovePhotoInput } from "./inputs/remove-photo.input"
 import { ReorderPhotosInput } from "./inputs/reorder-photos.input"
 import { UploadPhotoInput } from "./inputs/upload-photo.input"
 import { LotService } from "./lot.service"
+import { FindLotsModel } from "./models/find-lots.model"
 import { LotModel } from "./models/lot.model"
 
 @Resolver(() => LotModel)
 export class LotResolver {
 	constructor(private readonly lotService: LotService) {}
 
-	@Query(() => [LotModel], { name: "findAllLots" })
+	@Query(() => FindLotsModel, { name: "findAllLots" })
 	public async findAll(@Args("filters") input: FiltersInput) {
 		return this.lotService.findAll(input)
 	}

@@ -6,7 +6,7 @@ import {
 	NotFoundException,
 } from "@nestjs/common"
 import { createId } from "@paralleldrive/cuid2"
-import { LotType, Prisma, User } from "@prisma/client"
+import { Prisma, User } from "@prisma/client"
 import { FileUpload } from "graphql-upload-ts"
 import * as sharp from "sharp"
 
@@ -106,7 +106,7 @@ export class LotService {
 		country,
 		region,
 		lotTypes,
-		condition,
+		conditionTypes,
 		categorySlugs,
 	}: FiltersInput): Prisma.LotWhereInput {
 		const conditions: Prisma.LotWhereInput[] = []
@@ -127,8 +127,8 @@ export class LotService {
 		if ((lotTypes ?? []).length > 0) {
 			conditions.push({ type: { in: lotTypes } })
 		}
-		if ((condition ?? []).length > 0) {
-			conditions.push({ condition: { in: condition } })
+		if ((conditionTypes ?? []).length > 0) {
+			conditions.push({ condition: { in: conditionTypes } })
 		}
 		if ((categorySlugs ?? []).length > 0) {
 			conditions.push({ categorySlug: { in: categorySlugs } })
@@ -160,7 +160,11 @@ export class LotService {
 			orderBy,
 		})
 
-		return lots
+		const maxPrice = await this.prismaService.lot.aggregate({
+			_max: { currentPrice: true },
+		})
+
+		return { lots, maxPrice: maxPrice._max.currentPrice }
 	}
 
 	public async findById(id: string) {

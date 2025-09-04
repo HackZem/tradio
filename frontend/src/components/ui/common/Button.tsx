@@ -25,7 +25,7 @@ const buttonVariants = cva(
 					"text-foreground hover:text-primary active:text-accent transition-none bg-white",
 			},
 			size: {
-				default: "px-5 py-2.5 rounded-lg text-xl",
+				default: "px-5 py-2.5 rounded-[25px] text-xl",
 				icon: "size-4 rounded-full",
 			},
 		},

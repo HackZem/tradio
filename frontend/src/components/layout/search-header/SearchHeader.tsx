@@ -46,9 +46,9 @@ export async function SearchHeader() {
 
 	return (
 		<header className='border-border bg-card pt-6 pb-2'>
-			<div className='flex flex-col max-w-[800px] mx-auto gap-y-2.5'>
+			<div className='mx-auto flex max-w-[800px] flex-col gap-y-2.5'>
 				<div className='flex items-center justify-center gap-x-2.5'>
-					<CategoriesPopover categories={categories}>
+					<CategoriesPopover categoriesData={categories}>
 						<Button
 							variant='outline'
 							size={"default"}
@@ -60,7 +60,7 @@ export async function SearchHeader() {
 					</CategoriesPopover>
 					<Search />
 				</div>
-				<CategoryChips categories={categories} />
+				<CategoryChips categoriesData={categories} />
 			</div>
 		</header>
 	)

@@ -139,6 +139,28 @@
 			"firstPrice": "first price",
 			"expired": "expired",
 			"buyNow": "buy now"
+		},
+		"list": {
+			"sort": {
+				"heading": "Sort",
+				"by": "By",
+				"order": "Order"
+			},
+			"filters": {
+				"heading": "Filters",
+				"lotTypes": "Lot types",
+				"price": {
+					"heading": "Price",
+					"from": "from",
+					"to": "to"
+				},
+				"condition": "Condition",
+				"location": {
+					"heading": "Location",
+					"country": "Country",
+					"region": "Region"
+				}
+			}
 		}
 	},
 	"elements": {
@@ -148,6 +170,9 @@
 		},
 		"emptyState": {
 			"heading": "Not found"
+		},
+		"filterSelect": {
+			"empty": "— None —"
 		}
 	},
 	"enums": {
@@ -155,6 +180,21 @@
 			"AUCTION": "Auction",
 			"BUYNOW": "Buy Now",
 			"MIXED": "Auction/Buy Now"
+		},
+		"conditionTypes": {
+			"NEW": "New",
+			"USED": "Used",
+			"DEFECTIVE": "Defective"
+		},
+		"sortBy": {
+			"PRICE": "Current Price",
+			"BIDS": "Bids",
+			"CREATED_AT": "Creation Date",
+			"EXPIRES_AT": "End Date"
+		},
+		"sortOrder": {
+			"ASC": "Ascending",
+			"DESC": "Descending"
 		}
 	}
 }

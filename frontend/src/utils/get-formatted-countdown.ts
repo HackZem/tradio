@@ -1,5 +1,6 @@
 import { intervalToDuration } from "date-fns"
 
+//TODO: bug with date formatting -> 7:00 to 6:23:59:59
 export function getFormattedCountdown(ms?: number): string {
 	if (!ms) return "--:--"
 

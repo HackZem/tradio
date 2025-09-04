@@ -1,7 +1,6 @@
 "use client"
 
 import _ from "lodash"
-import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 
@@ -10,29 +9,32 @@ import {
 	useFindAllLotsQuery,
 } from "@/graphql/generated/output"
 
+import { useLotFiltersStore } from "@/store/lot-filters/lot-filters.store"
+
 import { LotCardSkeleton } from "../card/LotCard"
 
 import { LotsList } from "./LotsList"
 
 interface LotsContentProps {
-	lots: FindAllLotsQuery["findAllLots"]
+	lots: FindAllLotsQuery["findAllLots"]["lots"]
 }
 
-export function LotsContent({ lots }: LotsContentProps) {
-	const searchParams = useSearchParams()
-	const query = searchParams.get("query")
-	const categories = searchParams.getAll("category")
+// TODO: problem with sort by BIDS -> identical lots arrive
 
-	const [lotsList, setLotsList] = useState<FindAllLotsQuery["findAllLots"]>(
-		lots ?? [],
-	)
+export function LotsContent({ lots }: LotsContentProps) {
+	const { categories, minPrice, maxPrice, ...filters } = useLotFiltersStore()
+
+	const [lotsList, setLotsList] = useState<
+		FindAllLotsQuery["findAllLots"]["lots"]
+	>(lots ?? [])
 	const [hasMore, setHasMore] = useState<boolean>(true)
 
 	const { data, fetchMore } = useFindAllLotsQuery({
 		variables: {
 			filters: {
-				query,
+				...filters,
 				categorySlugs: categories,
+				priceRange: { min: minPrice, max: maxPrice },
 				take: 20,
 				skip: 0,
 			},
@@ -42,42 +44,50 @@ export function LotsContent({ lots }: LotsContentProps) {
 
 	useEffect(() => {
 		if (data?.findAllLots) {
-			setLotsList(data.findAllLots)
-			setHasMore(data.findAllLots.length >= 20)
+			setLotsList(data.findAllLots.lots)
+			setHasMore(data.findAllLots.lots.length >= 20)
 		}
-	}, [data, query])
+	}, [data])
 
 	async function fetchMoreLots() {
 		if (!hasMore) return
 
 		setTimeout(async () => {
-			const { data: newData } = await fetchMore({
-				variables: {
-					filters: {
-						query,
-						categorySlugs: categories,
-						take: 20,
-						skip: lotsList.length,
+			try {
+				const { data: newData } = await fetchMore({
+					variables: {
+						filters: {
+							...filters,
+							categorySlugs: categories,
+							priceRange: { min: minPrice, max: maxPrice },
+							take: 20,
+							skip: lotsList.length,
+						},
 					},
-				},
-			})
+				})
 
-			if (newData.findAllLots.length) {
-				setLotsList(prev => [...prev, ...newData.findAllLots])
-			} else {
-				setHasMore(false)
+				if (newData.findAllLots.lots.length) {
+					setLotsList(prev => [...prev, ...newData.findAllLots.lots])
+				} else {
+					setHasMore(false)
+				}
+			} catch (err) {
+				console.log(err)
 			}
 		}, 400)
 	}
 
 	return (
-		<>
+		<div className='-m-4 w-full'>
 			<InfiniteScroll
 				dataLength={lotsList.length}
 				next={fetchMoreLots}
 				hasMore={hasMore}
 				loader={
-					<div className='grid grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
+					<div
+						className='grid grid-cols-2 gap-5 p-4 xl:grid-cols-3
+							2xl:grid-cols-4'
+					>
 						{_.times(10, i => (
 							<LotCardSkeleton key={i} />
 						))}
@@ -86,6 +96,6 @@ export function LotsContent({ lots }: LotsContentProps) {
 			>
 				<LotsList lots={lotsList} />
 			</InfiniteScroll>
-		</>
+		</div>
 	)
 }

@@ -9,14 +9,14 @@ import { useCurrent } from "@/hooks/useCurrent"
 import { LotCard } from "../card/LotCard"
 
 interface LotsListProps {
-	lots: FindAllLotsQuery["findAllLots"]
+	lots: FindAllLotsQuery["findAllLots"]["lots"]
 }
 
 export function LotsList({ lots }: LotsListProps) {
 	const { user } = useCurrent()
 
 	return lots.length ? (
-		<div className='grid grid-cols-2 gap-5 p-4 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'>
+		<div className='grid grid-cols-2 gap-5 p-4 xl:grid-cols-3 2xl:grid-cols-4'>
 			{lots.map(lot => (
 				<LotCard
 					lot={lot}

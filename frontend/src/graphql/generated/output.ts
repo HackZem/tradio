@@ -98,7 +98,7 @@ export type DeviceModel = {
 
 export type FiltersInput = {
   categorySlugs?: InputMaybe<Array<Scalars['String']['input']>>;
-  condition?: InputMaybe<Array<ConditionType>>;
+  conditionTypes?: InputMaybe<Array<ConditionType>>;
   country?: InputMaybe<Scalars['String']['input']>;
   lotTypes?: InputMaybe<Array<LotType>>;
   priceRange?: InputMaybe<PriceRangeInput>;
@@ -108,6 +108,12 @@ export type FiltersInput = {
   sortBy?: InputMaybe<SortBy>;
   sortOrder?: InputMaybe<SortOrder>;
   take?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type FindLotsModel = {
+  __typename?: 'FindLotsModel';
+  lots: Array<LotModel>;
+  maxPrice?: Maybe<Scalars['Float']['output']>;
 };
 
 export type GetNotificationsInput = {
@@ -309,7 +315,7 @@ export type PriceRangeInput = {
 export type Query = {
   __typename?: 'Query';
   findAllCategories: Array<CategoryModel>;
-  findAllLots: Array<LotModel>;
+  findAllLots: FindLotsModel;
   findCurrentSession: SessionModel;
   findLastBid: Scalars['Boolean']['output'];
   findLotById: LotModel;
@@ -491,7 +497,7 @@ export type FindAllLotsQueryVariables = Exact<{
 }>;
 
 
-export type FindAllLotsQuery = { __typename?: 'Query', findAllLots: Array<{ __typename?: 'LotModel', id: string, title: string, firstPrice?: number | null, currentPrice?: number | null, views: number, country: string, region: string, type: LotType, expiresAt?: any | null, buyNowPrice?: number | null, photos: Array<string>, _count: { __typename?: 'LotCount', bids: number }, user: { __typename?: 'UserModel', avatar?: string | null, username: string } }> };
+export type FindAllLotsQuery = { __typename?: 'Query', findAllLots: { __typename?: 'FindLotsModel', maxPrice?: number | null, lots: Array<{ __typename?: 'LotModel', id: string, title: string, firstPrice?: number | null, currentPrice?: number | null, views: number, country: string, region: string, type: LotType, expiresAt?: any | null, buyNowPrice?: number | null, photos: Array<string>, _count: { __typename?: 'LotCount', bids: number }, user: { __typename?: 'UserModel', avatar?: string | null, username: string } }> } };
 
 export type FindMeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -810,24 +816,27 @@ export type FindAllCategoriesQueryResult = Apollo.QueryResult<FindAllCategoriesQ
 export const FindAllLotsDocument = gql`
     query FindAllLots($filters: FiltersInput!) {
   findAllLots(filters: $filters) {
-    id
-    title
-    firstPrice
-    currentPrice
-    views
-    country
-    region
-    type
-    expiresAt
-    buyNowPrice
-    photos(limit: 1)
-    _count {
-      bids
+    lots {
+      id
+      title
+      firstPrice
+      currentPrice
+      views
+      country
+      region
+      type
+      expiresAt
+      buyNowPrice
+      photos(limit: 1)
+      _count {
+        bids
+      }
+      user {
+        avatar
+        username
+      }
     }
-    user {
-      avatar
-      username
-    }
+    maxPrice
   }
 }
     `;

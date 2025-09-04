@@ -56,7 +56,6 @@ export class FiltersInput {
 	@Field(() => String, { nullable: true })
 	@IsString()
 	@IsOptional()
-	@IsNotEmpty()
 	public query?: string
 
 	@Field(() => PriceRangeInput, { nullable: true })
@@ -87,7 +86,7 @@ export class FiltersInput {
 	@IsEnum(ConditionType, { each: true })
 	@IsOptional()
 	@IsNotEmpty()
-	public condition?: ConditionType[]
+	public conditionTypes?: ConditionType[]
 
 	@Field(() => [String], { nullable: true })
 	@IsOptional()

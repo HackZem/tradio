@@ -82,7 +82,7 @@ type DeviceModel {
 
 input FiltersInput {
   categorySlugs: [String!]
-  condition: [ConditionType!]
+  conditionTypes: [ConditionType!]
   country: String
   lotTypes: [LotType!]
   priceRange: PriceRangeInput
@@ -92,6 +92,11 @@ input FiltersInput {
   sortBy: SortBy
   sortOrder: SortOrder
   take: Float
+}
+
+type FindLotsModel {
+  lots: [LotModel!]!
+  maxPrice: Float
 }
 
 input GetNotificationsInput {
@@ -215,7 +220,7 @@ input PriceRangeInput {
 
 type Query {
   findAllCategories: [CategoryModel!]!
-  findAllLots(filters: FiltersInput!): [LotModel!]!
+  findAllLots(filters: FiltersInput!): FindLotsModel!
   findCurrentSession: SessionModel!
   findLastBid(lotId: String!): Boolean!
   findLotById(id: String!): LotModel!

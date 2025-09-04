@@ -51,7 +51,8 @@ async function findTopLots() {
 		const data = await response.json()
 
 		return {
-			lots: data.data.findAllLots as FindAllLotsQuery["findAllLots"],
+			lots: data.data.findAllLots
+				.lots as FindAllLotsQuery["findAllLots"]["lots"],
 		}
 	} catch (err) {
 		console.error(err)
@@ -83,7 +84,8 @@ async function findEndingSoonLots() {
 		const data = await response.json()
 
 		return {
-			lots: data.data.findAllLots as FindAllLotsQuery["findAllLots"],
+			lots: data.data.findAllLots
+				.lots as FindAllLotsQuery["findAllLots"]["lots"],
 		}
 	} catch (err) {
 		console.error(err)
@@ -115,7 +117,8 @@ async function findNewLots() {
 		const data = await response.json()
 
 		return {
-			lots: data.data.findAllLots as FindAllLotsQuery["findAllLots"],
+			lots: data.data.findAllLots
+				.lots as FindAllLotsQuery["findAllLots"]["lots"],
 		}
 	} catch (err) {
 		console.error(err)

@@ -29,7 +29,7 @@ import { LotCard, LotCardSkeleton } from "../card/LotCard"
 
 interface LotsCarouselProps {
 	heading: string
-	lots: FindAllLotsQuery["findAllLots"]
+	lots: FindAllLotsQuery["findAllLots"]["lots"]
 	rows?: number
 	filters?: FindAllLotsQueryVariables["filters"]
 }
@@ -75,12 +75,12 @@ export function LotsCarousel({
 				variables: { skip: lotsList.length, take: 5 * rows },
 			})
 
-			if (newData.findAllLots.length < 5 * rows) {
+			if (newData.findAllLots.lots.length < 5 * rows) {
 				api.off("scroll", scrollListenerRef.current)
 				setHasMore(false)
 			}
 
-			setLotsList(prev => [...prev, ...newData.findAllLots])
+			setLotsList(prev => [...prev, ...newData.findAllLots.lots])
 		}
 
 		setLoadingMore(loadingMore => {
@@ -162,7 +162,8 @@ export function LotsCarousel({
 					{sliced.map((slice, i) => (
 						<CarouselItem
 							className={cn(
-								"grid basis-full grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5",
+								`grid basis-full grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-4
+								2xl:grid-cols-5`,
 								`grid-rows-${rows}`,
 								!hasMore && slice.length - 1 === i && "-mr-5",
 							)}
@@ -183,7 +184,8 @@ export function LotsCarousel({
 						<CarouselItem
 							className={cn(
 								`grid-rows-${rows}`,
-								"mr-5 grid basis-full grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5",
+								`mr-5 grid basis-full grid-cols-2 gap-5 lg:grid-cols-3
+								xl:grid-cols-4 2xl:grid-cols-5`,
 							)}
 						>
 							{_.times(itemsPerSlide * rows, i => (
