@@ -30,7 +30,9 @@ export function LotSort() {
 				<FilterSelect
 					title={t("by")}
 					value={sortBy ?? "empty"}
-					onValueChange={value => setSortBy(value as SortBy)}
+					onValueChange={value =>
+						setSortBy(value === "empty" ? undefined : (value as SortBy))
+					}
 					elements={Object.entries(SortBy).map(element => ({
 						title: tEnums(`sortBy.${element[1]}`),
 						slug: element[1],
@@ -39,7 +41,9 @@ export function LotSort() {
 				<FilterSelect
 					title={t("order")}
 					value={sortOrder ?? "empty"}
-					onValueChange={value => setSortOrder(value as SortOrder)}
+					onValueChange={value =>
+						setSortOrder(value === "empty" ? undefined : (value as SortOrder))
+					}
 					elements={Object.entries(SortOrder).map(element => ({
 						title: tEnums(`sortOrder.${element[1]}`),
 						slug: element[1],

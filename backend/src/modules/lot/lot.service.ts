@@ -86,18 +86,14 @@ export class LotService {
 	private buildOrderBy(
 		sortBy?: SortBy,
 		sortOrder?: SortOrder,
-	): Prisma.LotOrderByWithRelationInput {
+	): Prisma.Enumerable<Prisma.LotOrderByWithRelationInput> {
 		const order = sortOrder || SortOrder.DESC
 
-		let clause
-
 		if (sortBy === SortBy.BIDS) {
-			clause = sortBy ? { [sortBy]: { _count: order } } : {}
-		} else {
-			clause = sortBy ? { [sortBy]: order } : {}
+			return sortBy ? [{ [sortBy]: { _count: order } }, { id: "asc" }] : {}
 		}
 
-		return clause
+		return sortBy ? { [sortBy]: order } : {}
 	}
 
 	private buildWhereClause({

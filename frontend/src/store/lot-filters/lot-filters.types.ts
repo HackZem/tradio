@@ -25,8 +25,8 @@ export interface ILotFiltersStore {
 
 	categories: string[]
 
-	setSortBy: (sortBy: SortBy) => void
-	setSortOrder: (sortOrder: SortOrder) => void
+	setSortBy: (sortBy?: SortBy) => void
+	setSortOrder: (sortOrder?: SortOrder) => void
 
 	addLotType: (lotType: LotType) => void
 	removeLotType: (lotType: LotType) => void

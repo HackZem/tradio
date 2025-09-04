@@ -1,7 +1,7 @@
 "use client"
 
 import _ from "lodash"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 
 import {
@@ -18,8 +18,6 @@ import { LotsList } from "./LotsList"
 interface LotsContentProps {
 	lots: FindAllLotsQuery["findAllLots"]["lots"]
 }
-
-// TODO: problem with sort by BIDS -> identical lots arrive
 
 export function LotsContent({ lots }: LotsContentProps) {
 	const { categories, minPrice, maxPrice, ...filters } = useLotFiltersStore()
@@ -49,10 +47,13 @@ export function LotsContent({ lots }: LotsContentProps) {
 		}
 	}, [data])
 
+	const timeoutRef = useRef<NodeJS.Timeout>(null)
 	async function fetchMoreLots() {
 		if (!hasMore) return
 
-		setTimeout(async () => {
+		timeoutRef.current && clearTimeout(timeoutRef.current)
+
+		timeoutRef.current = setTimeout(async () => {
 			try {
 				const { data: newData } = await fetchMore({
 					variables: {
