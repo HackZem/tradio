@@ -88,6 +88,7 @@ export function LotCard({ lot, currentUserUsername, className }: LotCardProps) {
 					</div>
 				</div>
 				<div className='mt-2 flex items-center justify-between'>
+					{/* TODO: remove this wrinkle with me */}
 					<Link
 						href={`/users/${lot.user.username === currentUserUsername ? "me" : lot.user.username}`}
 					>

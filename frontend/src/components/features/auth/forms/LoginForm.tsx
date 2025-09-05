@@ -62,6 +62,8 @@ export function LoginForm() {
 		})
 	}
 
+	//TODO:bug: when I log in under a different name, the avatar doesn't change until I reboot.
+
 	return (
 		<AuthWrapper
 			heading={t("heading")}

@@ -36,7 +36,10 @@ export function CategoryCard({
 						style={{ width: "auto", height: "95%" }}
 						className='-translate-y-4 object-cover'
 					/>
-					<h2 className='absolute -bottom-4 left-5 text-[clamp(20px,2vw,32px)] leading-[1.2em] font-normal'>
+					<h2
+						className='absolute -bottom-4 left-5 text-[clamp(20px,2vw,32px)]
+							leading-[1.2em] font-normal'
+					>
 						{heading}
 					</h2>
 				</div>

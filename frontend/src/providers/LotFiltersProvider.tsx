@@ -10,13 +10,13 @@ import { useLotFiltersStore } from "@/store/lot-filters/lot-filters.store"
 export function LotFiltersProvider({ children }: PropsWithChildren<unknown>) {
 	const searchParams = useSearchParams()
 
-	useLotFiltersUrlSync()
+	const isSyncing = useLotFiltersUrlSync()
 
 	const initFromUrl = useLotFiltersStore(state => state.initFromUrl)
 
 	useEffect(() => {
-		initFromUrl(searchParams)
-	}, [])
+		!isSyncing && initFromUrl(searchParams)
+	}, [searchParams, initFromUrl])
 
 	return <>{children}</>
 }

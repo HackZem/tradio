@@ -31,7 +31,10 @@ export function UserAvatar({ size, user, className }: UserAvatarProps) {
 	return (
 		<div className={cn("relative", className)}>
 			<Avatar className={cn(avatarSizes({ size }))}>
-				<AvatarImage src={getMediaSource(avatar)} className='object-cover' />
+				<AvatarImage
+					src={avatar ? getMediaSource(avatar) : undefined}
+					className='object-cover'
+				/>
 				<AvatarFallback>{username[0]?.toUpperCase()}</AvatarFallback>
 			</Avatar>
 		</div>

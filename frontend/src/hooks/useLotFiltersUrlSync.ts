@@ -1,5 +1,5 @@
 import { usePathname, useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 import {
 	ConditionType,
@@ -20,6 +20,8 @@ export const useLotFiltersUrlSync = () => {
 	const pathname = usePathname()
 	const router = useRouter()
 
+	const [isSyncing, setIsSyncing] = useState<boolean>(false)
+
 	useEffect(() => {
 		let debounceTimer: NodeJS.Timeout
 
@@ -28,6 +30,7 @@ export const useLotFiltersUrlSync = () => {
 			state => {
 				clearTimeout(debounceTimer)
 
+				setIsSyncing(true)
 				debounceTimer = setTimeout(() => {
 					const params = new URLSearchParams()
 
@@ -77,10 +80,15 @@ export const useLotFiltersUrlSync = () => {
 
 					const newParams = params.toString()
 
-					if (!newParams.length && !pathname.includes(ROUTES.LOTS)) return
+					if (!newParams.length && !pathname.includes(ROUTES.LOTS)) {
+						setIsSyncing(false)
+						return
+					}
 
 					const url = ROUTES.LOTS + "?" + newParams
 					router.replace(url)
+
+					setIsSyncing(false)
 				}, 500)
 			},
 		)
@@ -90,4 +98,6 @@ export const useLotFiltersUrlSync = () => {
 			clearTimeout(debounceTimer)
 		}
 	}, [router, store, pathname])
+
+	return isSyncing
 }
