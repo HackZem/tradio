@@ -49,7 +49,7 @@ export default async function LotsPage() {
 	return (
 		<div
 			className='mx-auto flex w-full max-w-[1610px] justify-center gap-x-[30px]
-				overflow-visible pt-6'
+				overflow-visible'
 		>
 			<div className='w-full max-w-[300px] space-y-5'>
 				<LotSort />

@@ -1,0 +1,25 @@
+query FindLotById($id: String!) {
+	findLotById(id: $id) {
+		title
+		firstPrice
+		currentPrice
+		buyNowPrice
+		views
+		country
+		region
+		type
+		expiresAt
+		photos
+		condition
+		isActive
+		_count {
+			bids
+		}
+		user {
+			avatar
+			username
+		}
+		returnPeriod
+		description
+	}
+}

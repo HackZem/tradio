@@ -15,7 +15,9 @@ export function LotFiltersProvider({ children }: PropsWithChildren<unknown>) {
 	const initFromUrl = useLotFiltersStore(state => state.initFromUrl)
 
 	useEffect(() => {
-		!isSyncing && initFromUrl(searchParams)
+		if (isSyncing) return
+
+		initFromUrl(searchParams)
 	}, [searchParams, initFromUrl])
 
 	return <>{children}</>

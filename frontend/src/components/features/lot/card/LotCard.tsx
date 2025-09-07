@@ -7,6 +7,7 @@ import _ from "lodash"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import { Card } from "@/components/ui/common/Card"
 import { Skeleton } from "@/components/ui/common/Skeleton"
@@ -15,6 +16,8 @@ import { Heading } from "@/components/ui/elements/Heading"
 import { UserAvatar } from "@/components/ui/elements/UserAvatar"
 
 import { FindAllLotsQuery, LotType } from "@/graphql/generated/output"
+
+import { ROUTES } from "@/libs/constants/routes.constants"
 
 import { getMediaSource } from "@/utils/get-media-source"
 import { cn } from "@/utils/tw-merge"
@@ -33,9 +36,15 @@ export function LotCard({ lot, currentUserUsername, className }: LotCardProps) {
 	const t = useTranslations("lot.card")
 	const tEnum = useTranslations("enums.lotTypes")
 
+	const router = useRouter()
+
 	return (
 		<Card
-			className={cn("h-[500px] justify-between gap-0 truncate p-0", className)}
+			className={cn(
+				"h-[500px] cursor-pointer justify-between gap-0 truncate p-0",
+				className,
+			)}
+			onClick={() => router.push(ROUTES.LOTS_DETAIL(lot.id))}
 		>
 			{lot.photos[0] ? (
 				<Image
@@ -91,6 +100,7 @@ export function LotCard({ lot, currentUserUsername, className }: LotCardProps) {
 					{/* TODO: remove this wrinkle with me */}
 					<Link
 						href={`/users/${lot.user.username === currentUserUsername ? "me" : lot.user.username}`}
+						onClick={e => e.stopPropagation()}
 					>
 						<div className='flex items-center gap-x-2'>
 							<UserAvatar user={lot.user} size={"sm"} />

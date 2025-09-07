@@ -499,6 +499,13 @@ export type FindAllLotsQueryVariables = Exact<{
 
 export type FindAllLotsQuery = { __typename?: 'Query', findAllLots: { __typename?: 'FindLotsModel', maxPrice?: number | null, lots: Array<{ __typename?: 'LotModel', id: string, title: string, firstPrice?: number | null, currentPrice?: number | null, views: number, country: string, region: string, type: LotType, expiresAt?: any | null, buyNowPrice?: number | null, photos: Array<string>, _count: { __typename?: 'LotCount', bids: number }, user: { __typename?: 'UserModel', avatar?: string | null, username: string } }> } };
 
+export type FindLotByIdQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type FindLotByIdQuery = { __typename?: 'Query', findLotById: { __typename?: 'LotModel', title: string, firstPrice?: number | null, currentPrice?: number | null, buyNowPrice?: number | null, views: number, country: string, region: string, type: LotType, expiresAt?: any | null, photos: Array<string>, condition: ConditionType, isActive: boolean, returnPeriod: ReturnType, description?: any | null, _count: { __typename?: 'LotCount', bids: number }, user: { __typename?: 'UserModel', avatar?: string | null, username: string } } };
+
 export type FindMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -873,6 +880,66 @@ export type FindAllLotsQueryHookResult = ReturnType<typeof useFindAllLotsQuery>;
 export type FindAllLotsLazyQueryHookResult = ReturnType<typeof useFindAllLotsLazyQuery>;
 export type FindAllLotsSuspenseQueryHookResult = ReturnType<typeof useFindAllLotsSuspenseQuery>;
 export type FindAllLotsQueryResult = Apollo.QueryResult<FindAllLotsQuery, FindAllLotsQueryVariables>;
+export const FindLotByIdDocument = gql`
+    query FindLotById($id: String!) {
+  findLotById(id: $id) {
+    title
+    firstPrice
+    currentPrice
+    buyNowPrice
+    views
+    country
+    region
+    type
+    expiresAt
+    photos
+    condition
+    isActive
+    _count {
+      bids
+    }
+    user {
+      avatar
+      username
+    }
+    returnPeriod
+    description
+  }
+}
+    `;
+
+/**
+ * __useFindLotByIdQuery__
+ *
+ * To run a query within a React component, call `useFindLotByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindLotByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindLotByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindLotByIdQuery(baseOptions: Apollo.QueryHookOptions<FindLotByIdQuery, FindLotByIdQueryVariables> & ({ variables: FindLotByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindLotByIdQuery, FindLotByIdQueryVariables>(FindLotByIdDocument, options);
+      }
+export function useFindLotByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindLotByIdQuery, FindLotByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindLotByIdQuery, FindLotByIdQueryVariables>(FindLotByIdDocument, options);
+        }
+export function useFindLotByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FindLotByIdQuery, FindLotByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindLotByIdQuery, FindLotByIdQueryVariables>(FindLotByIdDocument, options);
+        }
+export type FindLotByIdQueryHookResult = ReturnType<typeof useFindLotByIdQuery>;
+export type FindLotByIdLazyQueryHookResult = ReturnType<typeof useFindLotByIdLazyQuery>;
+export type FindLotByIdSuspenseQueryHookResult = ReturnType<typeof useFindLotByIdSuspenseQuery>;
+export type FindLotByIdQueryResult = Apollo.QueryResult<FindLotByIdQuery, FindLotByIdQueryVariables>;
 export const FindMeDocument = gql`
     query FindMe {
   findMe {

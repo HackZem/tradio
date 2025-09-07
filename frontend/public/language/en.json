@@ -161,7 +161,18 @@
 					"region": "Region"
 				}
 			}
-		}
+		},
+		"placeBidButton": "Place Bid",
+		"buyNowButton": "Buy Now",
+		"addToCartButton": "Add to Cart",
+		"addToWatchlistButton": "Add to Watchlist",
+		"firstPrice": "first price",
+		"expired": "expired",
+		"buyNow": "buy now for",
+		"bids": "bids",
+		"condition": "Condition",
+		"returns": "Returns",
+		"location": "Location"
 	},
 	"elements": {
 		"confirmDialog": {
@@ -185,6 +196,12 @@
 			"NEW": "New",
 			"USED": "Used",
 			"DEFECTIVE": "Defective"
+		},
+		"returnTypes": {
+			"NON_RETURNABLE": "This item is non-returnable",
+			"PERIOD_30D": "This item can be returned within 30 days",
+			"PERIOD_14D": "This item can be returned within 14 days",
+			"PERIOD_7D": "This item can be returned within 7 days"
 		},
 		"sortBy": {
 			"PRICE": "Current Price",

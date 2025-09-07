@@ -80,10 +80,12 @@ export const useLotFiltersUrlSync = () => {
 
 					const newParams = params.toString()
 
-					if (!newParams.length && !pathname.includes(ROUTES.LOTS)) {
+					if (!newParams.length && pathname !== ROUTES.LOTS) {
 						setIsSyncing(false)
 						return
 					}
+
+					console.log(newParams)
 
 					const url = ROUTES.LOTS + "?" + newParams
 					router.replace(url)

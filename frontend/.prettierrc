@@ -30,5 +30,6 @@
 		"prettier-plugin-merge"
 	],
 	"tailwindFunctions": ["clsx", "cn", "cva"],
-	"customFunctions": ["clsx", "cn", "cva"]
+	"customFunctions": ["clsx", "cn", "cva"],
+	"endOfLine": "crlf"
 }

@@ -117,6 +117,17 @@
 	}
 }
 
+@layer utilities {
+	.scrollbar-hidden::-webkit-scrollbar {
+		display: none;
+	}
+
+	.scrollbar-hidden {
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+}
+
 ::-webkit-scrollbar-button {
 	display: none;
 }
@@ -132,3 +143,4 @@
 ::-webkit-scrollbar-thumb {
 	@apply bg-primary/65 hover:bg-primary rounded-full;
 }
+

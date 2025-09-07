@@ -166,7 +166,11 @@ export class LotService {
 	public async findById(id: string) {
 		const lot = await this.prismaService.lot.findUnique({
 			where: { id },
-			include: { user: true, category: true },
+			include: {
+				user: true,
+				category: true,
+				_count: { select: { bids: true } },
+			},
 		})
 
 		if (!lot) {

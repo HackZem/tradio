@@ -33,7 +33,7 @@ interface LotsCarouselProps {
 	rows?: number
 	filters?: FindAllLotsQueryVariables["filters"]
 }
-//TODO: this carousel is garbage and laggy, replace it with another one
+//TODO: this carousel is garbage and laggy, replace it with another one (e.g. swiperjs.com)
 export function LotsCarousel({
 	heading,
 	lots,
