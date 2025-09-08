@@ -47,15 +47,14 @@ export function LotCard({ lot, currentUserUsername, className }: LotCardProps) {
 			onClick={() => router.push(ROUTES.LOTS_DETAIL(lot.id))}
 		>
 			{lot.photos[0] ? (
-				<Image
-					src={getMediaSource(lot.photos[0])}
-					alt={lot.title}
-					width={0}
-					height={0}
-					sizes='100vw'
-					style={{ width: "auto", height: "100%" }}
-					className='bg-muted flex items-center justify-center object-cover'
-				/>
+				<div className='relative h-full'>
+					<Image
+						src={getMediaSource(lot.photos[0])}
+						alt={lot.title}
+						fill
+						className='bg-muted flex items-center justify-center object-contain'
+					/>
+				</div>
 			) : (
 				<div className='bg-muted flex h-full items-center justify-center'>
 					<Icon icon={"f7:question"} width={100} />
@@ -107,7 +106,7 @@ export function LotCard({ lot, currentUserUsername, className }: LotCardProps) {
 							<span>{lot.user.username}</span>
 						</div>
 					</Link>
-					<LotTimer expiresAt={lot.expiresAt} />
+					{lot.type !== "BUYNOW" && <LotTimer expiresAt={lot.expiresAt} />}
 				</div>
 			</div>
 		</Card>

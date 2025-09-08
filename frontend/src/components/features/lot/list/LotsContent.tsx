@@ -67,11 +67,9 @@ export function LotsContent({ lots }: LotsContentProps) {
 					},
 				})
 
-				if (newData.findAllLots.lots.length) {
-					setLotsList(prev => [...prev, ...newData.findAllLots.lots])
-				} else {
-					setHasMore(false)
-				}
+				setLotsList(prev => [...prev, ...newData.findAllLots.lots])
+
+				if (newData.findAllLots.lots.length < 20) setHasMore(false)
 			} catch (err) {
 				console.log(err)
 			}

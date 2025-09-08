@@ -1,0 +1,1 @@
+export const AUTH_OPTIONS_TOKEN = "AUTH_OPTIONS_TOKEN"

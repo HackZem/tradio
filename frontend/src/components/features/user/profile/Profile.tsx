@@ -67,7 +67,11 @@ export function Profile({ profile, refetch, isMe = false }: ProfileProps) {
 														: ""
 												}
 											/>
-											<div className='absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 transform items-center justify-center gap-3 group-hover:flex'>
+											<div
+												className='absolute top-1/2 left-1/2 hidden
+													-translate-x-1/2 -translate-y-1/2 transform
+													items-center justify-center gap-3 group-hover:flex'
+											>
 												{isMe && (
 													<ChangeAvatarDialog>
 														<Icon
@@ -96,7 +100,10 @@ export function Profile({ profile, refetch, isMe = false }: ProfileProps) {
 										</div>
 										<div className='flex flex-col gap-y-[15px]'>
 											<div className='flex items-center'>
-												<span className='max-w-[400px] text-[32px] font-bold wrap-break-word'>
+												<span
+													className='max-w-[400px] text-[32px] font-bold
+														wrap-break-word'
+												>
 													{profile.username}
 												</span>
 												{isMe && (
@@ -154,7 +161,10 @@ export function Profile({ profile, refetch, isMe = false }: ProfileProps) {
 										{isMe ? (
 											<UserDescription />
 										) : (
-											<div className='rounded text-xl break-words whitespace-pre-wrap'>
+											<div
+												className='rounded text-xl break-words
+													whitespace-pre-wrap'
+											>
 												{profile.description}
 											</div>
 										)}
@@ -162,9 +172,7 @@ export function Profile({ profile, refetch, isMe = false }: ProfileProps) {
 								</CardContent>
 							</Card>
 						</div>
-						<Block heading={t("lots")}>
-							<p>AFFFF</p>
-						</Block>
+						<Block heading={t("lots")}></Block>
 					</div>
 				)}
 			</div>

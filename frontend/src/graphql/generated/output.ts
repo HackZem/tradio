@@ -155,6 +155,7 @@ export type LotModel = {
   firstPrice?: Maybe<Scalars['Float']['output']>;
   id: Scalars['ID']['output'];
   isActive: Scalars['Boolean']['output'];
+  isSubscribed: Scalars['Boolean']['output'];
   photos: Array<Scalars['String']['output']>;
   region: Scalars['String']['output'];
   returnPeriod: ReturnType;
@@ -463,6 +464,20 @@ export type VerifyAccountMutationVariables = Exact<{
 
 export type VerifyAccountMutation = { __typename?: 'Mutation', verifyAccount: { __typename?: 'UserModel', isEmailVerified: boolean } };
 
+export type SubscribeToLotMutationVariables = Exact<{
+  lotId: Scalars['String']['input'];
+}>;
+
+
+export type SubscribeToLotMutation = { __typename?: 'Mutation', subscribeToLot: boolean };
+
+export type UnsubscribeFromLotMutationVariables = Exact<{
+  lotId: Scalars['String']['input'];
+}>;
+
+
+export type UnsubscribeFromLotMutation = { __typename?: 'Mutation', unsubscribeFromLot: boolean };
+
 export type ChangeProfileAvatarMutationVariables = Exact<{
   avatar: Scalars['Upload']['input'];
 }>;
@@ -504,7 +519,7 @@ export type FindLotByIdQueryVariables = Exact<{
 }>;
 
 
-export type FindLotByIdQuery = { __typename?: 'Query', findLotById: { __typename?: 'LotModel', title: string, firstPrice?: number | null, currentPrice?: number | null, buyNowPrice?: number | null, views: number, country: string, region: string, type: LotType, expiresAt?: any | null, photos: Array<string>, condition: ConditionType, isActive: boolean, returnPeriod: ReturnType, description?: any | null, _count: { __typename?: 'LotCount', bids: number }, user: { __typename?: 'UserModel', avatar?: string | null, username: string } } };
+export type FindLotByIdQuery = { __typename?: 'Query', findLotById: { __typename?: 'LotModel', id: string, title: string, firstPrice?: number | null, currentPrice?: number | null, buyNowPrice?: number | null, views: number, country: string, region: string, type: LotType, expiresAt?: any | null, photos: Array<string>, condition: ConditionType, isActive: boolean, isSubscribed: boolean, returnPeriod: ReturnType, description?: any | null, _count: { __typename?: 'LotCount', bids: number }, user: { __typename?: 'UserModel', avatar?: string | null, username: string } } };
 
 export type FindMeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -658,6 +673,68 @@ export function useVerifyAccountMutation(baseOptions?: Apollo.MutationHookOption
 export type VerifyAccountMutationHookResult = ReturnType<typeof useVerifyAccountMutation>;
 export type VerifyAccountMutationResult = Apollo.MutationResult<VerifyAccountMutation>;
 export type VerifyAccountMutationOptions = Apollo.BaseMutationOptions<VerifyAccountMutation, VerifyAccountMutationVariables>;
+export const SubscribeToLotDocument = gql`
+    mutation SubscribeToLot($lotId: String!) {
+  subscribeToLot(lotId: $lotId)
+}
+    `;
+export type SubscribeToLotMutationFn = Apollo.MutationFunction<SubscribeToLotMutation, SubscribeToLotMutationVariables>;
+
+/**
+ * __useSubscribeToLotMutation__
+ *
+ * To run a mutation, you first call `useSubscribeToLotMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubscribeToLotMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [subscribeToLotMutation, { data, loading, error }] = useSubscribeToLotMutation({
+ *   variables: {
+ *      lotId: // value for 'lotId'
+ *   },
+ * });
+ */
+export function useSubscribeToLotMutation(baseOptions?: Apollo.MutationHookOptions<SubscribeToLotMutation, SubscribeToLotMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SubscribeToLotMutation, SubscribeToLotMutationVariables>(SubscribeToLotDocument, options);
+      }
+export type SubscribeToLotMutationHookResult = ReturnType<typeof useSubscribeToLotMutation>;
+export type SubscribeToLotMutationResult = Apollo.MutationResult<SubscribeToLotMutation>;
+export type SubscribeToLotMutationOptions = Apollo.BaseMutationOptions<SubscribeToLotMutation, SubscribeToLotMutationVariables>;
+export const UnsubscribeFromLotDocument = gql`
+    mutation UnsubscribeFromLot($lotId: String!) {
+  unsubscribeFromLot(lotId: $lotId)
+}
+    `;
+export type UnsubscribeFromLotMutationFn = Apollo.MutationFunction<UnsubscribeFromLotMutation, UnsubscribeFromLotMutationVariables>;
+
+/**
+ * __useUnsubscribeFromLotMutation__
+ *
+ * To run a mutation, you first call `useUnsubscribeFromLotMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnsubscribeFromLotMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unsubscribeFromLotMutation, { data, loading, error }] = useUnsubscribeFromLotMutation({
+ *   variables: {
+ *      lotId: // value for 'lotId'
+ *   },
+ * });
+ */
+export function useUnsubscribeFromLotMutation(baseOptions?: Apollo.MutationHookOptions<UnsubscribeFromLotMutation, UnsubscribeFromLotMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnsubscribeFromLotMutation, UnsubscribeFromLotMutationVariables>(UnsubscribeFromLotDocument, options);
+      }
+export type UnsubscribeFromLotMutationHookResult = ReturnType<typeof useUnsubscribeFromLotMutation>;
+export type UnsubscribeFromLotMutationResult = Apollo.MutationResult<UnsubscribeFromLotMutation>;
+export type UnsubscribeFromLotMutationOptions = Apollo.BaseMutationOptions<UnsubscribeFromLotMutation, UnsubscribeFromLotMutationVariables>;
 export const ChangeProfileAvatarDocument = gql`
     mutation ChangeProfileAvatar($avatar: Upload!) {
   changeProfileAvatar(avatar: $avatar)
@@ -883,6 +960,7 @@ export type FindAllLotsQueryResult = Apollo.QueryResult<FindAllLotsQuery, FindAl
 export const FindLotByIdDocument = gql`
     query FindLotById($id: String!) {
   findLotById(id: $id) {
+    id
     title
     firstPrice
     currentPrice
@@ -895,6 +973,7 @@ export const FindLotByIdDocument = gql`
     photos
     condition
     isActive
+    isSubscribed
     _count {
       bids
     }

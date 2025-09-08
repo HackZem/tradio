@@ -9,6 +9,7 @@ import {
 import { User } from "@prisma/client"
 import { FileUpload, GraphQLUpload } from "graphql-upload-ts"
 
+import { PrismaService } from "@/src/core/prisma/prisma.service"
 import { Authorization } from "@/src/shared/decorators/auth.decorator"
 import { Authorized } from "@/src/shared/decorators/authorized.decorator"
 import { FileValidationPipe } from "@/src/shared/pipes/file-validation.pipe"
@@ -26,7 +27,10 @@ import { LotModel } from "./models/lot.model"
 
 @Resolver(() => LotModel)
 export class LotResolver {
-	constructor(private readonly lotService: LotService) {}
+	constructor(
+		private readonly lotService: LotService,
+		private readonly prismaService: PrismaService,
+	) {}
 
 	@Query(() => FindLotsModel, { name: "findAllLots" })
 	public async findAll(@Args("filters") input: FiltersInput) {
@@ -34,9 +38,29 @@ export class LotResolver {
 	}
 
 	@ResolveField(() => [String], { nullable: true })
-	photos(@Parent() lot: LotModel, @Args() args: PhotosArgs) {
+	public photos(@Parent() lot: LotModel, @Args() args: PhotosArgs) {
 		if (args.limit) return lot.photos.slice(0, args.limit)
 		return lot.photos
+	}
+
+	@Authorization({ isAnonymous: true })
+	@ResolveField(() => Boolean)
+	public async isSubscribed(
+		@Parent() lot: LotModel,
+		@Authorized("id") userId: string,
+	) {
+		if (!userId) return false
+
+		const subscription = await this.prismaService.lotSubscription.findUnique({
+			where: {
+				lotId_userId: {
+					userId: userId,
+					lotId: lot.id,
+				},
+			},
+		})
+
+		return !!subscription
 	}
 
 	@Query(() => LotModel, { name: "findLotById" })

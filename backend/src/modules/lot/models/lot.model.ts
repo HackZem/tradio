@@ -86,8 +86,11 @@ export class LotModel implements Lot {
 	@Field(() => String)
 	public userId: string
 
+	@Field(() => Boolean)
+	public isSubscribed: boolean
+
 	@Field(() => LotCount)
-	_count: LotCount
+	public _count: LotCount
 }
 
 registerEnumType(LotType, { name: "LotType" })

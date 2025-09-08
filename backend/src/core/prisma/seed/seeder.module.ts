@@ -3,6 +3,7 @@ import { Module } from "@nestjs/common"
 import { ConfigModule, ConfigService } from "@nestjs/config"
 
 import { BidService } from "@/src/modules/bid/bid.service"
+import { S3Service } from "@/src/modules/libs/s3/s3.service"
 import { LotQueueService } from "@/src/modules/lot/queues/lot-queue.service"
 import { NotificationService } from "@/src/modules/notification/notification.service"
 
@@ -33,6 +34,7 @@ import { PrismaService } from "../prisma.service"
 		PrismaService,
 		NotificationService,
 		BidService,
+		S3Service,
 	],
 	exports: [
 		RedisService,
@@ -41,6 +43,7 @@ import { PrismaService } from "../prisma.service"
 		PrismaService,
 		NotificationService,
 		BidService,
+		S3Service,
 	],
 })
 export class SeederModule {}

@@ -255,12 +255,12 @@ export class NotificationService {
 
 		const wonBid = lot.bids[0]
 
-		const notificationaData: Prisma.NotificationCreateInput[] = []
+		const notificationData: Prisma.NotificationCreateInput[] = []
 
-		notificationaData.push(
+		notificationData.push(
 			this.createNotificationData(
 				NOTIFICATIONS.lotEnded.toAutor(
-					wonBid.amount.toNumber(),
+					wonBid.amount?.toNumber() ?? 0,
 					lot.title,
 					lot.userId!,
 				),
@@ -294,19 +294,19 @@ export class NotificationService {
 			.map(({ userId }) => {
 				return this.createNotificationData(
 					NOTIFICATIONS.lotEnded.toUser(
-						wonBid.amount.toNumber(),
+						wonBid.amount?.toNumber() ?? 0,
 						lot.title,
 						userId,
 					),
 				)
 			})
 
-		notificationaData.push(...bidderNotifications)
-		notificationaData.push(...subscriberNotifications)
+		notificationData.push(...bidderNotifications)
+		notificationData.push(...subscriberNotifications)
 
 		const notifications =
 			await this.prismaService.notification.createManyAndReturn({
-				data: notificationaData.map(({ user, ...data }) => ({
+				data: notificationData.map(({ user, ...data }) => ({
 					...data,
 					userId: user?.connect?.id!,
 				})),

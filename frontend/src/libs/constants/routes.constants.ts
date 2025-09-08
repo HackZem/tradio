@@ -6,6 +6,8 @@ export const ROUTES = {
 	CONTACT: "/contact",
 	ABOUT: "/about",
 	LOTS: "/lots",
+	LOGIN: "/account/login",
+	REGISTER: "/account/create",
 	LOTS_DETAIL: (id: string) => `/lots/${id}`,
 	PROFILE: (username: string) => `/users/${username}`,
 } as const

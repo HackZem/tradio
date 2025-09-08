@@ -1,0 +1,3 @@
+mutation SubscribeToLot($lotId: String!) {
+	subscribeToLot(lotId: $lotId)
+}

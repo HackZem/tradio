@@ -1,3 +1,5 @@
+import { cookies } from "next/headers"
+
 import { Lot } from "@/components/features/lot/Lot"
 
 import {
@@ -9,12 +11,20 @@ import { SERVER_URL } from "@/libs/constants/url.constants"
 
 async function findLot(id: string) {
 	try {
+		const cookieStore = await cookies()
+
+		const cookieHeader = cookieStore
+			.getAll()
+			.map(c => `${c.name}=${c.value}`)
+			.join("; ")
+
 		const query = FindLotByIdDocument.loc?.source.body
 
 		const response = await fetch(SERVER_URL, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
+				Cookie: cookieHeader,
 			},
 			body: JSON.stringify({
 				query,

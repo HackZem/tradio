@@ -1,5 +1,6 @@
 import { BadRequestException, Logger } from "@nestjs/common"
 import { NestFactory } from "@nestjs/core"
+import { createId } from "@paralleldrive/cuid2"
 import {
 	ConditionType,
 	LotType,
@@ -8,10 +9,13 @@ import {
 	ReturnType,
 } from "@prisma/client"
 import { hash } from "argon2"
+import axios from "axios"
 import { Country, ICountry, IState, State } from "country-state-city"
 import * as _ from "lodash"
+import * as sharp from "sharp"
 
 import { BidService } from "@/src/modules/bid/bid.service"
+import { S3Service } from "@/src/modules/libs/s3/s3.service"
 
 import { LotQueueService } from "../../../modules/lot/queues/lot-queue.service"
 import ms from "../../../shared/utils/ms.util"
@@ -27,7 +31,17 @@ const DESCRIPTION =
 
 const PASSWORD = "19871987"
 
+const PRODUCTS_URL = "https://picsum.photos"
+
 const logger = new Logger("seed")
+
+const prisma = new PrismaClient({
+	transactionOptions: {
+		maxWait: 5000,
+		timeout: 10000,
+		isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+	},
+})
 
 const allCountries = Country.getAllCountries()
 const countriesWithStates = allCountries.filter(
@@ -42,13 +56,30 @@ function getRandomLocation() {
 	return { country, region }
 }
 
-const prisma = new PrismaClient({
-	transactionOptions: {
-		maxWait: 5000,
-		timeout: 10000,
-		isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-	},
-})
+async function getRandomImageData() {
+	const randomHeight = _.random(800, 1024)
+	const randomWidth = _.random(800, 1024)
+
+	try {
+		const res = await axios(PRODUCTS_URL + `/${randomWidth}/${randomHeight}`, {
+			responseType: "arraybuffer",
+		})
+
+		const buffer = Buffer.from(res.data, "binary")
+
+		const processedBuffer = await sharp(buffer)
+			.resize(512, 512)
+			.webp()
+			.toBuffer()
+
+		const mimetype = "image/webp"
+
+		return { buffer: processedBuffer, mimetype }
+	} catch (err) {
+		logger.error(err)
+		throw new BadRequestException("`Failed to download image`")
+	}
+}
 
 async function main() {
 	if (process.env.NODE_ENV === "production") {
@@ -60,6 +91,7 @@ async function main() {
 	const lotQueueService = context.get(LotQueueService)
 	const redis = context.get(RedisService)
 	const bidService = context.get(BidService)
+	const s3Service = context.get(S3Service)
 
 	try {
 		logger.log("Starting to filling the database")
@@ -76,6 +108,8 @@ async function main() {
 			await redis.del(keys)
 			console.log(`Deleted ${keys.length} bull keys`)
 		}
+
+		s3Service.removeAll()
 
 		logger.log("Info successfully deleted")
 
@@ -122,6 +156,7 @@ async function main() {
 				continue
 			}
 
+			const LOT_IDS_LIST: string[] = []
 			await prisma.$transaction(async tx => {
 				let lotData: { title: string; category: string }
 				for (let j = i * 5; j < i * 5 + 5; j++) {
@@ -131,7 +166,7 @@ async function main() {
 
 					const type = _.sample(LotType) ?? LotType.AUCTION
 
-					await tx.lot.create({
+					const lot = await tx.lot.create({
 						data: {
 							title: lotData.title,
 							type,
@@ -148,20 +183,52 @@ async function main() {
 								type !== "AUCTION"
 									? price + _.random(0, 11000 - price)
 									: undefined,
-							expiresAt: new Date(_.now() + ms(`${_.random(7, 14, true)}d`)),
+							...(type !== "BUYNOW"
+								? {
+										expiresAt: new Date(
+											_.now() + ms(`${_.random(7, 14, true)}d`),
+										),
+									}
+								: {}),
 						},
 					})
+
+					LOT_IDS_LIST.push(lot.id)
 				}
 			})
 
 			logger.log(
 				`Five lots have been created for the seller ${seller.username}`,
 			)
+
+			for (const lotId of LOT_IDS_LIST) {
+				const randomTimes = _.random(1, 5)
+				for (let i = 0; i < randomTimes; i++) {
+					const { buffer, mimetype } = await getRandomImageData()
+
+					const key = `lots/${lotId}/${createId()}.webp`
+
+					await s3Service.upload(buffer, key, mimetype)
+
+					await prisma.lot.update({
+						where: { id: lotId },
+						data: {
+							photos: {
+								push: key,
+							},
+						},
+					})
+				}
+
+				logger.log(`For lot ${lotId} have been created ${randomTimes} photos`)
+			}
 		}
 
 		const allLots = await prisma.lot.findMany()
 
 		for (const lot of allLots) {
+			if (lot.type === "BUYNOW") continue
+
 			await lotQueueService.scheduleLotEvents(lot)
 		}
 

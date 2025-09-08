@@ -34,19 +34,19 @@ export class ProfileService {
 
 		const buffer = Buffer.concat(chunks)
 
-		const fileName = `avatars/${user.username}_${createId()}.webp`
+		const key = `avatars/${user.username}_${createId()}.webp`
 
 		const processedBuffer = await sharp(buffer)
 			.resize(512, 512)
 			.webp()
 			.toBuffer()
 
-		await this.s3Service.upload(processedBuffer, fileName, "image/webp")
+		await this.s3Service.upload(processedBuffer, key, "image/webp")
 
 		await this.prismaService.user.update({
 			where: { id: user.id },
 			data: {
-				avatar: fileName,
+				avatar: key,
 			},
 		})
 

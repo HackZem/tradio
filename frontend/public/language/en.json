@@ -162,10 +162,15 @@
 				}
 			}
 		},
+		"errorSubscribeToLot": "Subscribe to lot error",
+		"successSubscribeToLot": "Successful subscribe to lot",
+		"errorUnsubscribeFromLot": "Unsubscribe from lot error",
+		"successUnsubscribeFromLot": "Successful unsubscribe from lot",
 		"placeBidButton": "Place Bid",
 		"buyNowButton": "Buy Now",
 		"addToCartButton": "Add to Cart",
 		"addToWatchlistButton": "Add to Watchlist",
+		"removeFromWatchlistButton": "Remove from Watchlist",
 		"firstPrice": "first price",
 		"expired": "expired",
 		"buyNow": "buy now for",

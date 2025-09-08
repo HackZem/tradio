@@ -6,12 +6,24 @@ import { format } from "date-fns"
 import * as countries from "i18n-iso-countries"
 import _ from "lodash"
 import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/common/Button"
 import { Heading } from "@/components/ui/elements/Heading"
 import { UserAvatar } from "@/components/ui/elements/UserAvatar"
 
-import { FindLotByIdQuery, LotType } from "@/graphql/generated/output"
+import {
+	FindLotByIdQuery,
+	LotType,
+	useSubscribeToLotMutation,
+	useUnsubscribeFromLotMutation,
+} from "@/graphql/generated/output"
+
+import { useAuth } from "@/hooks/useAuth"
+
+import { ROUTES } from "@/libs/constants/routes.constants"
 
 import { LotPhotosPreview } from "./LotPhotosPreview"
 import { LotTimer } from "./card/LotTimer"
@@ -26,6 +38,10 @@ export function Lot({ lot }: LotProps) {
 	const t = useTranslations("lot")
 	const tEnums = useTranslations("enums")
 
+	const { isAuthenticated } = useAuth()
+
+	const router = useRouter()
+
 	const {
 		photos,
 		title,
@@ -38,8 +54,39 @@ export function Lot({ lot }: LotProps) {
 		type,
 		returnPeriod,
 		isActive,
+		id,
+		isSubscribed,
 		_count: { bids: bidsCount },
 	} = lot
+
+	const [isLotSubscribed, setIsLotSubscribed] = useState<boolean>(isSubscribed)
+
+	useEffect(() => setIsLotSubscribed(isSubscribed), [isSubscribed])
+
+	const [subscribe, { loading: isSubscribing }] = useSubscribeToLotMutation({
+		variables: { lotId: id },
+		onCompleted() {
+			setIsLotSubscribed(true)
+			toast.success(t("successSubscribeToLot"))
+		},
+		onError() {
+			setIsLotSubscribed(false)
+			toast.error(t("errorSubscribeToLot"))
+		},
+	})
+
+	const [unsubscribe, { loading: isUnsubscribing }] =
+		useUnsubscribeFromLotMutation({
+			variables: { lotId: id },
+			onCompleted() {
+				setIsLotSubscribed(false)
+				toast.success(t("successUnsubscribeFromLot"))
+			},
+			onError() {
+				setIsLotSubscribed(true)
+				toast.error(t("errorUnsubscribeFromLot"))
+			},
+		})
 
 	return (
 		<div className='flex w-full gap-x-5'>
@@ -73,13 +120,15 @@ export function Lot({ lot }: LotProps) {
 						<span className='text-xl'>{`${bidsCount} ${t("bids")}`}</span>
 					</div>
 				</div>
-				<div className='flex items-center gap-x-2'>
-					<Icon icon={"lets-icons:clock"} width={35} />
-					<span className='text-2xl font-bold'>
-						<LotTimer expiresAt={expiresAt} /> {" · "}
-						{format(expiresAt, "dd EEEE p")}
-					</span>
-				</div>
+				{type !== "BUYNOW" && (
+					<div className='flex items-center gap-x-2'>
+						<Icon icon={"lets-icons:clock"} width={35} />
+						<span className='text-2xl font-bold'>
+							<LotTimer expiresAt={expiresAt} /> {" · "}
+							{format(expiresAt, "dd EEEE p")}
+						</span>
+					</div>
+				)}
 				<div className='space-y-3'>
 					<span className='block text-2xl font-bold'>
 						{t("condition")}
@@ -110,9 +159,11 @@ export function Lot({ lot }: LotProps) {
 					className='w-full max-w-[370px] space-y-2.5 [&_button]:rounded-[15px]'
 				>
 					<div className='flex w-full gap-x-2.5'>
-						<Button className='flex-1' disabled={!isActive}>
-							{t("placeBidButton")}
-						</Button>
+						{type !== "BUYNOW" && (
+							<Button className='flex-1' disabled={!isActive}>
+								{t("placeBidButton")}
+							</Button>
+						)}
 						{type !== LotType.Auction && (
 							<Button className='flex-1' variant={"secondary"}>
 								{t("buyNowButton")}
@@ -124,9 +175,35 @@ export function Lot({ lot }: LotProps) {
 							{t("addToCartButton")}
 						</Button>
 					)}
-					<Button variant={"outline"} className='w-full'>
-						{t("addToWatchlistButton")}
-					</Button>
+					{isLotSubscribed ? (
+						<Button
+							variant={"destructiveOutline"}
+							className='w-full'
+							disabled={isUnsubscribing || isSubscribing}
+							onClick={() => {
+								unsubscribe()
+								setIsLotSubscribed(false)
+							}}
+						>
+							{t("removeFromWatchlistButton")}
+						</Button>
+					) : (
+						<Button
+							variant={"outline"}
+							className='w-full'
+							disabled={isSubscribing || isUnsubscribing}
+							onClick={() => {
+								if (isAuthenticated) {
+									subscribe()
+									setIsLotSubscribed(true)
+								} else {
+									router.push(ROUTES.LOGIN)
+								}
+							}}
+						>
+							{t("addToWatchlistButton")}
+						</Button>
+					)}
 				</div>
 				<div className='flex items-center gap-x-2.5'>
 					<UserAvatar user={lot.user} />

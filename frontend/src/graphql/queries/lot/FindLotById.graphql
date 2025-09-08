@@ -1,5 +1,6 @@
 query FindLotById($id: String!) {
 	findLotById(id: $id) {
+		id
 		title
 		firstPrice
 		currentPrice
@@ -12,6 +13,7 @@ query FindLotById($id: String!) {
 		photos
 		condition
 		isActive
+		isSubscribed
 		_count {
 			bids
 		}

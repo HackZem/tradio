@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/common/Card"
 import { FindLotByIdQuery } from "@/graphql/generated/output"
 
 import { getMediaSource } from "@/utils/get-media-source"
+import { cn } from "@/utils/tw-merge"
 
 interface LotPhotosPreviewProps {
 	photos: FindLotByIdQuery["findLotById"]["photos"]
@@ -17,7 +18,9 @@ interface LotPhotosPreviewProps {
 export function LotPhotosPreview({ photos }: LotPhotosPreviewProps) {
 	const previewImageRef = useRef<HTMLDivElement>(null)
 
-	const [scrollImagesHeight, setScrollImagesHeight] = useState<number>()
+	const [scrollImagesHeight, setScrollImagesHeight] = useState<number>(630)
+
+	const [selectedLotIndex, setSelectedLotIndex] = useState<number>(0)
 
 	useEffect(() => {
 		if (!previewImageRef.current) return
@@ -43,15 +46,21 @@ export function LotPhotosPreview({ photos }: LotPhotosPreviewProps) {
 			{/* idea: we can make each element with absolute for shadow */}
 			<div
 				className='scrollbar-hidden relative flex w-full flex-col gap-y-2.5
-					overflow-y-auto px-[12px]'
+					overflow-y-auto px-[12px] py-[4px]'
 			>
-				{_.times(6).map((photo, i) => (
+				{photos.map((photo, i) => (
 					<Card
-						className='relative aspect-square w-full shrink-0 overflow-hidden'
+						className={cn(
+							`relative aspect-square w-full shrink-0 cursor-pointer
+							overflow-hidden`,
+							selectedLotIndex === i && "ring-accent ring-4",
+						)}
+						onClick={() => setSelectedLotIndex(i)}
+						key={i}
 					>
 						<Image
-							src={getMediaSource("")}
-							alt={`Image ${++i}`}
+							src={getMediaSource(photo)}
+							alt={`Image ${i + 1}`}
 							fill
 							className='object-contain'
 						/>
@@ -61,7 +70,7 @@ export function LotPhotosPreview({ photos }: LotPhotosPreviewProps) {
 			<div className='aspect-square w-full max-w-[630px]' ref={previewImageRef}>
 				<Card className='relative h-full w-full overflow-hidden'>
 					<Image
-						src={getMediaSource("")}
+						src={getMediaSource(photos[selectedLotIndex])}
 						alt='Product preview'
 						fill
 						className='object-contain'

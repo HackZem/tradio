@@ -140,6 +140,7 @@ type LotModel {
   firstPrice: Float
   id: ID!
   isActive: Boolean!
+  isSubscribed: Boolean!
   photos(limit: Int): [String!]!
   region: String!
   returnPeriod: ReturnType!
