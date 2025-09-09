@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl"
 import Link from "next/link"
-import { useState } from "react"
+import { usePathname } from "next/navigation"
 
 import { Button } from "@/components/ui/common/Button"
 
@@ -13,9 +13,10 @@ import { Route } from "./route.interface"
 export function Navigation() {
 	const t = useTranslations("layout.header.navigation")
 
-	const [activeRoute, setActiveRoute] = useState<string>("")
+	const pathname = usePathname()
 
 	const routes: Route[] = [
+		{ label: t("lots"), href: "/lots" },
 		{ label: t("news"), href: "/news" },
 		{ label: t("topUsers"), href: "/top-users" },
 		{ label: t("help"), href: "/help" },
@@ -29,11 +30,7 @@ export function Navigation() {
 				<Link href={route.href} key={route.label}>
 					<Button
 						variant={"ghost"}
-						className={cn(
-							"text-lg",
-							route.label === activeRoute && "text-primary",
-						)}
-						onClick={() => setActiveRoute(route.label)}
+						className={cn("text-lg", route.href === pathname && "text-primary")}
 					>
 						{route.label}
 					</Button>

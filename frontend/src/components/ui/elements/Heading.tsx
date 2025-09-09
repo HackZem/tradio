@@ -9,6 +9,7 @@ const headingSizes = cva("", {
 			default: "text-[20px]",
 			lg: "text-[24px]",
 			xl: "text-[32px]",
+			"2xl": "text-[48px]",
 		},
 	},
 	defaultVariants: {

@@ -6,7 +6,8 @@
 				"topUsers": "Top Users",
 				"help": "Help",
 				"contact": "Contact",
-				"about": "About"
+				"about": "About",
+				"lots": "Search Lots"
 			},
 			"menu": {
 				"login": "Login",
@@ -35,6 +36,24 @@
 		"topLotsHeading": "Top Lots",
 		"endingSoonLotsHeading": "Ending Soon Lots",
 		"newLotsHeading": "New Lots"
+	},
+	"about": {
+		"heading": "Tradio",
+		"description": "This site is a platform for online auctions and sales, where you can list any items: from books and clothing to collectibles or electronics. Users can create lots for auctions, where participants place bids, or sell items at a fixed price.",
+		"features": {
+			"heading": "Features",
+			"list": [
+				"Creating lots with descriptions and photos",
+				"Participating in auctions with a set end time",
+				"Direct sale of items without bidding",
+				"Browsing available lots by categories"
+			]
+		},
+		"addition": "The site makes it easy to find interesting items and participate in auctions or buy directly.",
+		"authorLabel": "Author",
+		"author": "HackZem",
+		"githubLabel": "Github",
+		"github": "https://github.com/HackZem/tradio"
 	},
 	"auth": {
 		"register": {
