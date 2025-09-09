@@ -4,6 +4,8 @@ import { getTranslations } from "next-intl/server"
 import { Profile } from "@/components/features/user/profile/Profile"
 
 import {
+	FindAllLotsDocument,
+	FindAllLotsQuery,
 	FindProfileDocument,
 	FindProfileQuery,
 } from "@/graphql/generated/output"
@@ -46,6 +48,39 @@ async function findProfile(username: string) {
 	}
 }
 
+async function findUserLots(username: string) {
+	try {
+		const query = FindAllLotsDocument.loc?.source.body
+
+		const response = await fetch(SERVER_URL, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				query,
+				variables: {
+					filters: {
+						query: "@" + username,
+						take: 4,
+						skip: 0,
+					},
+				},
+			}),
+		})
+
+		const data = await response.json()
+
+		return {
+			lots: data.data.findAllLots
+				.lots as FindAllLotsQuery["findAllLots"]["lots"],
+		}
+	} catch (err) {
+		console.error(err)
+		throw new Error("Error when receiving lots")
+	}
+}
+
 export default async function ProfilePage({
 	params,
 }: Readonly<{
@@ -55,9 +90,11 @@ export default async function ProfilePage({
 
 	const { profile } = await findProfile(username)
 
+	const { lots } = await findUserLots(username)
+
 	return (
 		<div>
-			<Profile profile={profile} />
+			<Profile initialProfile={profile} lots={lots} />
 		</div>
 	)
 }

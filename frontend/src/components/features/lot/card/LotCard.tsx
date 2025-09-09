@@ -28,11 +28,10 @@ countries.registerLocale(require("i18n-iso-countries/langs/en.json"))
 
 interface LotCardProps {
 	lot: FindAllLotsQuery["findAllLots"]["lots"][number]
-	currentUserUsername: string
 	className?: string
 }
 
-export function LotCard({ lot, currentUserUsername, className }: LotCardProps) {
+export function LotCard({ lot, className }: LotCardProps) {
 	const t = useTranslations("lot.card")
 	const tEnum = useTranslations("enums.lotTypes")
 
@@ -96,9 +95,8 @@ export function LotCard({ lot, currentUserUsername, className }: LotCardProps) {
 					</div>
 				</div>
 				<div className='mt-2 flex items-center justify-between'>
-					{/* TODO: remove this wrinkle with me */}
 					<Link
-						href={`/users/${lot.user.username === currentUserUsername ? "me" : lot.user.username}`}
+						href={`/users/${lot.user.username}`}
 						onClick={e => e.stopPropagation()}
 					>
 						<div className='flex items-center gap-x-2'>

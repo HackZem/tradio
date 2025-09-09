@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/common/Input"
 import { useLoginUserMutation } from "@/graphql/generated/output"
 
 import { useAuth } from "@/hooks/useAuth"
+import { useCurrent } from "@/hooks/useCurrent"
 
 import { AuthWrapper } from "../AuthWrapper"
 
@@ -29,6 +30,8 @@ export function LoginForm() {
 	const t = useTranslations("auth.login")
 
 	const { auth } = useAuth()
+
+	const { refetch } = useCurrent()
 
 	const router = useRouter()
 
@@ -44,6 +47,7 @@ export function LoginForm() {
 		useLoginUserMutation({
 			onCompleted() {
 				auth()
+				refetch()
 				router.replace("/")
 				toast.success(t("successMessage"))
 			},
@@ -61,8 +65,6 @@ export function LoginForm() {
 			},
 		})
 	}
-
-	//TODO:bug: when I log in under a different name, the avatar doesn't change until I reboot.
 
 	return (
 		<AuthWrapper

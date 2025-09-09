@@ -93,7 +93,7 @@ export function LotsContent({ lots }: LotsContentProps) {
 					</div>
 				}
 			>
-				<LotsList lots={lotsList} />
+				<LotsList lots={lotsList} className='p-4' />
 			</InfiniteScroll>
 		</div>
 	)

@@ -27,7 +27,7 @@ export function ProfileMenu() {
 	const router = useRouter()
 
 	const { exit } = useAuth()
-	const { user, isLoadingProfile } = useCurrent()
+	const { user, isLoadingProfile, refetch } = useCurrent()
 
 	const [logout] = useLogoutUserMutation({
 		onCompleted() {
@@ -53,7 +53,7 @@ export function ProfileMenu() {
 					<div className='flex w-full justify-center'>
 						<h2 className='mb-1 text-xl font-bold'>{user.username}</h2>
 					</div>
-					<Link href={`/users/me`}>
+					<Link href={`/users/${user.username}`}>
 						<DropdownMenuItem className='text-xl'>
 							<Icon
 								icon={"lucide:user"}

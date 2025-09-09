@@ -4,8 +4,10 @@ import { Icon } from "@iconify-icon/react"
 import { State } from "country-state-city"
 import * as countries from "i18n-iso-countries"
 import { useTranslations } from "next-intl"
+import { useEffect } from "react"
 import { toast } from "sonner"
 
+import { Button } from "@/components/ui/common/Button"
 import { Card, CardContent } from "@/components/ui/common/Card"
 import { Block } from "@/components/ui/elements/Block"
 import { ConfirmDialog } from "@/components/ui/elements/ConfirmDialog"
@@ -13,12 +15,20 @@ import { Heading } from "@/components/ui/elements/Heading"
 import { UserAvatar } from "@/components/ui/elements/UserAvatar"
 
 import {
+	FindAllLotsQuery,
 	FindProfileQuery,
-	useFindMeQuery,
+	useFindProfileLazyQuery,
+	useFindProfileQuery,
 	useRemoveProfileAvatarMutation,
 } from "@/graphql/generated/output"
 
+import { useCurrent } from "@/hooks/useCurrent"
+
+import { LotCard } from "../../lot/card/LotCard"
+import { LotsList } from "../../lot/list/LotsList"
+
 import { UserDescription } from "./UserDescription"
+import { UserLots } from "./UserLots"
 import { ChangeAvatarDialog } from "./dialogs/ChangeAvatarDialog"
 import { ChangeLocationDialog } from "./dialogs/ChangeLocationDialog"
 import { ChangePhoneDialog } from "./dialogs/ChangePhoneDialog"
@@ -27,17 +37,22 @@ import { ChangeUsernameDialog } from "./dialogs/ChangeUsernameDialog"
 countries.registerLocale(require("i18n-iso-countries/langs/en.json"))
 
 interface ProfileProps {
-	profile: Omit<FindProfileQuery["findProfile"], "__typename">
-	refetch?: ReturnType<typeof useFindMeQuery>["refetch"]
-	isMe?: boolean
+	initialProfile: FindProfileQuery["findProfile"]
+	lots: FindAllLotsQuery["findAllLots"]["lots"]
 }
 
-export function Profile({ profile, refetch, isMe = false }: ProfileProps) {
+export function Profile({ initialProfile, lots }: ProfileProps) {
 	const t = useTranslations("user.profile")
+
+	const { user, refetch } = useCurrent()
+
+	const isMe = user?.username === initialProfile.username
+
+	const profile = isMe ? user : initialProfile
 
 	const [remove] = useRemoveProfileAvatarMutation({
 		onCompleted() {
-			refetch?.()
+			refetch()
 			toast.success(t("avatar.successRemovedMessage"))
 		},
 		onError() {
@@ -46,7 +61,7 @@ export function Profile({ profile, refetch, isMe = false }: ProfileProps) {
 	})
 
 	return (
-		<div className='px-4'>
+		<div className='mb-20 px-4'>
 			<div className='mx-auto max-w-[1285px]'>
 				{!profile ? (
 					"Loading"
@@ -104,7 +119,7 @@ export function Profile({ profile, refetch, isMe = false }: ProfileProps) {
 													className='max-w-[400px] text-[32px] font-bold
 														wrap-break-word'
 												>
-													{profile.username}
+													{isMe ? user.username : profile.username}
 												</span>
 												{isMe && (
 													<ChangeUsernameDialog>
@@ -172,7 +187,7 @@ export function Profile({ profile, refetch, isMe = false }: ProfileProps) {
 								</CardContent>
 							</Card>
 						</div>
-						<Block heading={t("lots")}></Block>
+						<UserLots initialLots={lots} username={profile.username} />
 					</div>
 				)}
 			</div>

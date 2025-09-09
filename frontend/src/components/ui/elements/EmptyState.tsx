@@ -9,7 +9,7 @@ export function EmptyState() {
 	const t = useTranslations("elements.emptyState")
 
 	return (
-		<div className='flex h-[75vh] w-full flex-col items-center justify-center'>
+		<div className='flex w-full flex-col items-center justify-center'>
 			<Icon
 				icon='hugeicons:search-remove'
 				width={100}

@@ -15,9 +15,9 @@ export function Block({
 	className,
 }: PropsWithChildren<BlockProps>) {
 	return (
-		<div className={cn("space-y-5", className)}>
+		<div className={"space-y-5"}>
 			<Heading size={"lg"} title={heading} />
-			<div>{children}</div>
+			<div className={className}>{children}</div>
 		</div>
 	)
 }

@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
 import { PropsWithChildren, useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -33,6 +34,8 @@ export function ChangeUsernameDialog({ children }: PropsWithChildren<unknown>) {
 
 	const { user, isLoadingProfile, refetch } = useCurrent()
 
+	const router = useRouter()
+
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 
 	const form = useForm<TChangeUsernameSchema>({
@@ -42,7 +45,11 @@ export function ChangeUsernameDialog({ children }: PropsWithChildren<unknown>) {
 		},
 	})
 
-	const { isSubmitting, isValid } = form.formState
+	const { formState, watch } = form
+
+	const { isSubmitting, isValid } = formState
+
+	const username = watch("username")
 
 	const [change, { loading: isLoadingChange }] = useChangeProfileInfoMutation({
 		onCompleted() {
@@ -50,6 +57,7 @@ export function ChangeUsernameDialog({ children }: PropsWithChildren<unknown>) {
 			toast.success(t("successChangedMessage"))
 			setIsOpen(false)
 			clearDialog()
+			router.replace(`/users/${username}`)
 		},
 		onError() {
 			toast.error(t("errorChangedMessage"))

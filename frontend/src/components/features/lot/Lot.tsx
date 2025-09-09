@@ -6,6 +6,7 @@ import { format } from "date-fns"
 import * as countries from "i18n-iso-countries"
 import _ from "lodash"
 import { useTranslations } from "next-intl"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
@@ -56,6 +57,7 @@ export function Lot({ lot }: LotProps) {
 		isActive,
 		id,
 		isSubscribed,
+		user,
 		_count: { bids: bidsCount },
 	} = lot
 
@@ -205,10 +207,12 @@ export function Lot({ lot }: LotProps) {
 						</Button>
 					)}
 				</div>
-				<div className='flex items-center gap-x-2.5'>
-					<UserAvatar user={lot.user} />
-					<span className='text-xl'>{lot.user.username}</span>
-				</div>
+				<Link href={`/users/${user.username}`}>
+					<div className='flex items-center gap-x-2.5'>
+						<UserAvatar user={user} />
+						<span className='text-xl'>{user.username}</span>
+					</div>
+				</Link>
 			</div>
 		</div>
 	)

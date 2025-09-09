@@ -116,7 +116,10 @@
 				"successChangedMessage": "Successful changed location",
 				"errorChangedMessage": "Location changed error"
 			},
-			"lots": "Lots",
+			"lots": {
+				"heading": "Lots",
+				"showMoreButton": "Show more"
+			},
 			"rating": "Rating",
 			"reviews": "Reviews",
 			"showMoreLotsButton": "Show more",
@@ -127,10 +130,6 @@
 			},
 			"filters": {
 				"stars": "Stars Count"
-			},
-			"my": {
-				"heading": "My Profile",
-				"lots": "My Lots"
 			}
 		}
 	},
