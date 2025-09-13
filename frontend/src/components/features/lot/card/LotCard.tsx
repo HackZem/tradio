@@ -74,12 +74,13 @@ export function LotCard({ lot, className }: LotCardProps) {
 					<span>{tEnum(lot.type)}</span>
 				</div>
 				<div className='flex items-center justify-between'>
+					{lot.type !== LotType.Buynow && (
+						<span className='text-muted-foreground'>
+							{lot.firstPrice}€ {t("firstPrice")}
+						</span>
+					)}
 					<span className='text-muted-foreground'>
-						{lot.firstPrice}€ {t("firstPrice")}
-					</span>
-					<span className='text-muted-foreground'>
-						{lot.type !== LotType.Auction &&
-							`${lot.buyNowPrice}€ ${t("buyNow")}`}
+						{lot.type === LotType.Mixed && `${lot.buyNowPrice}€ ${t("buyNow")}`}
 					</span>
 				</div>
 				<div className='text-muted-foreground flex items-center gap-x-[7px]'>

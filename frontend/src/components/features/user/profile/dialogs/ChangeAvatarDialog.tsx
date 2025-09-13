@@ -18,14 +18,17 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/common/Button"
 import { DialogClose } from "@/components/ui/common/Dialog"
 import { Form, FormField } from "@/components/ui/common/Form"
-import { ChangeAvatarButton } from "@/components/ui/elements/ChangeAvatarButton"
+import { UploadPhotoButton } from "@/components/ui/elements/ChangeAvatarButton"
 import { ChangeDialog } from "@/components/ui/elements/ChangeDialog"
 
 import { useChangeProfileAvatarMutation } from "@/graphql/generated/output"
 
 import { useCurrent } from "@/hooks/useCurrent"
 
-import { ALLOWED_FILE_FORMATS } from "@/libs/constants/image.constants"
+import {
+	ALLOWED_FILE_FORMATS,
+	MAX_FILE_SIZE,
+} from "@/libs/constants/image.constants"
 
 import getCroppedImg from "@/utils/get-cropped-img"
 
@@ -48,8 +51,6 @@ export function ChangeAvatarDialog({ children }: PropsWithChildren<unknown>) {
 
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 
-	const inputRef = useRef<HTMLInputElement>(null)
-
 	const form = useForm<TUploadFileSchema>({
 		resolver: zodResolver(uploadFileSchema),
 		values: {
@@ -65,7 +66,7 @@ export function ChangeAvatarDialog({ children }: PropsWithChildren<unknown>) {
 		}
 	}, [imageSource])
 
-	const { getRootProps, getInputProps } = useDropzone({
+	const { getRootProps, getInputProps, open } = useDropzone({
 		onDrop: (files: File[]) => {
 			if (files && files.length > 0) {
 				const file = files[0]
@@ -73,6 +74,13 @@ export function ChangeAvatarDialog({ children }: PropsWithChildren<unknown>) {
 			}
 		},
 		maxFiles: 1,
+		accept: ALLOWED_FILE_FORMATS.reduce<Record<string, string[]>>(
+			(acc, mime) => {
+				acc[mime] = []
+				return acc
+			},
+			{},
+		),
 	})
 
 	const [change, { loading: isLoadingChange }] = useChangeProfileAvatarMutation(
@@ -89,29 +97,24 @@ export function ChangeAvatarDialog({ children }: PropsWithChildren<unknown>) {
 		},
 	)
 
-	function handleImageUpload(e: ChangeEvent<HTMLInputElement>) {
-		const file = e.target.files?.[0]
-		imageUpload(file)
-	}
-
 	async function imageUpload(file?: File) {
-		if (file) {
-			form.clearErrors("file")
+		if (!file) return
 
-			form.setValue("file", file)
+		form.clearErrors("file")
 
-			const isValid = await form.trigger("file")
+		form.setValue("file", file, { shouldValidate: true })
 
-			if (!isValid) {
-				toast.error(t("errorUploadMessage"), {
-					description: t("errorUploadDescription"),
-				})
-				return
-			}
+		const isValid = await form.trigger("file")
 
-			const url = URL.createObjectURL(file)
-			setImageSource(url)
+		if (!isValid) {
+			toast.error(t("errorUploadMessage"), {
+				description: t("errorUploadDescription"),
+			})
+			return
 		}
+
+		const url = URL.createObjectURL(file)
+		setImageSource(url)
 	}
 
 	function handleOpenChange(isOpen: boolean) {
@@ -174,7 +177,10 @@ export function ChangeAvatarDialog({ children }: PropsWithChildren<unknown>) {
 						control={form.control}
 						name='file'
 						render={_ => (
-							<div className='relative my-[30px] flex h-full w-full flex-col items-center'>
+							<div
+								className='relative my-[30px] flex h-full w-full flex-col
+									items-center'
+							>
 								{imageSource ? (
 									<>
 										<Cropper
@@ -204,23 +210,18 @@ export function ChangeAvatarDialog({ children }: PropsWithChildren<unknown>) {
 										<Icon
 											icon='lets-icons:close-round'
 											width='28'
-											className='text-destructive absolute top-2.5 right-2.5 opacity-90 hover:cursor-pointer hover:opacity-100'
+											className='text-destructive absolute top-2.5 right-2.5
+												opacity-90 hover:cursor-pointer hover:opacity-100'
 											onClick={() => clearDialog()}
 										/>
 									</>
 								) : (
 									<>
-										<input
-											className='hidden'
-											type='file'
-											ref={inputRef}
-											accept={ALLOWED_FILE_FORMATS.join(", ")}
-											onChange={handleImageUpload}
-											{...getInputProps()}
-										/>
-										<ChangeAvatarButton
-											onClick={() => inputRef.current?.click()}
+										<input className='hidden' {...getInputProps()} />
+										<UploadPhotoButton
+											onClick={open}
 											{...getRootProps()}
+											className='max-w-[300px] rounded-full'
 										/>
 									</>
 								)}

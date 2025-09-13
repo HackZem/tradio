@@ -95,11 +95,7 @@ export function LoginForm() {
 							<FormItem>
 								<FormLabel className='text-xl'>{t("passwordLabel")}</FormLabel>
 								<FormControl>
-									<Input
-										{...field}
-										type='password'
-										disabled={isLoadingLogin}
-									></Input>
+									<Input {...field} type='password' disabled={isLoadingLogin} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>

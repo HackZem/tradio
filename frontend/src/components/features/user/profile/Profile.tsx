@@ -4,12 +4,9 @@ import { Icon } from "@iconify-icon/react"
 import { State } from "country-state-city"
 import * as countries from "i18n-iso-countries"
 import { useTranslations } from "next-intl"
-import { useEffect } from "react"
 import { toast } from "sonner"
 
-import { Button } from "@/components/ui/common/Button"
 import { Card, CardContent } from "@/components/ui/common/Card"
-import { Block } from "@/components/ui/elements/Block"
 import { ConfirmDialog } from "@/components/ui/elements/ConfirmDialog"
 import { Heading } from "@/components/ui/elements/Heading"
 import { UserAvatar } from "@/components/ui/elements/UserAvatar"
@@ -17,15 +14,10 @@ import { UserAvatar } from "@/components/ui/elements/UserAvatar"
 import {
 	FindAllLotsQuery,
 	FindProfileQuery,
-	useFindProfileLazyQuery,
-	useFindProfileQuery,
 	useRemoveProfileAvatarMutation,
 } from "@/graphql/generated/output"
 
 import { useCurrent } from "@/hooks/useCurrent"
-
-import { LotCard } from "../../lot/card/LotCard"
-import { LotsList } from "../../lot/list/LotsList"
 
 import { UserDescription } from "./UserDescription"
 import { UserLots } from "./UserLots"

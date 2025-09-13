@@ -79,8 +79,7 @@ export function LotFilters({ maxPrice }: LotFiltersProps) {
 					<Heading title={t("location.heading")} size={"sm"} />
 					<div className='flex w-full gap-x-2.5'>
 						<CountryCombobox
-							className='border-border text-foreground text-md h-[35px] flex-1
-								hover:border-transparent'
+							className='text-md h-[35px] flex-1'
 							value={country}
 							onValueChange={country => setCountry(country as Alpha2Code)}
 						/>
@@ -93,8 +92,7 @@ export function LotFilters({ maxPrice }: LotFiltersProps) {
 					</div>
 					<div className='flex w-full gap-x-2.5'>
 						<RegionCombobox
-							className='border-border text-foreground text-md h-[35px] flex-1
-								hover:border-transparent'
+							className='text-md h-[35px] flex-1'
 							country={country}
 							value={region}
 							onValueChange={region => setRegion(region)}

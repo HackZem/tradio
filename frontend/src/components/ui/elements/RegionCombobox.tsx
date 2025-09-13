@@ -3,7 +3,7 @@
 import { State } from "country-state-city"
 import { Alpha2Code } from "i18n-iso-countries"
 import { Check, ChevronsUpDown } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { cn } from "@/utils/tw-merge"
 
@@ -56,7 +56,11 @@ export function RegionCombobox({
 					variant='outline'
 					role='combobox'
 					aria-expanded={open}
-					className={cn("w-full justify-between rounded-[12px]", className)}
+					className={cn(
+						`border-border text-foreground w-full justify-between rounded-[12px]
+						hover:border-transparent`,
+						className,
+					)}
 					disabled={disabled}
 				>
 					{selectedOption ? selectedOption.label : "Choose region..."}

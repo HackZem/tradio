@@ -180,6 +180,25 @@
 				}
 			}
 		},
+		"form": {
+			"errorUploadMessage": "Photo uploaded error",
+			"errorUploadDescription": "Invalid file format or you have exceeded the file size limit",
+			"confirmDialog": {
+				"heading": "Delete Photo",
+				"message": "Are you sure you want to delete photo? This action cannot be undone"
+			},
+			"titleLabel": "Title",
+			"typeLabel": "Type",
+			"conditionLabel": "Condition",
+			"priceLabel": "Price",
+			"firstPriceLabel": "First price",
+			"buyNowPriceLabel": "Buy now price",
+			"categoryLabel": "Category",
+			"returnPeriodLabel": "Return period",
+			"location": "Location",
+			"endDate": "End date",
+			"insertLocationButtonTooltip": "Insert your location"
+		},
 		"errorSubscribeToLot": "Subscribe to lot error",
 		"successSubscribeToLot": "Successful subscribe to lot",
 		"errorUnsubscribeFromLot": "Unsubscribe from lot error",

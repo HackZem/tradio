@@ -70,12 +70,13 @@ export enum ConditionType {
 }
 
 export type CreateLotInput = {
+  buyNowPrice?: InputMaybe<Scalars['Float']['input']>;
   categorySlug: Scalars['String']['input'];
   condition: ConditionType;
   country: Scalars['String']['input'];
   description?: InputMaybe<Scalars['JSON']['input']>;
   expiresAt: Scalars['DateTime']['input'];
-  firstPrice: Scalars['Float']['input'];
+  price: Scalars['Float']['input'];
   region: Scalars['String']['input'];
   returnPeriod: ReturnType;
   title: Scalars['String']['input'];

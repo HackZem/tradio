@@ -50,12 +50,13 @@ enum ConditionType {
 }
 
 input CreateLotInput {
+  buyNowPrice: Float
   categorySlug: String!
   condition: ConditionType!
   country: String!
   description: JSON
   expiresAt: DateTime!
-  firstPrice: Float!
+  price: Float!
   region: String!
   returnPeriod: ReturnType!
   title: String!

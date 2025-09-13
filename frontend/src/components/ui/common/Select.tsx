@@ -1,9 +1,10 @@
 "use client"
 
-import { cn } from "@/utils/tw-merge"
 import * as SelectPrimitive from "@radix-ui/react-select"
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 import { ComponentProps } from "react"
+
+import { cn } from "@/utils/tw-merge"
 
 function Select({ ...props }: ComponentProps<typeof SelectPrimitive.Root>) {
 	return <SelectPrimitive.Root data-slot='select' {...props} />
@@ -39,8 +40,8 @@ function SelectTrigger({
 				focus-visible:border-ring focus-visible:ring-ring/50
 				aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40
 				aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50
-				flex w-fit items-center justify-between gap-2 rounded-[12px] border
-				bg-transparent px-3 py-2 text-sm whitespace-nowrap
+				flex w-fit items-center justify-between gap-2 rounded-[12px] border-2
+				bg-transparent px-3 py-2 text-base whitespace-nowrap
 				transition-[color,box-shadow] outline-none focus-visible:ring-[3px]
 				disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9
 				data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1
@@ -53,7 +54,7 @@ function SelectTrigger({
 		>
 			{children}
 			<SelectPrimitive.Icon asChild>
-				<ChevronDownIcon className='size-5 opacity-50 stroke-3 ml-auto' />
+				<ChevronDownIcon className='ml-auto size-5 stroke-3 opacity-50' />
 			</SelectPrimitive.Icon>
 		</SelectPrimitive.Trigger>
 	)

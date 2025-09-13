@@ -8,7 +8,7 @@ const inputVariants = cva(
 	selection:text-primary-foreground dark:bg-input/30
 	aria-invalid:ring-destructive dark:aria-invalid:ring-destructive/40
 	aria-invalid:border-destructive focus-visible:border-ring
-	focus-visible:ring-ring! hover:ring-primary flex h-[2.875rem] w-full min-w-0
+	focus-visible:ring-ring! hover:ring-primary flex h-[2.8125rem] w-full min-w-0
 	rounded-full px-3 py-1 pl-4 text-xl transition-all outline-none
 	file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm
 	file:font-medium hover:brightness-90 hover:filter focus-visible:bg-transparent

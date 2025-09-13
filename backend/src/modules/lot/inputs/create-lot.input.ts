@@ -10,12 +10,10 @@ import {
 	IsOptional,
 	IsString,
 	Length,
-	Max,
 	Validate,
 } from "class-validator"
 import GraphQLJSON from "graphql-type-json"
 
-import { IsCUID } from "@/src/shared/decorators/is-cuid.decorator"
 import { IsRegionExistsConstraint } from "@/src/shared/decorators/is-region-constraint.decorator"
 
 @InputType()
@@ -30,7 +28,6 @@ export class CreateLotInput {
 	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
-	@Max(1000)
 	public description?: JsonObject
 
 	@Field(() => LotType)
@@ -63,7 +60,13 @@ export class CreateLotInput {
 	@Field(() => Float)
 	@IsNumber()
 	@IsNotEmpty()
-	public firstPrice: number
+	public price: number
+
+	@Field(() => Float, { nullable: true })
+	@IsOptional()
+	@IsNumber()
+	@IsNotEmpty()
+	public buyNowPrice?: number
 
 	@Field(() => Date)
 	@IsDate()
@@ -71,7 +74,7 @@ export class CreateLotInput {
 	public expiresAt: Date
 
 	@Field(() => String)
-	@IsCUID()
+	@IsString()
 	@IsNotEmpty()
 	public categorySlug: string
 }

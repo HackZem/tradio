@@ -56,7 +56,11 @@ export function CountryCombobox({
 					variant='outline'
 					role='combobox'
 					aria-expanded={open}
-					className={cn("w-full justify-between rounded-[12px]", className)}
+					className={cn(
+						`border-border text-foreground w-full justify-between rounded-[12px]
+						hover:border-transparent`,
+						className,
+					)}
 					disabled={disabled}
 				>
 					{selectedOption ? selectedOption.label : "Choose country..."}

@@ -181,13 +181,15 @@ export class LotService {
 	}
 
 	public async create(user: User, input: CreateLotInput) {
-		const { categorySlug, firstPrice, ...data } = input
+		const { categorySlug, price, buyNowPrice, type, ...data } = input
 
 		const newLot = await this.prismaService.lot.create({
 			data: {
 				...data,
-				firstPrice,
-				currentPrice: firstPrice,
+				firstPrice: price,
+				currentPrice: price,
+				type,
+				buyNowPrice: type === "MIXED" ? buyNowPrice : undefined,
 				category: { connect: { slug: categorySlug } },
 				user: {
 					connect: {
@@ -197,8 +199,7 @@ export class LotService {
 			},
 		})
 
-		if (newLot.type !== "BUYNOW")
-			await this.lotQueueService.scheduleLotEvents(newLot)
+		if (type !== "BUYNOW") await this.lotQueueService.scheduleLotEvents(newLot)
 
 		return true
 	}
