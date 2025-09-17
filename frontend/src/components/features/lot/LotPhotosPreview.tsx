@@ -48,29 +48,31 @@ export function LotPhotosPreview({ photos }: LotPhotosPreviewProps) {
 				className='scrollbar-hidden relative flex w-full flex-col gap-y-2.5
 					overflow-y-auto px-[12px] py-[4px]'
 			>
-				{photos.map((photo, i) => (
-					<Card
-						className={cn(
-							`relative aspect-square w-full shrink-0 cursor-pointer
-							overflow-hidden`,
-							selectedLotIndex === i && "ring-accent ring-4",
-						)}
-						onClick={() => setSelectedLotIndex(i)}
-						key={i}
-					>
-						<Image
-							src={getMediaSource(photo)}
-							alt={`Image ${i + 1}`}
-							fill
-							className='object-contain'
-						/>
-					</Card>
-				))}
+				{photos
+					?.sort((a, b) => a.order - b.order)
+					.map((photo, i) => (
+						<Card
+							className={cn(
+								`relative aspect-square w-full shrink-0 cursor-pointer
+								overflow-hidden`,
+								selectedLotIndex === i && "ring-accent ring-4",
+							)}
+							onClick={() => setSelectedLotIndex(i)}
+							key={i}
+						>
+							<Image
+								src={getMediaSource(photo.key)}
+								alt={`Image ${i + 1}`}
+								fill
+								className='object-contain'
+							/>
+						</Card>
+					))}
 			</div>
 			<div className='aspect-square w-full max-w-[630px]' ref={previewImageRef}>
 				<Card className='relative h-full w-full overflow-hidden'>
 					<Image
-						src={getMediaSource(photos[selectedLotIndex])}
+						src={getMediaSource(photos[selectedLotIndex].key)}
 						alt='Product preview'
 						fill
 						className='object-contain'

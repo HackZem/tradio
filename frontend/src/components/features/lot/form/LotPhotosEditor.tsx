@@ -79,13 +79,13 @@ export function LotPhotosEditor({ photos, onChange }: LotPhotosEditorProps) {
 
 		const url = URL.createObjectURL(file)
 
-		if (editingIndex !== null && photos) {
+		if (editingIndex !== null && photos?.length) {
 			const updatedPhotos = [...photos]
-			updatedPhotos[editingIndex] = url
+			updatedPhotos[editingIndex].key = url
 			setEditingIndex(null)
 			onChange(updatedPhotos)
 		} else {
-			onChange([...(photos ?? []), url])
+			onChange([...(photos ?? []), { key: url, order: photos?.length ?? 0 }])
 		}
 	}
 
@@ -120,60 +120,66 @@ export function LotPhotosEditor({ photos, onChange }: LotPhotosEditorProps) {
 				className='scrollbar-hidden relative flex w-full flex-col gap-y-2.5
 					overflow-y-auto px-[12px] py-[4px]'
 			>
-				{photos?.map((photo, i) => (
-					<Card
-						className={cn(
-							`relative aspect-square w-full shrink-0 cursor-pointer
-							overflow-hidden`,
-							selectedLotIndex === i && "ring-accent ring-4",
-						)}
-						onClick={() => setSelectedLotIndex(i)}
-						key={i}
-					>
-						<Image
-							src={photo.startsWith("blob:") ? photo : getMediaSource(photo)}
-							alt={`Image ${i + 1}`}
-							fill
-							className='object-contain'
-						/>
-						<div
-							className='absolute top-1 right-1 transform items-center
-								justify-center gap-3 group-hover:flex'
+				{photos
+					?.sort((a, b) => a.order - b.order)
+					.map((photo, i) => (
+						<Card
+							className={cn(
+								`relative aspect-square w-full shrink-0 cursor-pointer
+								overflow-hidden`,
+								selectedLotIndex === i && "ring-accent ring-4",
+							)}
+							onClick={() => setSelectedLotIndex(i)}
+							key={i}
 						>
-							<Icon
-								icon={"bx:pencil"}
-								width={30}
-								className='hover:text-primary'
-								onClick={() => {
-									open()
-									setEditingIndex(i)
-								}}
+							<Image
+								src={
+									photo.key.startsWith("blob:")
+										? photo.key
+										: getMediaSource(photo.key)
+								}
+								alt={`Image ${i + 1}`}
+								fill
+								className='object-contain'
 							/>
-
-							<ConfirmDialog
-								heading={t("confirmDialog.heading")}
-								message={t("confirmDialog.message")}
-								onConfirm={() => {
-									onChange(
-										photos.filter((_, _i) => {
-											if (_i === i) {
-												URL.revokeObjectURL(photos[i])
-												return false
-											}
-											return true
-										}),
-									)
-								}}
+							<div
+								className='absolute top-1 right-1 transform items-center
+									justify-center gap-3 group-hover:flex'
 							>
 								<Icon
-									icon={"material-symbols:delete-outline-rounded"}
+									icon={"bx:pencil"}
 									width={30}
-									className='hover:text-destructive'
+									className='hover:text-primary'
+									onClick={() => {
+										open()
+										setEditingIndex(i)
+									}}
 								/>
-							</ConfirmDialog>
-						</div>
-					</Card>
-				))}
+
+								<ConfirmDialog
+									heading={t("confirmDialog.heading")}
+									message={t("confirmDialog.message")}
+									onConfirm={() => {
+										onChange(
+											photos.filter((_, _i) => {
+												if (_i === i) {
+													URL.revokeObjectURL(photos[i].key)
+													return false
+												}
+												return true
+											}),
+										)
+									}}
+								>
+									<Icon
+										icon={"material-symbols:delete-outline-rounded"}
+										width={30}
+										className='hover:text-destructive'
+									/>
+								</ConfirmDialog>
+							</div>
+						</Card>
+					))}
 				<Card
 					className={`relative aspect-square w-full shrink-0 cursor-pointer
 						overflow-hidden p-0`}
@@ -204,9 +210,9 @@ export function LotPhotosEditor({ photos, onChange }: LotPhotosEditorProps) {
 					{photos?.length && photos[selectedLotIndex] ? (
 						<Image
 							src={
-								photos[selectedLotIndex].startsWith("blob:")
-									? photos[selectedLotIndex]
-									: getMediaSource(photos[selectedLotIndex])
+								photos[selectedLotIndex].key.startsWith("blob:")
+									? photos[selectedLotIndex].key
+									: getMediaSource(photos[selectedLotIndex].key)
 							}
 							alt='Product preview'
 							fill

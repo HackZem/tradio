@@ -7,6 +7,7 @@ import { UserModel } from "../../auth/account/models/user.model"
 import { BidModel } from "../../bid/models/bid.model"
 import { CategoryModel } from "../../category/models/category.model"
 
+import { LotPhotoModel } from "./lot-photo.model"
 import { LotSubscriptionModel } from "./lot-subscription.model"
 
 @ObjectType()
@@ -32,8 +33,8 @@ export class LotModel implements Lot {
 	@Field(() => GraphQLJSON, { nullable: true })
 	public description: JsonValue
 
-	@Field(() => [String])
-	public photos: string[]
+	@Field(() => [LotPhotoModel])
+	public photos: LotPhotoModel[]
 
 	@Field(() => LotType)
 	public type: LotType

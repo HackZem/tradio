@@ -8,6 +8,7 @@ import {
 import { createId } from "@paralleldrive/cuid2"
 import { Prisma, User } from "@prisma/client"
 import { FileUpload } from "graphql-upload-ts"
+import _ from "lodash"
 import * as sharp from "sharp"
 
 import { PrismaService } from "@/src/core/prisma/prisma.service"
@@ -22,8 +23,6 @@ import {
 	SortBy,
 	SortOrder,
 } from "./inputs/filters.input"
-import { RemovePhotoInput } from "./inputs/remove-photo.input"
-import { ReorderPhotosInput } from "./inputs/reorder-photos.input"
 import { UploadPhotoInput } from "./inputs/upload-photo.input"
 import { LotQueueService } from "./queues/lot-queue.service"
 
@@ -140,11 +139,12 @@ export class LotService {
 
 		const orderBy = this.buildOrderBy(sortBy, sortOrder)
 
-		const lots = this.prismaService.lot.findMany({
+		const lots = await this.prismaService.lot.findMany({
 			where: whereClause,
 			include: {
 				user: true,
 				category: true,
+				photos: true,
 				_count: {
 					select: {
 						bids: true,
@@ -169,6 +169,7 @@ export class LotService {
 			include: {
 				user: true,
 				category: true,
+				photos: true,
 				_count: { select: { bids: true } },
 			},
 		})
@@ -181,7 +182,18 @@ export class LotService {
 	}
 
 	public async create(user: User, input: CreateLotInput) {
-		const { categorySlug, price, buyNowPrice, type, ...data } = input
+		const {
+			categorySlug,
+			price,
+			buyNowPrice,
+			type,
+			photos,
+			expiresAt,
+			...data
+		} = input
+
+		if (type !== "BUYNOW" && !expiresAt)
+			throw new BadRequestException("You didn't specify the end date")
 
 		const newLot = await this.prismaService.lot.create({
 			data: {
@@ -189,11 +201,34 @@ export class LotService {
 				firstPrice: price,
 				currentPrice: price,
 				type,
+				expiresAt,
 				buyNowPrice: type === "MIXED" ? buyNowPrice : undefined,
 				category: { connect: { slug: categorySlug } },
 				user: {
 					connect: {
 						id: user.id,
+					},
+				},
+			},
+		})
+
+		for (const photo of photos) {
+			if (photo.file) {
+				photo.key = await this.uploadPhoto(user, newLot.id, photo.file)
+			}
+		}
+
+		await this.prismaService.lot.update({
+			where: { id: newLot.id },
+			data: {
+				photos: {
+					createMany: {
+						data: photos.map(({ key, order }) => {
+							return {
+								key: key!,
+								order,
+							}
+						}),
 					},
 				},
 			},
@@ -216,11 +251,12 @@ export class LotService {
 			categorySlug,
 			expiresAt,
 			firstPrice,
+			photos,
 		} = input
 
 		const lot = await this.prismaService.lot.findUnique({
 			where: { id: lotId },
-			include: { bids: true },
+			include: { bids: true, photos: true },
 		})
 
 		if (!lot) {
@@ -233,11 +269,46 @@ export class LotService {
 			)
 		}
 
+		const newPhotos: UploadPhotoInput[] = []
+
+		for (const photo of photos) {
+			if (photo.file) {
+				photo.key = await this.uploadPhoto(user, lot.id, photo.file)
+
+				newPhotos.push(photo)
+			}
+		}
+
+		await this.prismaService.$transaction([
+			this.prismaService.lotPhoto.createMany({
+				data: newPhotos.map(
+					newPhoto =>
+						({
+							...newPhoto,
+							lotId,
+						}) as Prisma.LotPhotoCreateManyInput,
+				),
+			}),
+			this.prismaService.lotPhoto.deleteMany({
+				where: {
+					key: {
+						in: _.differenceBy(lot.photos, photos, "key").map(v => v.key),
+					},
+				},
+			}),
+			...photos.map(({ order, key }) =>
+				this.prismaService.lotPhoto.update({
+					where: { key },
+					data: { order },
+				}),
+			),
+		])
+
 		const isBidPlaced = lot.bids.length > 0
 
 		const data: Prisma.LotUpdateInput = isBidPlaced
 			? {
-					title: lot.title.startsWith(title ?? "") ? title : lot.title,
+					title: title?.startsWith(lot.title) ? title : lot.title,
 				}
 			: {
 					region,
@@ -252,6 +323,13 @@ export class LotService {
 						connect: {
 							slug: categorySlug ?? lot.categorySlug!,
 						},
+					},
+					photos: {
+						connect: photos.map(({ key }) => {
+							return {
+								key: key!,
+							}
+						}),
 					},
 				}
 
@@ -338,13 +416,7 @@ export class LotService {
 		return result
 	}
 
-	public async uploadPhoto(
-		user: User,
-		input: UploadPhotoInput,
-		file: FileUpload,
-	) {
-		const { lotId } = input
-
+	public async uploadPhoto(user: User, lotId: string, file: FileUpload) {
 		const lot = await this.prismaService.lot.findUnique({
 			where: { id: lotId },
 		})
@@ -367,32 +439,19 @@ export class LotService {
 
 		const buffer = Buffer.concat(chunks)
 
-		const fileName = `lots/${lot.id}/${createId()}.webp`
+		const key = `lots/${lot.id}/${createId()}.webp`
 
-		const processedBuffer = await sharp(buffer)
-			.resize(1280, 1280)
-			.webp()
-			.toBuffer()
+		const processedBuffer = await sharp(buffer).webp().toBuffer()
 
-		await this.s3Service.upload(processedBuffer, fileName, "image/webp")
+		await this.s3Service.upload(processedBuffer, key, "image/webp")
 
-		await this.prismaService.lot.update({
-			where: { id: lotId },
-			data: {
-				photos: {
-					push: fileName,
-				},
-			},
-		})
-
-		return true
+		return key
 	}
 
-	public async removePhoto(user: User, input: RemovePhotoInput) {
-		const { lotId, photoKey } = input
-
+	public async removePhoto(user: User, lotId: string, key: string) {
 		const lot = await this.prismaService.lot.findUnique({
 			where: { id: lotId },
+			select: { photos: true, userId: true },
 		})
 
 		if (!lot) {
@@ -405,52 +464,7 @@ export class LotService {
 			)
 		}
 
-		await this.s3Service.remove(photoKey)
-
-		await this.prismaService.lot.update({
-			where: { id: lotId },
-			data: {
-				photos: {
-					set: lot.photos.filter(key => key !== photoKey),
-				},
-			},
-		})
-
-		return true
-	}
-
-	public async reorderPhotos(user: User, input: ReorderPhotosInput) {
-		const { lotId, photoKeys } = input
-
-		const lot = await this.prismaService.lot.findUnique({
-			where: { id: lotId },
-		})
-
-		if (!lot) {
-			throw new NotFoundException("Lot is not found")
-		}
-
-		if (lot.userId !== user.id) {
-			throw new ForbiddenException(
-				"You do not have permission to edit this lot",
-			)
-		}
-
-		const isPhotosExists =
-			photoKeys.filter(key => !lot.photos.includes(key)).length <= 0
-
-		if (!isPhotosExists) {
-			throw new BadRequestException("Some photos do not belong to this lot")
-		}
-
-		await this.prismaService.lot.update({
-			where: { id: lotId },
-			data: {
-				photos: {
-					set: photoKeys,
-				},
-			},
-		})
+		await this.s3Service.remove(key)
 
 		return true
 	}

@@ -1,0 +1,3 @@
+mutation CreateLot($data: CreateLotInput!) {
+	createLot(data: $data)
+}

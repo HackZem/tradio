@@ -29,6 +29,7 @@ input ChangeLotInfoInput {
   expiresAt: DateTime
   firstPrice: Float
   lotId: String!
+  photos: [UploadPhotoInput!]!
   region: String
   returnPeriod: ReturnType
   title: String
@@ -55,7 +56,8 @@ input CreateLotInput {
   condition: ConditionType!
   country: String!
   description: JSON
-  expiresAt: DateTime!
+  expiresAt: DateTime
+  photos: [UploadPhotoInput!]!
   price: Float!
   region: String!
   returnPeriod: ReturnType!
@@ -142,7 +144,7 @@ type LotModel {
   id: ID!
   isActive: Boolean!
   isSubscribed: Boolean!
-  photos(limit: Int): [String!]!
+  photos(limit: Int): [LotPhotoModel!]!
   region: String!
   returnPeriod: ReturnType!
   subscriptions: [LotSubscriptionModel!]!
@@ -152,6 +154,15 @@ type LotModel {
   user: UserModel!
   userId: String!
   views: Float!
+}
+
+type LotPhotoModel {
+  createdAt: DateTime!
+  id: ID!
+  key: String!
+  lot: LotModel!
+  lotId: String!
+  order: Int!
 }
 
 type LotSubscriptionModel {
@@ -179,13 +190,10 @@ type Mutation {
   login(data: LoginInput!): UserModel!
   logout: Boolean!
   placeBid(data: PlaceBidInput!): Boolean!
-  removePhotoFromLot(data: RemovePhotoInput!): Boolean!
   removeProfileAvatar: Boolean!
   removeSession(id: String!): Boolean!
-  reorderPhotosInLot(data: ReorderPhotosInput!): Boolean!
   subscribeToLot(lotId: String!): Boolean!
   unsubscribeFromLot(lotId: String!): Boolean!
-  uploadPhotoToLot(data: UploadPhotoInput!, file: Upload!): Boolean!
   verifyAccount(data: VerificationInput!): UserModel!
 }
 
@@ -233,16 +241,6 @@ type Query {
   findUnreadNotificationsCount: Float!
 }
 
-input RemovePhotoInput {
-  lotId: String!
-  photoKey: String!
-}
-
-input ReorderPhotosInput {
-  lotId: String!
-  photoKeys: [String!]!
-}
-
 enum ReturnType {
   NON_RETURNABLE
   PERIOD_7D
@@ -279,7 +277,9 @@ enum SortOrder {
 scalar Upload
 
 input UploadPhotoInput {
-  lotId: String!
+  file: Upload
+  key: String
+  order: Int!
 }
 
 type UserModel {

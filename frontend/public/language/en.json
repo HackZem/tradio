@@ -183,6 +183,8 @@
 		"form": {
 			"errorUploadMessage": "Photo uploaded error",
 			"errorUploadDescription": "Invalid file format or you have exceeded the file size limit",
+			"errorCreatedLot": "Created lot error",
+			"successCreatedLot": "Successful created lot",
 			"confirmDialog": {
 				"heading": "Delete Photo",
 				"message": "Are you sure you want to delete photo? This action cannot be undone"
@@ -197,7 +199,13 @@
 			"returnPeriodLabel": "Return period",
 			"location": "Location",
 			"endDate": "End date",
-			"insertLocationButtonTooltip": "Insert your location"
+			"insertLocationButtonTooltip": "Insert your location",
+			"description": {
+				"heading": "Description",
+				"placeholder": "Write your description ..."
+			},
+			"placeLotButton": "Place Lot",
+			"cancelButton": "Cancel"
 		},
 		"errorSubscribeToLot": "Subscribe to lot error",
 		"successSubscribeToLot": "Successful subscribe to lot",

@@ -76,7 +76,7 @@ model Lot {
   title       String
   description Json?
 
-  photos String[]
+  photos LotPhoto[]
 
   type     LotType
   isActive Boolean @default(true) @map("is-active")
@@ -107,6 +107,20 @@ model Lot {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("lots")
+}
+
+model LotPhoto {
+  id String @id @default(cuid())
+
+  lot   Lot    @relation(fields: [lotId], references: [id])
+  lotId String @map("lot_id")
+
+  key   String @unique
+  order Int
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([lotId, order])
 }
 
 model Category {

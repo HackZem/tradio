@@ -3,13 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Icon } from "@iconify-icon/react"
 import { useTranslations } from "next-intl"
-import {
-	ChangeEvent,
-	PropsWithChildren,
-	useEffect,
-	useRef,
-	useState,
-} from "react"
+import { PropsWithChildren, useEffect, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import Cropper, { Area } from "react-easy-crop"
 import { useForm } from "react-hook-form"
@@ -25,10 +19,7 @@ import { useChangeProfileAvatarMutation } from "@/graphql/generated/output"
 
 import { useCurrent } from "@/hooks/useCurrent"
 
-import {
-	ALLOWED_FILE_FORMATS,
-	MAX_FILE_SIZE,
-} from "@/libs/constants/image.constants"
+import { ALLOWED_FILE_FORMATS } from "@/libs/constants/image.constants"
 
 import getCroppedImg from "@/utils/get-cropped-img"
 

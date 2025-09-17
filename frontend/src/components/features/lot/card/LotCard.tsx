@@ -48,7 +48,7 @@ export function LotCard({ lot, className }: LotCardProps) {
 			{lot.photos[0] ? (
 				<div className='relative h-full'>
 					<Image
-						src={getMediaSource(lot.photos[0])}
+						src={getMediaSource(lot.photos[0].key)}
 						alt={lot.title}
 						fill
 						className='bg-muted flex items-center justify-center object-contain'

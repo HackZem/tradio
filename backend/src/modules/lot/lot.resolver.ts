@@ -7,22 +7,19 @@ import {
 	Resolver,
 } from "@nestjs/graphql"
 import { User } from "@prisma/client"
-import { FileUpload, GraphQLUpload } from "graphql-upload-ts"
 
 import { PrismaService } from "@/src/core/prisma/prisma.service"
 import { Authorization } from "@/src/shared/decorators/auth.decorator"
 import { Authorized } from "@/src/shared/decorators/authorized.decorator"
-import { FileValidationPipe } from "@/src/shared/pipes/file-validation.pipe"
+import { FilesValidationPipe } from "@/src/shared/pipes/files-validation.pipe"
 
 import { PhotosArgs } from "./args/photos.args"
 import { ChangeLotInfoInput } from "./inputs/change-lot-info.input"
 import { CreateLotInput } from "./inputs/create-lot.input"
 import { FiltersInput } from "./inputs/filters.input"
-import { RemovePhotoInput } from "./inputs/remove-photo.input"
-import { ReorderPhotosInput } from "./inputs/reorder-photos.input"
-import { UploadPhotoInput } from "./inputs/upload-photo.input"
 import { LotService } from "./lot.service"
 import { FindLotsModel } from "./models/find-lots.model"
+import { LotPhotoModel } from "./models/lot-photo.model"
 import { LotModel } from "./models/lot.model"
 
 @Resolver(() => LotModel)
@@ -37,9 +34,9 @@ export class LotResolver {
 		return this.lotService.findAll(input)
 	}
 
-	@ResolveField(() => [String], { nullable: true })
+	@ResolveField(() => [LotPhotoModel], { nullable: true })
 	public photos(@Parent() lot: LotModel, @Args() args: PhotosArgs) {
-		if (args.limit) return lot.photos.slice(0, args.limit)
+		if (args.limit) return lot?.photos?.slice(0, args.limit) ?? []
 		return lot.photos
 	}
 
@@ -81,7 +78,12 @@ export class LotResolver {
 	@Mutation(() => Boolean, { name: "createLot" })
 	public async create(
 		@Authorized() user: User,
-		@Args("data") input: CreateLotInput,
+		@Args(
+			"data",
+			{ type: () => CreateLotInput },
+			new FilesValidationPipe("photos"),
+		)
+		input: CreateLotInput,
 	) {
 		return this.lotService.create(user, input)
 	}
@@ -102,34 +104,5 @@ export class LotResolver {
 		@Args("lotId") lotId: string,
 	) {
 		return this.lotService.unsubscribe(user, lotId)
-	}
-
-	@Authorization()
-	@Mutation(() => Boolean, { name: "uploadPhotoToLot" })
-	public async uploadPhoto(
-		@Authorized() user: User,
-		@Args("data") input: UploadPhotoInput,
-		@Args("file", { type: () => GraphQLUpload }, FileValidationPipe)
-		file: FileUpload,
-	) {
-		return this.lotService.uploadPhoto(user, input, file)
-	}
-
-	@Authorization()
-	@Mutation(() => Boolean, { name: "removePhotoFromLot" })
-	public async removePhoto(
-		@Authorized() user: User,
-		@Args("data") input: RemovePhotoInput,
-	) {
-		return this.lotService.removePhoto(user, input)
-	}
-
-	@Authorization()
-	@Mutation(() => Boolean, { name: "reorderPhotosInLot" })
-	public async reorderPhotos(
-		@Authorized() user: User,
-		@Args("data") input: ReorderPhotosInput,
-	) {
-		return this.lotService.reorderPhotos(user, input)
 	}
 }

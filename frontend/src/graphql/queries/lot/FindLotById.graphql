@@ -10,7 +10,10 @@ query FindLotById($id: String!) {
 		region
 		type
 		expiresAt
-		photos
+		photos {
+			key
+			order
+		}
 		condition
 		isActive
 		isSubscribed

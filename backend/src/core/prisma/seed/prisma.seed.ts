@@ -202,8 +202,8 @@ async function main() {
 			)
 
 			for (const lotId of LOT_IDS_LIST) {
-				const randomTimes = _.random(1, 5)
-				for (let i = 0; i < randomTimes; i++) {
+				const randomImageCount = _.random(1, 5)
+				for (let i = 0; i < randomImageCount; i++) {
 					const { buffer, mimetype } = await getRandomImageData()
 
 					const key = `lots/${lotId}/${createId()}.webp`
@@ -214,13 +214,15 @@ async function main() {
 						where: { id: lotId },
 						data: {
 							photos: {
-								push: key,
+								create: { key, order: i },
 							},
 						},
 					})
 				}
 
-				logger.log(`For lot ${lotId} have been created ${randomTimes} photos`)
+				logger.log(
+					`For lot ${lotId} have been created ${randomImageCount} photos`,
+				)
 			}
 		}
 

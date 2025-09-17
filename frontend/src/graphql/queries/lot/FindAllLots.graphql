@@ -11,7 +11,10 @@ query FindAllLots($filters: FiltersInput!) {
 			type
 			expiresAt
 			buyNowPrice
-			photos(limit: 1)
+			photos(limit: 1) {
+				key
+				order
+			}
 			_count {
 				bids
 			}
