@@ -50,9 +50,9 @@ export class S3Service {
 	public async remove(key: string) {
 		const command: DeleteObjectCommandInput = {
 			Bucket: this.bucket,
-			Key: String(key),
+			Key: key,
 		}
-
+		console.log(key, "key")
 		try {
 			await this.client.send(new DeleteObjectCommand(command))
 		} catch (err) {

@@ -41,21 +41,6 @@ export type CategoryModel = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
-export type ChangeLotInfoInput = {
-  categorySlug?: InputMaybe<Scalars['String']['input']>;
-  condition?: InputMaybe<ConditionType>;
-  country?: InputMaybe<Scalars['String']['input']>;
-  description?: InputMaybe<Scalars['JSON']['input']>;
-  expiresAt?: InputMaybe<Scalars['DateTime']['input']>;
-  firstPrice?: InputMaybe<Scalars['Float']['input']>;
-  lotId: Scalars['String']['input'];
-  photos: Array<UploadPhotoInput>;
-  region?: InputMaybe<Scalars['String']['input']>;
-  returnPeriod?: InputMaybe<ReturnType>;
-  title?: InputMaybe<Scalars['String']['input']>;
-  type?: InputMaybe<LotType>;
-};
-
 export type ChangeProfileInfoInput = {
   country?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -76,7 +61,7 @@ export type CreateLotInput = {
   condition: ConditionType;
   country: Scalars['String']['input'];
   description?: InputMaybe<Scalars['JSON']['input']>;
-  expiresAt: Scalars['DateTime']['input'];
+  expiresAt?: InputMaybe<Scalars['DateTime']['input']>;
   photos: Array<UploadPhotoInput>;
   price: Scalars['Float']['input'];
   region: Scalars['String']['input'];
@@ -204,7 +189,6 @@ export enum LotType {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  changeLotInfo: Scalars['Boolean']['output'];
   changeProfileAvatar: Scalars['Boolean']['output'];
   changeProfileInfo: Scalars['Boolean']['output'];
   clearSessionCookie: Scalars['Boolean']['output'];
@@ -217,12 +201,8 @@ export type Mutation = {
   removeSession: Scalars['Boolean']['output'];
   subscribeToLot: Scalars['Boolean']['output'];
   unsubscribeFromLot: Scalars['Boolean']['output'];
+  updateLot: Scalars['Boolean']['output'];
   verifyAccount: UserModel;
-};
-
-
-export type MutationChangeLotInfoArgs = {
-  data: ChangeLotInfoInput;
 };
 
 
@@ -268,6 +248,11 @@ export type MutationSubscribeToLotArgs = {
 
 export type MutationUnsubscribeFromLotArgs = {
   lotId: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateLotArgs = {
+  data: UpdateLotInput;
 };
 
 
@@ -380,6 +365,22 @@ export enum SortOrder {
   Desc = 'DESC'
 }
 
+export type UpdateLotInput = {
+  buyNowPrice?: InputMaybe<Scalars['Float']['input']>;
+  categorySlug?: InputMaybe<Scalars['String']['input']>;
+  condition?: InputMaybe<ConditionType>;
+  country?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['JSON']['input']>;
+  expiresAt?: InputMaybe<Scalars['DateTime']['input']>;
+  lotId: Scalars['String']['input'];
+  photos: Array<UploadPhotoInput>;
+  price?: InputMaybe<Scalars['Float']['input']>;
+  region?: InputMaybe<Scalars['String']['input']>;
+  returnPeriod?: InputMaybe<ReturnType>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<LotType>;
+};
+
 export type UploadPhotoInput = {
   file?: InputMaybe<Scalars['Upload']['input']>;
   key?: InputMaybe<Scalars['String']['input']>;
@@ -423,6 +424,13 @@ export type UserProfileModel = {
 export type VerificationInput = {
   token: Scalars['String']['input'];
 };
+
+export type UpdateLotMutationVariables = Exact<{
+  data: UpdateLotInput;
+}>;
+
+
+export type UpdateLotMutation = { __typename?: 'Mutation', updateLot: boolean };
 
 export type CreateUserMutationVariables = Exact<{
   data: CreateUserInput;
@@ -512,7 +520,7 @@ export type FindLotByIdQueryVariables = Exact<{
 }>;
 
 
-export type FindLotByIdQuery = { __typename?: 'Query', findLotById: { __typename?: 'LotModel', id: string, title: string, firstPrice?: number | null, currentPrice?: number | null, buyNowPrice?: number | null, views: number, country: string, region: string, type: LotType, expiresAt?: any | null, condition: ConditionType, isActive: boolean, isSubscribed: boolean, returnPeriod: ReturnType, description?: any | null, photos: Array<{ __typename?: 'LotPhotoModel', key: string, order: number }>, _count: { __typename?: 'LotCount', bids: number }, user: { __typename?: 'UserModel', avatar?: string | null, username: string } } };
+export type FindLotByIdQuery = { __typename?: 'Query', findLotById: { __typename?: 'LotModel', id: string, title: string, firstPrice?: number | null, currentPrice?: number | null, buyNowPrice?: number | null, views: number, country: string, region: string, type: LotType, expiresAt?: any | null, condition: ConditionType, isActive: boolean, isSubscribed: boolean, categorySlug: string, returnPeriod: ReturnType, description?: any | null, photos: Array<{ __typename?: 'LotPhotoModel', key: string, order: number }>, _count: { __typename?: 'LotCount', bids: number }, user: { __typename?: 'UserModel', avatar?: string | null, username: string } } };
 
 export type FindMeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -539,6 +547,37 @@ export type FindUnreadNotificationsCountQueryVariables = Exact<{ [key: string]: 
 export type FindUnreadNotificationsCountQuery = { __typename?: 'Query', findUnreadNotificationsCount: number };
 
 
+export const UpdateLotDocument = gql`
+    mutation UpdateLot($data: UpdateLotInput!) {
+  updateLot(data: $data)
+}
+    `;
+export type UpdateLotMutationFn = Apollo.MutationFunction<UpdateLotMutation, UpdateLotMutationVariables>;
+
+/**
+ * __useUpdateLotMutation__
+ *
+ * To run a mutation, you first call `useUpdateLotMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLotMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLotMutation, { data, loading, error }] = useUpdateLotMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateLotMutation(baseOptions?: Apollo.MutationHookOptions<UpdateLotMutation, UpdateLotMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateLotMutation, UpdateLotMutationVariables>(UpdateLotDocument, options);
+      }
+export type UpdateLotMutationHookResult = ReturnType<typeof useUpdateLotMutation>;
+export type UpdateLotMutationResult = Apollo.MutationResult<UpdateLotMutation>;
+export type UpdateLotMutationOptions = Apollo.BaseMutationOptions<UpdateLotMutation, UpdateLotMutationVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($data: CreateUserInput!) {
   createUser(data: $data)
@@ -1004,6 +1043,7 @@ export const FindLotByIdDocument = gql`
     condition
     isActive
     isSubscribed
+    categorySlug
     _count {
       bids
     }

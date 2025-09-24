@@ -185,6 +185,8 @@
 			"errorUploadDescription": "Invalid file format or you have exceeded the file size limit",
 			"errorCreatedLot": "Created lot error",
 			"successCreatedLot": "Successful created lot",
+			"errorUpdatedLot": "Updated lot error",
+			"successUpdatedLot": "Successful updated lot",
 			"confirmDialog": {
 				"heading": "Delete Photo",
 				"message": "Are you sure you want to delete photo? This action cannot be undone"
@@ -205,6 +207,7 @@
 				"placeholder": "Write your description ..."
 			},
 			"placeLotButton": "Place Lot",
+			"editLotButton": "Save Lot",
 			"cancelButton": "Cancel"
 		},
 		"errorSubscribeToLot": "Subscribe to lot error",
@@ -216,6 +219,7 @@
 		"addToCartButton": "Add to Cart",
 		"addToWatchlistButton": "Add to Watchlist",
 		"removeFromWatchlistButton": "Remove from Watchlist",
+		"editLotButton": "Edit Lot",
 		"firstPrice": "first price",
 		"expired": "expired",
 		"buyNow": "buy now for",

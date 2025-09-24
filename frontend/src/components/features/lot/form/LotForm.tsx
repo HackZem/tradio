@@ -2,11 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Icon } from "@iconify-icon/react"
-import { set } from "date-fns"
+import { JSONContent } from "@tiptap/react"
+import { format, set, startOfDay } from "date-fns"
 import { Alpha2Code } from "i18n-iso-countries"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -36,10 +36,12 @@ import { FilterAmountInput } from "@/components/ui/elements/filters/FilterAmount
 
 import {
 	ConditionType,
+	FindLotByIdQuery,
 	LotType,
 	ReturnType,
 	useCreateLotMutation,
 	useFindAllCategoriesQuery,
+	useUpdateLotMutation,
 } from "@/graphql/generated/output"
 
 import { useCurrent } from "@/hooks/useCurrent"
@@ -52,58 +54,93 @@ import { LotPhotosEditor } from "./LotPhotosEditor"
 import { LotDescriptionEditor } from "./description/LotDescriptionEditor"
 import lotSchema, { TLotSchema } from "@/schemas/lot/lot.schema"
 
-export function LotForm() {
+interface TLotFormProps {
+	initialLot?: FindLotByIdQuery["findLotById"]
+	isEditing?: boolean
+}
+
+export function LotForm({ initialLot, isEditing = false }: TLotFormProps) {
 	const t = useTranslations("lot.form")
 	const tEnums = useTranslations("enums")
 
 	const router = useRouter()
 
-	const { data } = useFindAllCategoriesQuery()
-
-	const [create, { loading: isCreateLotLoading, data: isCreated }] =
-		useCreateLotMutation({
-			onCompleted() {
-				toast.success(t("successCreatedLot"))
-				router.replace(ROUTES.LOTS)
-			},
-			onError() {
-				toast.success(t("errorCreatedLot"))
-			},
-		})
-
-	const { user } = useCurrent()
+	const { data: categories } = useFindAllCategoriesQuery()
 
 	const form = useForm<TLotSchema>({
 		resolver: zodResolver(lotSchema),
 		defaultValues: {
-			title: "",
+			title: initialLot?.title ?? "",
+			condition: initialLot?.condition,
+			country: initialLot?.country,
+			region: initialLot?.region,
+			returnPeriod: initialLot?.returnPeriod,
+			categorySlug: initialLot?.categorySlug,
+			type: initialLot?.type,
+			buyNowPrice: initialLot?.buyNowPrice?.toString(),
+			description: initialLot?.description && initialLot.description,
+			photos: initialLot?.photos,
+			price: initialLot?.currentPrice?.toString(),
+			expiresDate: initialLot?.expiresAt && startOfDay(initialLot?.expiresAt),
+			expiresTime: initialLot?.expiresAt
+				? format(initialLot?.expiresAt, "HH:mm:ss")
+				: "",
 		},
 	})
 
-	const { control, watch, setValue, handleSubmit } = form
+	const { control, watch, setValue, handleSubmit, getValues, reset } = form
 
 	const { isDirty } = form.formState
+
+	const [update, { loading: isUpdateLotLoading }] = useUpdateLotMutation({
+		onCompleted() {
+			form.reset(form.getValues())
+			toast.success(t("successUpdatedLot"))
+		},
+		onError() {
+			toast.error(t("errorUpdatedLot"))
+		},
+	})
+
+	const [create, { loading: isCreateLotLoading, data: isCreated }] =
+		useCreateLotMutation({
+			onCompleted() {
+				form.reset(form.getValues())
+				router.replace(ROUTES.LOTS)
+				toast.success(t("successCreatedLot"))
+			},
+			onError() {
+				toast.error(t("errorCreatedLot"))
+			},
+		})
+
+	const isLoading = isCreateLotLoading || isUpdateLotLoading
+	const isEdited = !!isCreated
+
+	const isCanEdit = (initialLot?._count.bids ?? 0) <= 0 || !isEditing
+
+	const { user } = useCurrent()
 
 	const country = watch("country")
 	const type = watch("type")
 
 	async function onSubmit(data: TLotSchema) {
-		const { description, photos, type, price, ...other } = data
+		const { description, photos, type, price } = data
 
 		const buyNowPriceOrUndefined =
 			type === LotType.Mixed ? +data.buyNowPrice! : undefined
 
-		const descriptionOrUndefined = JSON.stringify(description) || undefined
+		const descriptionOrUndefined = description || undefined
 
 		let expiresAt: Date | undefined
-		if (type !== LotType.Buynow) {
+		if (type !== LotType.Buynow && data.expiresTime && data.expiresDate) {
 			const [hours, minutes, seconds] = data.expiresTime.split(":").map(Number)
 
 			expiresAt = set(data.expiresDate, { hours, minutes, seconds })
 		}
 
 		const photosData = []
-		for (const photo of photos) {
+		for (const photo of photos!) {
 			if (photo.key.startsWith("blob:")) {
 				const result = await fetch(photo.key)
 				const blob = await result.blob()
@@ -120,35 +157,56 @@ export function LotForm() {
 			}
 		}
 
-		create({
-			variables: {
-				data: {
-					title: data.title,
-					condition: data.condition,
-					country: data.country,
-					region: data.region,
-					returnPeriod: data.returnPeriod,
-					categorySlug: data.categorySlug,
-					type,
-					buyNowPrice: buyNowPriceOrUndefined,
-					description: descriptionOrUndefined,
-					expiresAt,
-					photos: photosData,
-					price: +price,
-				},
-			},
-		})
+		const common = {
+			title: data.title,
+			condition: data.condition,
+			country: data.country,
+			region: data.region,
+			returnPeriod: data.returnPeriod,
+			categorySlug: data.categorySlug,
+			type,
+			buyNowPrice: buyNowPriceOrUndefined,
+			description: descriptionOrUndefined,
+			expiresAt,
+			photos: photosData,
+			price: +price,
+		}
+
+		isEditing
+			? initialLot &&
+				update({
+					variables: {
+						data: { ...common, lotId: initialLot.id },
+					},
+				})
+			: create({
+					variables: {
+						data: common,
+					},
+				})
 	}
 
 	return (
 		<Form {...form}>
-			<form className='space-y-[50px]' onSubmit={handleSubmit(onSubmit)}>
+			<form
+				className='space-y-[50px]'
+				onSubmit={handleSubmit(onSubmit, error => console.log(error))}
+			>
 				<div className='flex gap-x-5'>
 					<FormField
 						control={control}
 						name='photos'
 						render={({ field }) => (
-							<LotPhotosEditor photos={field.value} onChange={field.onChange} />
+							<LotPhotosEditor
+								photos={field.value ?? []}
+								onChange={photos =>
+									field.onChange(
+										photos
+											.sort((a, b) => a.order - b.order)
+											.map((p, i) => ({ ...p, order: i })),
+									)
+								}
+							/>
 						)}
 					/>
 					<div className='w-full max-w-[420px] space-y-5'>
@@ -175,6 +233,7 @@ export function LotForm() {
 											<Select
 												value={field.value}
 												onValueChange={value => field.onChange(value)}
+												disabled={!isCanEdit}
 											>
 												<SelectTrigger className='!h-[45px] w-full'>
 													<SelectValue />
@@ -203,6 +262,7 @@ export function LotForm() {
 											<Select
 												value={field.value}
 												onValueChange={value => field.onChange(value)}
+												disabled={!isCanEdit}
 											>
 												<SelectTrigger className='!h-[45px] w-full'>
 													<SelectValue />
@@ -238,6 +298,7 @@ export function LotForm() {
 												{...field}
 												value={field.value ?? ""}
 												className='h-[45px] w-full rounded-[12px]'
+												disabled={!isCanEdit}
 											/>
 										</FormControl>
 									</FormItem>
@@ -258,6 +319,7 @@ export function LotForm() {
 												{...field}
 												value={field.value ?? ""}
 												className='h-[45px] w-full rounded-[12px]'
+												disabled={!isCanEdit}
 											/>
 										</FormControl>
 									</FormItem>
@@ -276,16 +338,19 @@ export function LotForm() {
 										<Select
 											value={field.value}
 											onValueChange={value => field.onChange(value)}
+											disabled={!isCanEdit}
 										>
 											<SelectTrigger className='!h-[45px] w-full'>
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>
-												{data?.findAllCategories.map(({ title, slug }) => (
-													<SelectItem value={slug} key={slug}>
-														{title}
-													</SelectItem>
-												))}
+												{categories?.findAllCategories.map(
+													({ title, slug }) => (
+														<SelectItem value={slug} key={slug}>
+															{title}
+														</SelectItem>
+													),
+												)}
 											</SelectContent>
 										</Select>
 									</FormControl>
@@ -304,6 +369,7 @@ export function LotForm() {
 										<Select
 											value={field.value}
 											onValueChange={value => field.onChange(value)}
+											disabled={!isCanEdit}
 										>
 											<SelectTrigger className='!h-[45px] w-full'>
 												<SelectValue />
@@ -323,7 +389,7 @@ export function LotForm() {
 						<div className='space-y-5'>
 							<div className='flex items-center justify-between'>
 								<Heading title={t("location")} className='font-bold' />
-								{user?.country && user.region && (
+								{user?.country && user.region && isCanEdit && (
 									<FullTextTooltip text={t("insertLocationButtonTooltip")}>
 										<Icon
 											icon={"ic:round-content-paste"}
@@ -347,6 +413,7 @@ export function LotForm() {
 											<CountryCombobox
 												value={field.value}
 												onValueChange={field.onChange}
+												disabled={!isCanEdit}
 											/>
 										</FormControl>
 									</FormItem>
@@ -362,6 +429,7 @@ export function LotForm() {
 												country={country as Alpha2Code}
 												value={field.value}
 												onValueChange={field.onChange}
+												disabled={!isCanEdit}
 											/>
 										</FormControl>
 									</FormItem>
@@ -381,6 +449,7 @@ export function LotForm() {
 															date={field.value}
 															onValueChange={field.onChange}
 															className='max-w-[200px] rounded-[12px]'
+															disabled={!isCanEdit}
 														/>
 													</FormControl>
 												</FormItem>
@@ -397,6 +466,7 @@ export function LotForm() {
 															step={1}
 															value={field.value ?? ""}
 															onChange={field.onChange}
+															disabled={!isCanEdit}
 															className='bg-background ring-border max-w-[125px]
 																appearance-none rounded-[12px] text-center
 																[&::-webkit-calendar-picker-indicator]:hidden
@@ -420,7 +490,7 @@ export function LotForm() {
 							<FormItem className='w-full'>
 								<FormControl>
 									<LotDescriptionEditor
-										description={field.value ?? ""}
+										description={field.value as JSONContent}
 										onChange={field.onChange}
 									/>
 								</FormControl>
@@ -434,9 +504,10 @@ export function LotForm() {
 					</Button>
 					<Button
 						className='w-full max-w-[150px]'
-						disabled={isCreateLotLoading || !isDirty || !!isCreated}
+						disabled={isLoading || !isDirty || isEdited}
+						type='submit'
 					>
-						{t("placeLotButton")}
+						{isEditing ? t("editLotButton") : t("placeLotButton")}
 					</Button>
 				</div>
 			</form>

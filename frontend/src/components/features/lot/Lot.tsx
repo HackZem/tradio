@@ -23,6 +23,7 @@ import {
 } from "@/graphql/generated/output"
 
 import { useAuth } from "@/hooks/useAuth"
+import { useCurrent } from "@/hooks/useCurrent"
 
 import { ROUTES } from "@/libs/constants/routes.constants"
 
@@ -41,6 +42,7 @@ export function Lot({ lot }: LotProps) {
 	const tEnums = useTranslations("enums")
 
 	const { isAuthenticated } = useAuth()
+	const { user } = useCurrent()
 
 	const router = useRouter()
 
@@ -58,7 +60,7 @@ export function Lot({ lot }: LotProps) {
 		isActive,
 		id,
 		isSubscribed,
-		user,
+		user: author,
 		_count: { bids: bidsCount },
 	} = lot
 
@@ -165,57 +167,68 @@ export function Lot({ lot }: LotProps) {
 						className='w-full max-w-[370px] space-y-2.5
 							[&_button]:rounded-[15px]'
 					>
-						<div className='flex w-full gap-x-2.5'>
-							{type !== "BUYNOW" && (
-								<Button className='flex-1' disabled={!isActive}>
-									{t("placeBidButton")}
-								</Button>
-							)}
-							{type !== LotType.Auction && (
-								<Button className='flex-1' variant={"secondary"}>
-									{t("buyNowButton")}
-								</Button>
-							)}
-						</div>
-						{type !== LotType.Auction && (
-							<Button variant={"outline"} className='w-full'>
-								{t("addToCartButton")}
-							</Button>
-						)}
-						{isLotSubscribed ? (
+						{user?.username === author.username ? (
 							<Button
-								variant={"destructiveOutline"}
 								className='w-full'
-								disabled={isUnsubscribing || isSubscribing}
-								onClick={() => {
-									unsubscribe()
-									setIsLotSubscribed(false)
-								}}
+								onClick={() => router.push(ROUTES.LOTS_EDIT(lot.id))}
 							>
-								{t("removeFromWatchlistButton")}
+								{t("editLotButton")}
 							</Button>
 						) : (
-							<Button
-								variant={"outline"}
-								className='w-full'
-								disabled={isSubscribing || isUnsubscribing}
-								onClick={() => {
-									if (isAuthenticated) {
-										subscribe()
-										setIsLotSubscribed(true)
-									} else {
-										router.push(ROUTES.LOGIN)
-									}
-								}}
-							>
-								{t("addToWatchlistButton")}
-							</Button>
+							<>
+								<div className='flex w-full gap-x-2.5'>
+									{type !== "BUYNOW" && (
+										<Button className='flex-1' disabled={!isActive}>
+											{t("placeBidButton")}
+										</Button>
+									)}
+									{type !== LotType.Auction && (
+										<Button className='flex-1' variant={"secondary"}>
+											{t("buyNowButton")}
+										</Button>
+									)}
+								</div>
+								{type !== LotType.Auction && (
+									<Button variant={"outline"} className='w-full'>
+										{t("addToCartButton")}
+									</Button>
+								)}
+								{isLotSubscribed ? (
+									<Button
+										variant={"destructiveOutline"}
+										className='w-full'
+										disabled={isUnsubscribing || isSubscribing}
+										onClick={() => {
+											unsubscribe()
+											setIsLotSubscribed(false)
+										}}
+									>
+										{t("removeFromWatchlistButton")}
+									</Button>
+								) : (
+									<Button
+										variant={"outline"}
+										className='w-full'
+										disabled={isSubscribing || isUnsubscribing}
+										onClick={() => {
+											if (isAuthenticated) {
+												subscribe()
+												setIsLotSubscribed(true)
+											} else {
+												router.push(ROUTES.LOGIN)
+											}
+										}}
+									>
+										{t("addToWatchlistButton")}
+									</Button>
+								)}
+							</>
 						)}
 					</div>
-					<Link href={`/users/${user.username}`}>
+					<Link href={`/users/${author.username}`}>
 						<div className='flex items-center gap-x-2.5'>
-							<UserAvatar user={user} />
-							<span className='text-xl'>{user.username}</span>
+							<UserAvatar user={author} />
+							<span className='text-xl'>{author.username}</span>
 						</div>
 					</Link>
 				</div>

@@ -21,13 +21,12 @@ import {
 } from "class-validator"
 import GraphQLJSON from "graphql-type-json"
 
-import { IsCUID } from "@/src/shared/decorators/is-cuid.decorator"
 import { IsRegionExistsConstraint } from "@/src/shared/decorators/is-region-constraint.decorator"
 
 import { UploadPhotoInput } from "./upload-photo.input"
 
 @InputType()
-export class ChangeLotInfoInput {
+export class UpdateLotInput {
 	@Field(() => String)
 	@IsString()
 	@IsNotEmpty()
@@ -44,7 +43,6 @@ export class ChangeLotInfoInput {
 	@IsOptional()
 	@IsObject()
 	@IsNotEmpty()
-	@Max(1000)
 	public description?: JsonObject
 
 	@Field(() => LotType, { nullable: true })
@@ -83,7 +81,13 @@ export class ChangeLotInfoInput {
 	@IsOptional()
 	@IsNumber()
 	@IsNotEmpty()
-	public firstPrice: number
+	public price?: number
+
+	@Field(() => Float, { nullable: true })
+	@IsOptional()
+	@IsNumber()
+	@IsNotEmpty()
+	public buyNowPrice?: number
 
 	@Field(() => Date, { nullable: true })
 	@IsOptional()
@@ -93,7 +97,6 @@ export class ChangeLotInfoInput {
 
 	@Field(() => String, { nullable: true })
 	@IsOptional()
-	@IsCUID()
 	@IsNotEmpty()
 	public categorySlug?: string
 

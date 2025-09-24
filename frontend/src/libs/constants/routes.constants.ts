@@ -9,5 +9,6 @@ export const ROUTES = {
 	LOGIN: "/account/login",
 	REGISTER: "/account/create",
 	LOTS_DETAIL: (id: string) => `/lots/${id}`,
+	LOTS_EDIT: (id: string) => `/lots/${id}/edit`,
 	PROFILE: (username: string) => `/users/${username}`,
 } as const

@@ -11,6 +11,7 @@ import {
 	IsISO31661Alpha2,
 	IsNotEmpty,
 	IsNumber,
+	IsObject,
 	IsOptional,
 	IsString,
 	Length,
@@ -33,7 +34,7 @@ export class CreateLotInput {
 
 	@Field(() => GraphQLJSON, { nullable: true })
 	@IsOptional()
-	@IsString()
+	@IsObject()
 	@IsNotEmpty()
 	public description?: JsonObject
 
@@ -67,7 +68,7 @@ export class CreateLotInput {
 	@Field(() => Float)
 	@IsNumber()
 	@IsNotEmpty()
-	public price: number
+	public price?: number
 
 	@Field(() => Float, { nullable: true })
 	@IsOptional()

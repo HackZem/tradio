@@ -21,21 +21,6 @@ type CategoryModel {
   updatedAt: DateTime!
 }
 
-input ChangeLotInfoInput {
-  categorySlug: String
-  condition: ConditionType
-  country: String
-  description: JSON
-  expiresAt: DateTime
-  firstPrice: Float
-  lotId: String!
-  photos: [UploadPhotoInput!]!
-  region: String
-  returnPeriod: ReturnType
-  title: String
-  type: LotType
-}
-
 input ChangeProfileInfoInput {
   country: String
   description: String
@@ -181,7 +166,6 @@ enum LotType {
 }
 
 type Mutation {
-  changeLotInfo(data: ChangeLotInfoInput!): Boolean!
   changeProfileAvatar(avatar: Upload!): Boolean!
   changeProfileInfo(data: ChangeProfileInfoInput!): Boolean!
   clearSessionCookie: Boolean!
@@ -194,6 +178,7 @@ type Mutation {
   removeSession(id: String!): Boolean!
   subscribeToLot(lotId: String!): Boolean!
   unsubscribeFromLot(lotId: String!): Boolean!
+  updateLot(data: UpdateLotInput!): Boolean!
   verifyAccount(data: VerificationInput!): UserModel!
 }
 
@@ -271,6 +256,22 @@ enum SortBy {
 enum SortOrder {
   ASC
   DESC
+}
+
+input UpdateLotInput {
+  buyNowPrice: Float
+  categorySlug: String
+  condition: ConditionType
+  country: String
+  description: JSON
+  expiresAt: DateTime
+  lotId: String!
+  photos: [UploadPhotoInput!]!
+  price: Float
+  region: String
+  returnPeriod: ReturnType
+  title: String
+  type: LotType
 }
 
 """The `Upload` scalar type represents a file upload."""

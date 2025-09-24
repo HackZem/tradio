@@ -17,6 +17,7 @@ query FindLotById($id: String!) {
 		condition
 		isActive
 		isSubscribed
+		categorySlug
 		_count {
 			bids
 		}

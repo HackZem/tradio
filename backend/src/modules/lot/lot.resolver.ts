@@ -14,9 +14,9 @@ import { Authorized } from "@/src/shared/decorators/authorized.decorator"
 import { FilesValidationPipe } from "@/src/shared/pipes/files-validation.pipe"
 
 import { PhotosArgs } from "./args/photos.args"
-import { ChangeLotInfoInput } from "./inputs/change-lot-info.input"
 import { CreateLotInput } from "./inputs/create-lot.input"
 import { FiltersInput } from "./inputs/filters.input"
+import { UpdateLotInput } from "./inputs/update-lot.input"
 import { LotService } from "./lot.service"
 import { FindLotsModel } from "./models/find-lots.model"
 import { LotPhotoModel } from "./models/lot-photo.model"
@@ -66,12 +66,17 @@ export class LotResolver {
 	}
 
 	@Authorization()
-	@Mutation(() => Boolean, { name: "changeLotInfo" })
-	public async changeInfo(
+	@Mutation(() => Boolean, { name: "updateLot" })
+	public async update(
 		@Authorized() user: User,
-		@Args("data") input: ChangeLotInfoInput,
+		@Args(
+			"data",
+			{ type: () => UpdateLotInput },
+			new FilesValidationPipe("photos"),
+		)
+		input: UpdateLotInput,
 	) {
-		return this.lotService.changeInfo(user, input)
+		return this.lotService.update(user, input)
 	}
 
 	@Authorization()

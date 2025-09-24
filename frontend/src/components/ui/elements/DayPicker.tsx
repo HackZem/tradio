@@ -10,12 +10,18 @@ import { Calendar } from "../common/Calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "../common/Popover"
 
 interface DayPickerProps {
-	date: Date
+	date?: Date
 	onValueChange: (date: Date) => void
 	className?: string
+	disabled?: boolean
 }
 
-export function DayPicker({ onValueChange, date, className }: DayPickerProps) {
+export function DayPicker({
+	onValueChange,
+	date,
+	className,
+	disabled = false,
+}: DayPickerProps) {
 	const [open, setOpen] = useState<boolean>(false)
 
 	return (
@@ -30,6 +36,7 @@ export function DayPicker({ onValueChange, date, className }: DayPickerProps) {
 							px-3 font-normal hover:border-transparent`,
 							className,
 						)}
+						disabled={disabled}
 					>
 						{date ? date.toLocaleDateString() : ""}
 						<ChevronDownIcon className='ml-auto size-5 stroke-3 opacity-50' />
@@ -45,6 +52,7 @@ export function DayPicker({ onValueChange, date, className }: DayPickerProps) {
 							onValueChange(selected)
 							setOpen(false)
 						}}
+						disabled={disabled}
 					/>
 				</PopoverContent>
 			</Popover>

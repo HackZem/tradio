@@ -1,0 +1,3 @@
+mutation UpdateLot($data: UpdateLotInput!) {
+	updateLot(data: $data)
+}
