@@ -135,7 +135,7 @@ export default async function HomePage() {
 
 	return (
 		<div className='flex justify-center' suppressHydrationWarning>
-			<div className='mb-[100px] max-w-[1610px] space-y-[100px]'>
+			<div className='max-w-[1610px] space-y-[100px]'>
 				<CategoriesList />
 				<LotsCarousel
 					heading={t("topLotsHeading")}

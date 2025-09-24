@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react"
 
 export function LayoutContainer({ children }: PropsWithChildren<unknown>) {
-	return <main className='px-5 pt-6'>{children}</main>
+	return <main className='px-5 pt-6 pb-[100px]'>{children}</main>
 }

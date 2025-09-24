@@ -53,7 +53,7 @@ export function Profile({ initialProfile, lots }: ProfileProps) {
 	})
 
 	return (
-		<div className='mb-20 px-4'>
+		<div className='px-4'>
 			<div className='mx-auto max-w-[1285px]'>
 				{!profile ? (
 					"Loading"

@@ -210,6 +210,10 @@
 			"editLotButton": "Save Lot",
 			"cancelButton": "Cancel"
 		},
+		"description": {
+			"heading": "Description",
+			"empty": "description is empty"
+		},
 		"errorSubscribeToLot": "Subscribe to lot error",
 		"successSubscribeToLot": "Successful subscribe to lot",
 		"errorUnsubscribeFromLot": "Unsubscribe from lot error",

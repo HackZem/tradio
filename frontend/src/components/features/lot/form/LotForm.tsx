@@ -94,7 +94,7 @@ export function LotForm({ initialLot, isEditing = false }: TLotFormProps) {
 
 	const [update, { loading: isUpdateLotLoading }] = useUpdateLotMutation({
 		onCompleted() {
-			form.reset(form.getValues())
+			reset(getValues())
 			toast.success(t("successUpdatedLot"))
 		},
 		onError() {
@@ -499,7 +499,14 @@ export function LotForm({ initialLot, isEditing = false }: TLotFormProps) {
 					/>
 				</Block>
 				<div className='ml-auto flex w-full justify-end gap-x-[15px]'>
-					<Button className='w-full max-w-[150px]' variant={"outline"}>
+					<Button
+						className='w-full max-w-[150px]'
+						variant={"outline"}
+						type='button'
+						onClick={() =>
+							initialLot?.id && router.push(ROUTES.LOTS_DETAIL(initialLot.id))
+						}
+					>
 						{t("cancelButton")}
 					</Button>
 					<Button

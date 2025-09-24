@@ -55,7 +55,7 @@ export default async function EditLotPage({
 	const { lot } = await findLot(id)
 
 	return (
-		<div className='mx-auto w-full max-w-[1280px] pb-[100px]'>
+		<div className='mx-auto w-full max-w-[1280px]'>
 			<LotForm initialLot={lot} isEditing />
 		</div>
 	)
