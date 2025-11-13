@@ -103,7 +103,14 @@ npm install
 
 ### 4. Setup environment variables
 
-Create a `.env` file in **backend** with your settings:
+The .env.dev file in **backend** is preconfigured with default values; however, some additional fields need to be set:
+
+```env
+MAIL_HOST=
+MAIL_PORT=
+MAIL_LOGIN=
+MAIL_PASSWORD=
+```
 
 ---
 
