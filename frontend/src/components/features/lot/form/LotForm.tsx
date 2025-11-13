@@ -188,10 +188,7 @@ export function LotForm({ initialLot, isEditing = false }: TLotFormProps) {
 
 	return (
 		<Form {...form}>
-			<form
-				className='space-y-[50px]'
-				onSubmit={handleSubmit(onSubmit, error => console.log(error))}
-			>
+			<form className='space-y-[50px]' onSubmit={handleSubmit(onSubmit)}>
 				<div className='flex gap-x-5'>
 					<FormField
 						control={control}

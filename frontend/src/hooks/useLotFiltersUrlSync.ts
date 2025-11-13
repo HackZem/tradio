@@ -85,8 +85,6 @@ export const useLotFiltersUrlSync = () => {
 						return
 					}
 
-					console.log(newParams)
-
 					const url = ROUTES.LOTS + "?" + newParams
 					router.replace(url)
 

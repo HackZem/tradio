@@ -106,7 +106,7 @@ async function main() {
 		const keys = await redis.keys("bull:*")
 		if (keys.length) {
 			await redis.del(keys)
-			console.log(`Deleted ${keys.length} bull keys`)
+			logger.log(`Deleted ${keys.length} bull keys`)
 		}
 
 		s3Service.removeAll()

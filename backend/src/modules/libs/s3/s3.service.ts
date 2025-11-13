@@ -52,7 +52,7 @@ export class S3Service {
 			Bucket: this.bucket,
 			Key: key,
 		}
-		console.log(key, "key")
+
 		try {
 			await this.client.send(new DeleteObjectCommand(command))
 		} catch (err) {
